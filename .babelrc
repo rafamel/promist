@@ -1,14 +1,10 @@
 {
-  "presets": [
-    ["env", { "targets": { "node": "8.0.0" } }]
-  ],
+  "presets": ["env"],
   "plugins": [
     [
       "module-resolver",
       {
-        "root": [
-          "./src/lib"
-        ],
+        "root": ["./src/lib"],
         "alias": {
           "~": "./src"
         }
@@ -23,7 +19,5 @@
       }
     ]
   ],
-  "ignore": [
-    "node_modules"
-  ]
+  "ignore": ["node_modules"]
 }

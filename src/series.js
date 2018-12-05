@@ -1,38 +1,52 @@
-export async function map(arr, cb) {
+export function map(arr, cb) {
   const ans = [];
-  for (let i = 0; i < arr.length; i++) {
-    // eslint-disable-next-line standard/no-callback-literal
-    const res = await cb(await arr[i], i, arr);
-    ans.push(res);
-  }
-  return ans;
+
+  return arr
+    .reduce((acc, x, i) => {
+      return acc
+        .then(() => x)
+        .then((val) => cb(val, i, arr))
+        .then((res) => ans.push(res));
+    }, Promise.resolve())
+    .then(() => ans);
 }
 
-export async function filter(arr, cb) {
+export function filter(arr, cb) {
   const ans = [];
-  for (let i = 0; i < arr.length; i++) {
-    // eslint-disable-next-line standard/no-callback-literal
-    const val = await arr[i];
-    if (await cb(val, i, arr)) ans.push(val);
-  }
-  return ans;
+
+  return arr
+    .reduce((acc, x, i) => {
+      return acc
+        .then(() => x)
+        .then((val) =>
+          Promise.resolve(cb(val, i, arr)).then((res) => res && ans.push(val))
+        );
+    }, Promise.resolve())
+    .then(() => ans);
 }
 
-export async function reduce(arr, cb, initialValue) {
-  let val = await (initialValue === undefined ? arr[0] : initialValue);
-  let start = initialValue === undefined ? 1 : 0;
-
-  for (let i = start; i < arr.length; i++) {
-    val = await cb(val, await arr[i], i, arr);
-  }
-  return val;
+export function reduce(arr, cb, initialValue) {
+  return arr
+    .slice(1)
+    .reduce(
+      (acc, x, i) =>
+        acc.then((val) =>
+          Promise.resolve(x).then((x) => cb(val, x, i + 1, arr))
+        ),
+      initialValue === undefined
+        ? Promise.resolve(arr[0])
+        : Promise.resolve(initialValue).then((val) =>
+            Promise.resolve(arr[0]).then((x) => cb(val, x, 0, arr))
+          )
+    );
 }
 
-export async function each(arr, cb) {
-  for (let i = 0; i < arr.length; i++) {
-    // eslint-disable-next-line standard/no-callback-literal
-    await cb(await arr[i], i, arr);
-  }
+export function each(arr, cb) {
+  return arr
+    .reduce((acc, x, i) => {
+      return acc.then(() => x).then((val) => cb(val, i, arr));
+    }, Promise.resolve())
+    .then(() => {});
 }
 
 export default {

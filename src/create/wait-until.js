@@ -1,10 +1,11 @@
 import wait from './wait';
 
-export default async function waitUntil(testCb, ms = 20) {
-  let ans;
-  while (!(ans = await testCb())) {
-    await wait(ms);
-  }
+export default function waitUntil(testCb, ms = 20) {
+  const callCb = () => {
+    return Promise.resolve(testCb()).then((ans) => {
+      return ans || wait(ms).then(() => callCb());
+    });
+  };
 
-  return ans;
+  return callCb();
 }

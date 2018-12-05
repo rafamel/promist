@@ -6,9 +6,9 @@ export default function delay(ms, delayRejection = false) {
   return (promise) => {
     promise = timed(promise);
 
-    const delayer = async (p) => {
+    const delayer = (p) => {
       const remaining = p.time ? ms - p.time : 0;
-      if (remaining > 0) await wait(remaining);
+      return remaining > 0 ? wait(remaining) : Promise.resolve();
     };
 
     return intercept(promise, (p) => {

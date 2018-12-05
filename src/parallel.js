@@ -8,21 +8,26 @@ export function filter(arr, fn) {
   return Promise.all(arr)
     .then((resArr) =>
       Promise.all(
-        resArr.map(async (x, i) => ((await fn(x, i, resArr)) ? x : filterVal))
+        resArr.map((x, i) =>
+          Promise.resolve(fn(x, i, resArr)).then((ans) => (ans ? x : filterVal))
+        )
       )
     )
     .then((arr) => arr.filter((x) => x !== filterVal));
 }
 
 export function reduce(arr, cb, initialValue) {
-  return Promise.all(arr).then(async (resArr) => {
-    let val = await (initialValue === undefined ? arr[0] : initialValue);
-    let start = initialValue === undefined ? 1 : 0;
-
-    for (let i = start; i < arr.length; i++) {
-      val = await cb(val, resArr[i], i, resArr);
-    }
-    return val;
+  return Promise.all(arr).then((resArr) => {
+    return resArr
+      .slice(1)
+      .reduce(
+        (acc, x, i) => acc.then((val) => cb(val, x, i + 1, resArr)),
+        initialValue === undefined
+          ? Promise.resolve(resArr[0])
+          : Promise.resolve(initialValue).then((val) =>
+              cb(val, resArr[0], 0, resArr)
+            )
+      );
   });
 }
 
