@@ -18,12 +18,12 @@ test(`waits takes into account ms`, async () => {
   let res = false;
   const init = Date.now();
   const p1 = waitUntil(() => res, 20);
-  const p2 = waitUntil(() => res, 200);
+  const p2 = waitUntil(() => res, 300);
   setTimeout(() => (res = true), 100);
 
   await p1;
   expect(Date.now() - init).toBeLessThan(200);
   expect(Date.now() - init).toBeGreaterThanOrEqual(100);
   await p2;
-  expect(Date.now() - init).toBeGreaterThanOrEqual(200);
+  expect(Date.now() - init).toBeGreaterThanOrEqual(250);
 });
