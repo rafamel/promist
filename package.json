@@ -1,6 +1,6 @@
 {
   "name": "promist",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "Rafa Mel",
   "description": "A dependable Promises and async utility belt",
   "keywords": [
