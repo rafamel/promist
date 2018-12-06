@@ -8,9 +8,9 @@ export default function defer(promise) {
   mark.set(promise, 'deferrable');
   const p = deferred();
 
-  const race = Promise.race(promise, p);
   promise.resolve = p.resolve;
   promise.reject = p.reject;
 
-  return intercept(promise, () => race);
+  promise.then((val) => p.resolve(val)).catch((reason) => p.reject(reason));
+  return intercept(promise, () => p);
 }
