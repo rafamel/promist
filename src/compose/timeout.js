@@ -7,10 +7,12 @@ export default function timeout(ms, reason) {
   return (promise) => {
     promise = reason ? deferrable(promise) : cancellable(promise);
 
-    return intercept(promise, (p) => {
-      let done = false;
-      wait(ms).then(() => !done && (reason ? p.reject(reason) : p.cancel()));
+    let done = false;
+    wait(ms).then(
+      () => !done && (reason ? promise.reject(reason) : promise.cancel())
+    );
 
+    return intercept(promise, (p) => {
       return p
         .then((val) => (done = true) && val)
         .catch((err) => (done = true) && Promise.reject(err));
