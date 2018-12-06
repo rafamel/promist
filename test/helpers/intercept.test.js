@@ -67,4 +67,40 @@ describe(`general`, () => {
 
     await expect(p).resolves.toBe(2);
   });
+  test(`only executes the whole flow once`, async () => {
+    expect.assertions(2);
+
+    const p = Promise.resolve(10);
+    let count = 0;
+    intercept(p, (p) =>
+      p.then((x) => {
+        count++;
+        return x;
+      })
+    );
+
+    await p;
+    expect(count).toBe(1);
+    await p;
+    expect(count).toBe(1);
+  });
+  test(`executes the whole flow again when an intercept is added`, async () => {
+    expect.assertions(2);
+
+    const p = Promise.resolve(10);
+    let count = 0;
+    intercept(p, (p) =>
+      p.then((x) => {
+        count++;
+        return x;
+      })
+    );
+
+    await p;
+    expect(count).toBe(1);
+
+    intercept(p, (p) => p);
+    await p;
+    expect(count).toBe(2);
+  });
 });

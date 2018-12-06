@@ -1,8 +1,29 @@
-export default function intercept(promise, interceptFn) {
-  const _then = promise.then;
+import compose from '~/utils/compose';
 
-  // TODO make it run just once per promise
-  const run = () => interceptFn(Promise.resolve(_then.call(promise, (x) => x)));
+const INTERCEPT_SYMBOL = Symbol('intercept');
+const RESPONSE_SYMBOL = Symbol('response');
+
+export default function intercept(promise, interceptFn) {
+  let intercept = promise[INTERCEPT_SYMBOL];
+
+  if (intercept) {
+    promise[RESPONSE_SYMBOL] = null;
+    intercept.push(interceptFn);
+    return promise;
+  }
+
+  intercept = [interceptFn];
+  promise[INTERCEPT_SYMBOL] = intercept;
+  const _then = promise.then;
+  const run = () => {
+    const res = promise[RESPONSE_SYMBOL];
+    return (
+      res ||
+      (promise[RESPONSE_SYMBOL] = compose(...intercept)(
+        Promise.resolve(_then.call(promise, (x) => x))
+      ))
+    );
+  };
 
   promise.then = (...args) => run().then(...args);
   promise.catch = (...args) => run().catch(...args);
