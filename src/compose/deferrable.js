@@ -11,6 +11,8 @@ export default function defer(promise) {
   promise.resolve = p.resolve;
   promise.reject = p.reject;
 
-  promise.then((val) => p.resolve(val)).catch((reason) => p.reject(reason));
-  return intercept(promise, () => p);
+  return intercept(promise, (promise) => {
+    promise.then((val) => p.resolve(val)).catch((reason) => p.reject(reason));
+    return p;
+  });
 }
