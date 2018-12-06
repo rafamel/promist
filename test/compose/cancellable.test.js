@@ -58,16 +58,12 @@ test(`should cancel (2)`, async () => {
   expect(p.cancelled).toBe(true);
 });
 test(`should fail silently`, async () => {
-  expect.assertions(2);
+  expect.assertions(3);
   const p = Promise.resolve(10);
   cancellable(p);
-  await new Promise((resolve) =>
-    setTimeout(() => {
-      p.cancel();
-      resolve();
-    }, 100)
-  );
+  await p;
 
+  expect(() => p.cancel()).not.toThrow();
   await expect(p).resolves.toBe(10);
   expect(p.cancelled).toBe(false);
 });

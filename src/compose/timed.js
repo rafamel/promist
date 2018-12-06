@@ -7,10 +7,8 @@ export default function timed(promise) {
 
   promise.time = null;
 
-  let init;
+  const init = Date.now();
   return intercept(promise, (p) => {
-    init = Date.now();
-
     return p
       .then((val) => {
         promise.time = Date.now() - init;

@@ -41,7 +41,7 @@ describe(`map`, () => {
     const init = Date.now();
     const p = parallel.map(arr, async (x) => x + 1);
     await expect(p).resolves.toEqual(arr.map((_, i) => i + 1));
-    expect(Date.now() - init).toBeLessThan(100);
+    expect(Date.now() - init).toBeLessThan(150);
   });
 });
 
@@ -78,7 +78,7 @@ describe(`filter`, () => {
     await expect(p).resolves.toEqual(
       arr.map((_, i) => i).filter((x) => x % 2 === 0)
     );
-    expect(Date.now() - init).toBeLessThan(100);
+    expect(Date.now() - init).toBeLessThan(150);
   });
 });
 
@@ -141,7 +141,7 @@ describe(`reduce`, () => {
     await expect(p).resolves.toEqual(
       arr.map((_, i) => i).reduce((acc, x) => acc + x)
     );
-    expect(Date.now() - init).toBeLessThan(100);
+    expect(Date.now() - init).toBeLessThan(150);
   });
 });
 
@@ -196,6 +196,6 @@ describe(`each`, () => {
     const p = parallel.each(arr, async () => {});
 
     await p;
-    expect(Date.now() - init).toBeLessThan(100);
+    expect(Date.now() - init).toBeLessThan(150);
   });
 });

@@ -13,15 +13,11 @@ export default function cancellable(promise) {
     promise.cancelled = true;
   };
 
+  const unfulfilled = new Promise(() => {});
+  promise.then(() => (cancellable = false)).catch(() => (cancellable = false));
   return intercept(promise, (p) => {
     return p
-      .then((val) => {
-        cancellable = false;
-        return promise.cancelled ? new Promise(() => {}) : val;
-      })
-      .catch((err) => {
-        cancellable = false;
-        return promise.cancelled ? new Promise(() => {}) : Promise.reject(err);
-      });
+      .then((val) => (promise.cancelled ? unfulfilled : val))
+      .catch((err) => (promise.cancelled ? unfulfilled : Promise.reject(err)));
   });
 }
