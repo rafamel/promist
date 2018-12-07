@@ -22,9 +22,26 @@
 
 * [*Promises*:](#Promises) There are *create* and *compose* functions:
   * [*Create* functions](#Create-functions) return a newly formed promise.
+    * [`wait()`](#waitms-Number-Promise)
+    * [`waitUntil()`](#waitUntiltestCb-Function-ms-Number-Promise)
+    * [`deferred()`](#deferred-Promise)
+    * [`lazy()`](#lazyexecutor-Function-Promise)
+    * [`immediate()`](#immediate-Promise)
   * [*Compose* functions](#Compose-functions) mutate an input promise in order to provide some added functionality. They can be chained via [`compose()`.](#composefns-Function)
+    * [`deferrable()`](#deferrablepromise-Promise-Promise)
+    * [`cancellable()`](#cancellablepromise-Promise-Promise)
+    * [`status()`](#statuspromise-Promise-Promise)
+    * [`timed()`](#timedpromise-Promise-Promise)
+    * [`delay()`](#delayms-Number-delayRejection-boolean-Function)
+    * [`timeout()`](#timeoutms-Number-reason-any-Function)
   * There are also some [utility functions.](#Utils)
+    * [`compose()`](#composefns-Function-Function)
+    * [`isPromise()`](#isPromiseobject-any-boolean)
 * [*Collections*:](#Collections) Handled either in *parallel* or *series.*
+  * [`map()`](#maparr-Promise-callback-Function-Promise)
+  * [`filter()`](#filterarr-Promise-callback-Function-Promise)
+  * [`reduce()`](#reducearr-Promise-callback-Function-initialValue-any-Promise)
+  * [`each()`](#eacharr-Promise-callback-Function-Promise)
 
 You can either `import` directly from the package root (as shown in the examples below), or:
 
@@ -85,7 +102,7 @@ promise.then(val => console.log('Resolves with "Hello":', val));
 promise.resolve('Hello');
 ```
 
-### `lazy(executor: Function): Promise`
+#### `lazy(executor: Function): Promise`
 
 Returns a lazy promise: it's executor won't run until `promise.then()`, `promise.catch()`, or `promise.finally()` are called for the first time.
 
@@ -103,7 +120,7 @@ const promise = lazy((resolve, reject) => {
 promise.then((value) => console.log('Executor has run and resolved:', value));
 ```
 
-### `immediate(): Promise`
+#### `immediate(): Promise`
 
 Returns a promise that resolves in the next event loop (`setImmediate`).
 
@@ -173,12 +190,12 @@ cancellable(myPromise);
 myPromise.cancel();
 ```
 
-### `timed(promise: Promise): Promise`
+#### `timed(promise: Promise): Promise`
 
 * `promise` will acquire:
   * `promise.time`: *(Number|void),* the number of milliseconds it took the promise to resolve or reject. Defaults to `null` before it's resolved/rejected. The count starts the moment `timed()` is called.
 
-#### `delay(ms: Number, delayRejection?: Boolean): Function`
+#### `delay(ms: Number, delayRejection?: boolean): Function`
 
 * `ms`: Threshold in milliseconds.
 * `delayRejection`: Whether or not to also delay a promise rejection. Default: `false`.
@@ -198,7 +215,7 @@ myPromise.then(() => {
 })
 ```
 
-### `timeout(ms: Number, reason?: any): Function`
+#### `timeout(ms: Number, reason?: any): Function`
 
 * `ms`: Threshold in milliseconds.
 * `reason`: Value the promise will reject with if it doesn't fulfill in `ms`. If none is passed, it will cancel instead of reject.
@@ -225,7 +242,7 @@ import { compose, cancellable, delay, deferrrable } from 'promist';
 const p1 = compose(cancellable, delay(500), deferrable)(myPromise);
 ```
 
-#### `isPromise(object: any): Boolean`
+#### `isPromise(object: any): boolean`
 
 Returns `true` if `object` is a *thenable,* `false` otherwise.
 
@@ -271,7 +288,7 @@ series.map(myPromiseArr, (x, i, arr) => {
 * `callback`: With the same signature as [`Array.prototype.reduce()`.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) Can be a promise returning/*async* function.
 * `initialValue`: An initial value; if absent, the resolved value of the first promise in the array will be taken as `initialValue`.
 
-### `each(arr: Promise[], callback: Function): Promise<undefined>`
+### `each(arr: Promise[], callback: Function): Promise`
 
 * `arr`: An array of promises.
 * `callback`: With the same signature as [`Array.prototype.forEach()`.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) Can be a promise returning/*async* function.
