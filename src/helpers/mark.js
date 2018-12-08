@@ -6,7 +6,7 @@ const getDefaults = () => ({
   status: false
 });
 
-const MARK_SYMBOL = Symbol('mark');
+export const MARK_SYMBOL = Symbol('mark');
 export default {
   set(promise, ...as) {
     if (!promise[MARK_SYMBOL]) promise[MARK_SYMBOL] = getDefaults();
