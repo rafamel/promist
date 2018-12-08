@@ -6,7 +6,6 @@
   "keywords": [
     "async",
     "promises",
-    "async",
     "series",
     "parallel",
     "map",
