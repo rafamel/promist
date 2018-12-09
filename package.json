@@ -17,7 +17,6 @@
     "delay"
   ],
   "scripts": {
-    "precommit": "cross-env MSG=\"Committing in:\" nps validate",
     "prepublishOnly": "exit 1",
     "start": "npm run watch",
     "build": "nps build",
@@ -62,7 +61,6 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-plugin-module-resolver": "^3.1.1",
-    "concurrently": "^3.6.1",
     "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
     "eslint": "^5.10.0",
@@ -77,12 +75,12 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-restricted-globals": "^0.2.0",
-    "husky": "^0.14.3",
+    "husky": "^1.2.0",
     "jake": "^8.0.19",
     "jest-cli": "^23.6.0",
     "markdownlint-cli": "^0.13.0",
     "nps": "^5.9.3",
-    "onchange": "^4.1.0",
+    "onchange": "^5.2.0",
     "prettier": "^1.15.2",
     "shx": "^0.3.2",
     "tslint": "^5.11.0",
@@ -101,5 +99,10 @@
     "modulePathIgnorePatterns": [
       "<rootDir>/build"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "cross-env MSG=\"Committing in:\" nps validate"
+    }
   }
 }

@@ -33,7 +33,10 @@ module.exports = scripts({
   validate:
     'nps fix lint lint.test lint.md lint.scripts lint.typings test private.validate_last',
   update: 'npm update --save/save-dev && npm outdated',
-  clean: `${exit0(`shx rm -r ${OUT_DIR} coverage`)} && shx rm -rf node_modules`,
+  clean: series([
+    exit0(`shx rm -r ${OUT_DIR} ${DOCS_DIR} coverage`),
+    'shx rm -rf node_modules'
+  ]),
   docs: series([
     'nps lint.typings',
     exit0(`shx rm -r ${DOCS_DIR}`),
