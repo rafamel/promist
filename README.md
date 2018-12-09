@@ -20,28 +20,28 @@
 
 `promist` intends to cover and abstract the most common day to day dealings with async behavior and promises. It doesn't intend to be the most complete library, or an incredibly slim one, but rather be a dependable set of functions that serve as go-to for most use cases.
 
-* [*Promises*:](#Promises) There are *create* and *compose* functions:
-  * [*Create* functions](#Create-functions) return a newly formed promise.
-    * [`wait()`](#waitms-Number-Promise)
-    * [`waitUntil()`](#waitUntiltestCb-Function-ms-Number-Promise)
-    * [`deferred()`](#deferred-Promise)
-    * [`lazy()`](#lazyexecutor-Function-Promise)
-    * [`immediate()`](#immediate-Promise)
-  * [*Compose* functions](#Compose-functions) mutate an input promise in order to provide some added functionality. They can be chained via [`compose()`.](#composefns-Function)
-    * [`deferrable()`](#deferrablepromise-Promise-Promise)
-    * [`cancellable()`](#cancellablepromise-Promise-Promise)
-    * [`status()`](#statuspromise-Promise-Promise)
-    * [`timed()`](#timedpromise-Promise-Promise)
-    * [`delay()`](#delayms-Number-delayRejection-boolean-Function)
-    * [`timeout()`](#timeoutms-Number-reason-any-Function)
-  * There are also some [utility functions.](#Utils)
-    * [`compose()`](#composefns-Function-Function)
-    * [`isPromise()`](#isPromiseobject-any-boolean)
-* [*Collections*:](#Collections) Handled either in *parallel* or *series.*
-  * [`map()`](#maparr-Promise-callback-Function-Promise)
-  * [`filter()`](#filterarr-Promise-callback-Function-Promise)
-  * [`reduce()`](#reducearr-Promise-callback-Function-initialValue-any-Promise)
-  * [`each()`](#eacharr-Promise-callback-Function-Promise)
+* [*Promises*:](#promises) There are *create* and *compose* functions:
+  * [*Create* functions](#create-functions) return a newly formed promise.
+    * [`wait()`](#waitms-number-promise)
+    * [`waitUntil()`](#waituntiltestcb-function-ms-number-promise)
+    * [`deferred()`](#deferred-promise)
+    * [`lazy()`](#lazyexecutor-function-promise)
+    * [`immediate()`](#immediate-promise)
+  * [*Compose* functions](#compose-functions) mutate an input promise in order to provide some added functionality. They can be chained via [`compose()`.](#composefns-function)
+    * [`deferrable()`](#deferrablepromise-promise-promise)
+    * [`cancellable()`](#cancellablepromise-promise-promise)
+    * [`status()`](#statuspromise-promise-promise)
+    * [`timed()`](#timedpromise-promise-promise)
+    * [`delay()`](#delayms-number-delayrejection-boolean-function)
+    * [`timeout()`](#timeoutms-number-reason-any-function)
+  * There are also some [utility functions.](#utils)
+    * [`compose()`](#composefns-function-function)
+    * [`isPromise()`](#ispromiseobject-any-boolean)
+* [*Collections*:](#collections) Handled either in *parallel* or *series.*
+  * [`map()`](#maparr-promise-callback-function-promise)
+  * [`filter()`](#filterarr-promise-callback-function-promise)
+  * [`reduce()`](#reducearr-promise-callback-function-initialvalue-any-promise)
+  * [`each()`](#eacharr-promise-callback-function-promise)
 
 You can either `import` directly from the package root (as shown in the examples below), or:
 
@@ -135,7 +135,7 @@ immediate().then(() => console.log('Next event loop')).
 *Compose* functions mutate an input promise in order to provide some added functionality:
 
 * They might not work adecuately if you're using non-standard methods for resolution other than `promise.then()`, `promise.catch()`, or `promise.finally()`.
-* They can be chained via [`compose()`.](#composefns-Function)
+* They can be chained via [`compose()`.](#composefns-function)
 
 #### `deferrable(promise: Promise): Promise`
 
