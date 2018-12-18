@@ -83,7 +83,7 @@ import { waitUntil } from 'promist';
 
 let example = 1;
 
-waitUntil(() => example === 10).then(() => console.log('Resolved after ~500ms'));
+waitUntil(() => example === 10).then(() => console.log('Resolved after example = 10'));
 example = 10;
 ```
 
@@ -182,18 +182,21 @@ myPromise.cancel();
   * `promise.reason`: Contains the rejection reason. `null` if the promise is pending or resolved.
 
 ```javascript
-import { cancellable } from 'promist';
+import { status } from 'promist';
 
-cancellable(myPromise);
-
-// Cancel the promise
-myPromise.cancel();
+status(myPromise);
 ```
 
 #### `timed(promise: Promise): Promise`
 
 * `promise` will acquire:
   * `promise.time`: *(Number|void),* the number of milliseconds it took the promise to resolve or reject. Defaults to `null` before it's resolved/rejected. The count starts the moment `timed()` is called.
+
+```javascript
+import { timed } from 'promist';
+
+timed(myPromise);
+```
 
 #### `delay(ms: Number, delayRejection?: boolean): Function`
 
