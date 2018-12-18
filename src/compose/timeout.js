@@ -5,12 +5,16 @@ import deferrable from './deferrable';
 
 export default function timeout(ms, reason) {
   return (promise) => {
-    promise = reason ? deferrable(promise) : cancellable(promise);
+    const shouldCancel = reason === undefined || reason === false;
+    promise = shouldCancel ? cancellable(promise) : deferrable(promise);
 
     let done = false;
-    wait(ms).then(
-      () => !done && (reason ? promise.reject(reason) : promise.cancel())
-    );
+    wait(ms).then(() => {
+      if (done) return;
+      if (shouldCancel) return promise.cancel();
+      if (typeof reason !== 'boolean') return promise.reject(reason);
+      promise.reject(Error('Promise timed out'));
+    });
 
     return intercept(promise, (p) => {
       return p

@@ -221,7 +221,9 @@ myPromise.then(() => {
 #### `timeout(ms: Number, reason?: any): Function`
 
 * `ms`: Threshold in milliseconds.
-* `reason`: Value the promise will reject with if it doesn't fulfill in `ms`. If none is passed, it will cancel instead of reject.
+* `reason`: Value the promise will reject with if it doesn't fulfill in `ms` milliseconds:
+  * If none is passed (`undefined`) or `false`, the promise will cancel (not resolve) instead of rejecting. For other *falsy* values, it will reject with the value.
+  * If a *boolean,* it will reject with a default error when `true`, and cancel as if no `reason` was passed when `false`.
 
 Returns a function with signature: `(promise: Promise): Promise`.
 
@@ -230,7 +232,8 @@ The returned promise will acquire an upper threshold in `ms` after which, if it 
 ```javascript
 import { timeout } from 'promist';
 
-timeout(500)(myPromise);
+timeout(500)(promise1); // It will cancel if it hasn't been fulfilled in 500 ms
+timeout(500, true)(promise2) // This one would reject with a default error
 ```
 
 ### Utils
