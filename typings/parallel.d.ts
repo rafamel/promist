@@ -14,7 +14,7 @@ declare const parallel: {
   reduce(
     arr: Array<Promise<any> | any>,
     fn: (
-      accumulator: any,
+      accumulator: Promise<any>,
       value: any,
       index: number,
       arr: any[]
