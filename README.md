@@ -260,8 +260,14 @@ isPromise(myPromise);
 
 ## Collections
 
-* *Series* collection functions execute serially. The passed functions (callbacks) receive an array of promises.
-* *Parallel* collection functions execute in parallel in two stages: first, the resolution of all promises, then the passed function calls (`parallel.reduce()` executes this serially). The passed functions (callbacks) receive an array with the values the input array of promises resolved to.
+* *Series:*
+  * Collection functions execute serially.
+  * The passed functions (callbacks) receive an array of promises.
+
+* *Parallel:*
+  * Collection functions execute in parallel in two stages: first, the resolution of all promises, then the passed function calls.
+  * The passed functions (callbacks) receive an array with the values the input array of promises resolved to.
+  * `parallel.reduce()` receives a promise as the accumulator parameter.
 
 ```javascript
 import { parallel } from 'promist';

@@ -86,13 +86,17 @@ describe(`reduce`, () => {
   test(`reduces`, async () => {
     expect.assertions(1);
 
-    const p = parallel.reduce(createArr(), (acc, x) => acc + x);
+    const p = parallel.reduce(createArr(), async (acc, x) => (await acc) + x);
     await expect(p).resolves.toEqual(10);
   });
   test(`reduces w/ initialValue`, async () => {
     expect.assertions(1);
 
-    const p = parallel.reduce(createArr(), (acc, x) => acc + x, 4);
+    const p = parallel.reduce(
+      createArr(),
+      async (acc, x) => (await acc) + x,
+      4
+    );
     await expect(p).resolves.toEqual(14);
   });
   test(`reduces w/ initialValue as Promise`, async () => {
@@ -100,7 +104,7 @@ describe(`reduce`, () => {
 
     const p = parallel.reduce(
       createArr(),
-      (acc, x) => acc + x,
+      async (acc, x) => (await acc) + x,
       Promise.resolve(4)
     );
     await expect(p).resolves.toEqual(14);
@@ -108,7 +112,7 @@ describe(`reduce`, () => {
   test(`reduces for async inner fn`, async () => {
     expect.assertions(1);
 
-    const p = parallel.reduce(createArr(), async (acc, x) => x + acc);
+    const p = parallel.reduce(createArr(), async (acc, x) => (await acc) + x);
     await expect(p).resolves.toEqual(10);
   });
   test(`receives all args`, async () => {
@@ -117,9 +121,10 @@ describe(`reduce`, () => {
     const pArr = createArr();
     const p = parallel.reduce(
       pArr,
-      (acc, x, i, arr) => {
+      async (acc, x, i, arr) => {
         expect(x).toBe(i + 1);
         expect(arr).toEqual([1, 2, 3, 4]);
+        acc = await acc;
         expect(acc).toBe(
           Array(i + 1)
             .fill(0)
@@ -137,7 +142,7 @@ describe(`reduce`, () => {
 
     const arr = createDelayedArr();
     const init = Date.now();
-    const p = parallel.reduce(arr, async (acc, x) => acc + x);
+    const p = parallel.reduce(arr, async (acc, x) => (await acc) + x);
     await expect(p).resolves.toEqual(
       arr.map((_, i) => i).reduce((acc, x) => acc + x)
     );
