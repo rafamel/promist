@@ -16,7 +16,8 @@ module.exports = scripts({
     `shx cp -r typings ${OUT_DIR}/typings`
   ]),
   publish: `nps build && cd ${OUT_DIR} && npm publish`,
-  watch: 'onchange "./src/**/*.{js,jsx,ts}" -i -- nps private.watch',
+  watch:
+    'onchange "./src/**/*.{js,jsx,ts}" --initial --kill -- nps private.watch',
   fix: `prettier --write "./**/*.{js,jsx,ts,json,scss}"`,
   lint: {
     default: 'eslint ./src --ext .js',
@@ -28,7 +29,7 @@ module.exports = scripts({
   test: {
     default: 'nps lint.test && jest ./test/.*.test.js',
     watch:
-      'onchange "./{test,src}/**/*.{js,jsx,ts}" -i -- nps private.test_watch'
+      'onchange "./{test,src}/**/*.{js,jsx,ts}" --initial --kill -- nps private.test_watch'
   },
   validate:
     'nps fix lint lint.test lint.md lint.scripts lint.typings test private.validate_last',
