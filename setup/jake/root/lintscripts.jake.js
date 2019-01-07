@@ -39,9 +39,9 @@ task('lintscripts', (ROOT_DIR, fix) => {
     return;
   }
 
-  const obj = { ...packageJson, scripts: { ...packageJson.scripts, ...names } };
+  Object.assign(packageJson.scripts, names);
   fs.writeFileSync(
     path.join(__dirname, '../../../package.json'),
-    JSON.stringify(obj, null, 2)
+    JSON.stringify(packageJson, null, 2)
   );
 });
