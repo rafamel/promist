@@ -3,28 +3,28 @@
  */
 
 declare const parallel: {
-  map(
-    arr: Array<Promise<any> | any>,
-    fn: (value: any, index: number, arr: any[]) => Promise<any> | any
-  );
-  filter(
-    arr: Array<Promise<any> | any>,
-    fn: (value: any, index: number, arr: any[]) => Promise<any> | any
-  );
-  reduce(
-    arr: Array<Promise<any> | any>,
+  map<T>(
+    arr: Array<PromiseLike<T> | Promise<T> | T>,
+    fn: (value: T, index: number, arr: T[]) => Promise<any> | any
+  ): Promise<any[]>;
+  filter<T>(
+    arr: Array<PromiseLike<T> | Promise<T> | T>,
+    fn: (value: T, index: number, arr: T[]) => Promise<any> | any
+  ): Promise<any[]>;
+  reduce<T>(
+    arr: Array<PromiseLike<T> | Promise<T> | T>,
     fn: (
       accumulator: Promise<any>,
-      value: any,
+      value: T,
       index: number,
-      arr: any[]
+      arr: T[]
     ) => Promise<any> | any,
-    initialValue?: any | Promise<any>
-  );
-  each(
-    arr: Array<Promise<any> | any>,
-    fn: (value: any, index: number, arr: any[]) => void
-  );
+    initialValue?: PromiseLike<any> | Promise<any> | any
+  ): Promise<any>;
+  each<T>(
+    arr: Array<PromiseLike<T> | Promise<T> | T>,
+    fn: (value: T, index: number, arr: T[]) => any
+  ): void;
 };
 
 export default parallel;

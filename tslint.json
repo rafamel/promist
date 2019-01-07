@@ -10,7 +10,9 @@
     "curly": false,
     "ordered-imports": false,
     "object-literal-sort-keys": false,
-    "interface-name": false
+    "interface-name": true,
+    "no-console": false,
+    "no-empty": false
   },
   "jsRules": {}
 }

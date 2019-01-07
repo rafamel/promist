@@ -1,4 +1,3 @@
-require('@babel/register');
 const fs = require('fs');
 const path = require('path');
 
@@ -9,7 +8,7 @@ const run = (dir) =>
     if (fs.statSync(item).isDirectory()) {
       if (name === 'root') run(item);
       else namespace(name, () => run(item));
-    } else if (/\.jake\.(js|ts)$/.exec(item)) {
+    } else if (/\.jake\.js$/.exec(item)) {
       require(item);
     }
   });

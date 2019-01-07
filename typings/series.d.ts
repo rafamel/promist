@@ -3,36 +3,40 @@
  */
 
 declare const series: {
-  map(
-    arr: Array<Promise<any> | any>,
+  map<T>(
+    arr: Array<PromiseLike<T> | Promise<T> | T>,
     fn: (
-      value: any,
+      value: T,
       index: number,
-      arr: Array<Promise<any> | any>
+      arr: Array<PromiseLike<T> | Promise<T> | T>
     ) => Promise<any> | any
-  );
-  filter(
-    arr: Array<Promise<any> | any>,
+  ): Promise<any[]>;
+  filter<T>(
+    arr: Array<PromiseLike<T> | Promise<T> | T>,
     fn: (
-      value: any,
+      value: T,
       index: number,
-      arr: Array<Promise<any> | any>
+      arr: Array<PromiseLike<T> | Promise<T> | T>
     ) => Promise<any> | any
-  );
-  reduce(
-    arr: Array<Promise<any> | any>,
+  ): Promise<any[]>;
+  reduce<T>(
+    arr: Array<PromiseLike<T> | Promise<T> | T>,
     fn: (
       accumulator: any,
-      value: any,
+      value: T,
       index: number,
-      arr: Array<Promise<any> | any>
+      arr: Array<PromiseLike<T> | Promise<T> | T>
     ) => Promise<any> | any,
-    initialValue?: any | Promise<any>
-  );
-  each(
-    arr: Array<Promise<any> | any>,
-    fn: (value: any, index: number, arr: Array<Promise<any> | any>) => void
-  );
+    initialValue?: PromiseLike<any> | Promise<any> | any
+  ): Promise<any>;
+  each<T>(
+    arr: Array<PromiseLike<T> | Promise<T> | T>,
+    fn: (
+      value: T,
+      index: number,
+      arr: Array<PromiseLike<T> | Promise<T> | T>
+    ) => any
+  ): void;
 };
 
 export default series;

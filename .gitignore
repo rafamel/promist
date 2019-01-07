@@ -5,6 +5,7 @@
 # Node, Frameworks, Editors #
 #############################
 _test.js
+_test.ts
 build
 dist
 .cache

@@ -31,6 +31,10 @@ module.exports = {
     // babel-plugin-module-resolver
     'import/resolver': {
       'babel-module': {}
+    },
+    // eslint-import-resolver-typescript
+    'import/resolver': {
+      typescript: {}
     }
   }
 };

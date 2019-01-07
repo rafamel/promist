@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+const fs = require('fs');
+const path = require('path');
 
 desc('Modifies package.json in output directory');
 task('fixpackage', (OUT_DIR) => {
