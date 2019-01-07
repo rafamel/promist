@@ -20,7 +20,7 @@ module.exports = scripts({
     `shx cp -r typings "${OUT_DIR}/"`,
     'nps docs'
   ),
-  publish: series('nps build', `cd ${OUT_DIR}`, 'npm publish'),
+  publish: `nps build && cd ${OUT_DIR} && npm publish`,
   watch: `onchange "./src/**/*{${EXT}}" --initial --kill -- nps private.watch`,
   fix: [
     'prettier',
