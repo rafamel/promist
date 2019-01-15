@@ -19,13 +19,13 @@ export function cancellable<T>(
 export function deferrable<T>(
   promise: Promise<T> | PromiseLike<T>
 ): IPromist<T>;
-export function delay<T>(
+export function delay(
   ms: number,
   delayRejection?: boolean
-): (promise: Promise<T> | PromiseLike<T>) => IPromist<T>;
+): <T>(promise: Promise<T> | PromiseLike<T>) => IPromist<T>;
 export function status<T>(promise: Promise<T> | PromiseLike<T>): IPromist<T>;
 export function timed<T>(promise: Promise<T> | PromiseLike<T>): IPromist<T>;
-export function timeout<T>(
+export function timeout(
   ms: number,
   reason?: any
-): (promise: Promise<T> | PromiseLike<T>) => IPromist<any>;
+): <T>(promise: Promise<T> | PromiseLike<T>) => IPromist<T>;
