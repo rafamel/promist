@@ -1,5 +1,3 @@
-import compose from '~/utils/compose';
-
 const INTERCEPT_SYMBOL = Symbol('intercept');
 const RESPONSE_SYMBOL = Symbol('response');
 
@@ -19,7 +17,8 @@ export default function intercept(promise, interceptFn) {
     const res = promise[RESPONSE_SYMBOL];
     return (
       res ||
-      (promise[RESPONSE_SYMBOL] = compose(...intercept)(
+      (promise[RESPONSE_SYMBOL] = intercept.reduce(
+        (acc, fn) => fn(acc),
         Promise.resolve(_then.call(promise, (x) => x))
       ))
     );
