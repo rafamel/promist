@@ -5,7 +5,7 @@ import deferrable from './deferrable';
 export default function timeout(ms, reason) {
   return (promise) => {
     const shouldCancel = reason === undefined || reason === false;
-    promise = shouldCancel ? cancellable(promise) : deferrable(promise);
+    promise = cancellable(deferrable(promise));
 
     let done = false;
     let timeout;
