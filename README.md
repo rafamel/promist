@@ -1,6 +1,6 @@
 # Promist
 
-[![Version](https://img.shields.io/github/package-json/v/rafamel/promist.svg)](https://github.com/rafamel/promist)
+[![Version](https://img.shields.io/npm/v/promist.svg)](https://www.npmjs.com/package/promist)
 [![Build Status](https://travis-ci.org/rafamel/promist.svg)](https://travis-ci.org/rafamel/promist)
 [![Coverage](https://img.shields.io/coveralls/rafamel/promist.svg)](https://coveralls.io/github/rafamel/promist)
 [![Dependencies](https://david-dm.org/rafamel/promist/status.svg)](https://david-dm.org/rafamel/promist)
@@ -36,6 +36,7 @@
     * [`timeout()`](#timeoutms-number-reason-any-function)
   * There are also some [utility functions.](#utils)
     * [`compose()`](#composefns-function-function)
+    * [`control()`](#controlgenerator-function-function)
     * [`isPromise()`](#ispromiseobject-any-boolean)
 * [*Collections*:](#collections) Handled either in *parallel* or *series.*
   * [`map()`](#maparr-promise-callback-function-promise)
@@ -246,6 +247,37 @@ Takes in an unlimited number of *compose* functions as arguments, and returns a 
 import { compose, cancellable, delay, deferrrable } from 'promist';
 
 const p1 = compose(cancellable, delay(500), deferrable)(myPromise);
+```
+
+#### `control(test: function, generator: function): function`
+
+Used to control async flow. It returns a promise returning function taking the same arguments as `generator`.
+
+* `test`: A test *function* (can be `async`) that will be run before calling each `next()` on `generator`, with signature  `() => Promise<boolean | Error> | boolean | Error`. It can return:
+  * `false`: `generator` will not continue execution (it will never resolve).
+  * `true`: `generator` will continue execution until the next `yield`.
+  * `Error`: `generator` call will return a rejected promise. The same behavior can be expected if the error is thrown instead of returned.
+* `generator`: must be a *generator function.* Within it, you'd use `yield` as you would `await` for an `async` function.
+
+```javascript
+import { control } from 'promist';
+
+function* gen(n) {
+  // You can use yield as you'd use await; res = 20
+  let res = yield Promise.resolve(n * 2);
+  // If tasks have been triggered by some event this won't execute
+  res = yield Promise.resolve(res * 5);
+  // res = 100
+  return res;
+}
+
+const willContinue = control(() => true, gen);
+const willNotContinue = control(() => false, gen);
+const willReject = control(() => Error('An error ocurred'), gen);
+
+willContinue(1).then(console.log); // 10
+willNotContinue(2).then(console.log); // Will not resolve
+willReject(3).then(console.log).catch(console.error); // Error: An error occurred
 ```
 
 #### `isPromise(object: any): boolean`
