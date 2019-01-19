@@ -2,30 +2,17 @@
  * @module compose
  */
 
-export interface IPromist<T> extends Promise<T> {
-  cancel: () => void;
-  cancelled: boolean;
-  resolve: (val: any) => void;
-  reject: (val: any) => void;
-  status: string;
-  value: any;
-  reason: any;
-  time: null | number;
-}
+import { IPromist, ICancellable, IDeferrable, IStatus, ITimed } from './core';
 
-export function cancellable<T>(
-  promise: Promise<T> | PromiseLike<T>
-): IPromist<T>;
-export function deferrable<T>(
-  promise: Promise<T> | PromiseLike<T>
-): IPromist<T>;
+export function cancellable<A, T>(promise: IPromist<A, T>): ICancellable & A;
+export function deferrable<A, T>(promise: IPromist<A, T>): IDeferrable & A;
 export function delay(
   ms: number,
   delayRejection?: boolean
-): <T>(promise: Promise<T> | PromiseLike<T>) => IPromist<T>;
-export function status<T>(promise: Promise<T> | PromiseLike<T>): IPromist<T>;
-export function timed<T>(promise: Promise<T> | PromiseLike<T>): IPromist<T>;
+): <A, T>(promise: IPromist<A, T>) => A;
+export function status<A, T>(promise: IPromist<A, T>): IStatus & A;
+export function timed<A, T>(promise: IPromist<A, T>): ITimed & A;
 export function timeout(
   ms: number,
-  reason?: any
-): <T>(promise: Promise<T> | PromiseLike<T>) => IPromist<T>;
+  reason?: boolean | Error
+): <A, T>(promise: IPromist<A, T>) => ICancellable & IDeferrable & A;
