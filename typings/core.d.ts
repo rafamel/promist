@@ -9,8 +9,8 @@ export interface ICancellable {
   cancelled: boolean;
 }
 export interface IDeferrable {
-  resolve: (val: any) => void;
-  reject: (val: any) => void;
+  resolve: (val?: any) => void;
+  reject: (reason: Error) => void;
 }
 export interface IStatus {
   status: 'pending' | 'resolved' | 'rejected';

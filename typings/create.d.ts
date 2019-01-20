@@ -8,7 +8,7 @@ export function deferred(): IDeferrable & Promise<any>;
 export function immediate(): Promise<void>;
 export function lazy(
   executor: (
-    resolve: (val: any) => void,
+    resolve: (val?: any) => void,
     reject: (reason: Error) => void
   ) => void
 ): Promise<any>;
