@@ -36,7 +36,7 @@
     * [`timeout()`](#timeoutms-number-reason-any-function)
   * There are also some [utility functions.](#utils)
     * [`compose()`](#composefns-function-function)
-    * [`control()`](#controlgenerator-function-function)
+    * [`control()`](#controltest-function-generator-function-function)
     * [`isPromise()`](#ispromiseobject-any-boolean)
 * [*Collections*:](#collections) Handled either in *parallel* or *series.*
   * [`map()`](#maparr-promise-callback-function-promise)
