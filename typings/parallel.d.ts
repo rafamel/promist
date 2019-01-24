@@ -24,7 +24,7 @@ declare const parallel: {
   each<T>(
     arr: Array<PromiseLike<T> | Promise<T> | T>,
     fn: (value: T, index: number, arr: T[]) => any
-  ): void;
+  ): Promise<void>;
 };
 
 export default parallel;

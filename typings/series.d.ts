@@ -36,7 +36,7 @@ declare const series: {
       index: number,
       arr: Array<PromiseLike<T> | Promise<T> | T>
     ) => any
-  ): void;
+  ): Promise<void>;
 };
 
 export default series;
