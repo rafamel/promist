@@ -1,12 +1,12 @@
 # Promist
 
 [![Version](https://img.shields.io/npm/v/promist.svg)](https://www.npmjs.com/package/promist)
-[![Build Status](https://travis-ci.org/rafamel/promist.svg)](https://travis-ci.org/rafamel/promist)
+[![Build Status](https://img.shields.io/travis/rafamel/promist.svg)](https://travis-ci.org/rafamel/promist)
 [![Coverage](https://img.shields.io/coveralls/rafamel/promist.svg)](https://coveralls.io/github/rafamel/promist)
-[![Dependencies](https://david-dm.org/rafamel/promist/status.svg)](https://david-dm.org/rafamel/promist)
-[![Vulnerabilities](https://snyk.io/test/npm/promist/badge.svg)](https://snyk.io/test/npm/promist)
-[![Issues](https://img.shields.io/github/issues/rafamel/promist.svg)](https://github.com/rafamel/promist/issues)
+[![Dependencies](https://img.shields.io/david/rafamel/promist.svg)](https://david-dm.org/rafamel/promist)
+[![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/promist.svg)](https://snyk.io/test/npm/promist)
 [![License](https://img.shields.io/github/license/rafamel/promist.svg)](https://github.com/rafamel/promist/blob/master/LICENSE)
+[![Types](https://img.shields.io/npm/types/exits.svg)](https://www.npmjs.com/package/exits)
 
 <!-- markdownlint-disable MD036 -->
 **A dependable Promises and async utility belt.** Not a `Promise` implementation.
@@ -135,7 +135,7 @@ immediate().then(() => console.log('Next event loop')).
 
 *Compose* functions mutate an input promise in order to provide some added functionality:
 
-* They might not work adecuately if you're using non-standard methods for resolution other than `promise.then()`, `promise.catch()`, or `promise.finally()`.
+* They might not work adequately if you're using non-standard methods for resolution other than `promise.then()`, `promise.catch()`, or `promise.finally()`.
 * They can be chained via [`compose()`.](#composefns-function)
 
 #### `deferrable(promise: Promise): Promise`
@@ -144,7 +144,7 @@ immediate().then(() => console.log('Next event loop')).
   * `promise.resolve(value: any)`: Resolves the promise with the given `value`.
   * `promise.reject(reason: any)`: Rejects the promise with the given `reason`.
 
-If the input `promise` resolves or rejects before `promise.resolve()` or `promise.reject()` are called, they won't have any effect. If the opposite ocurrs, the resolution or rejection value of the input promise will be discarded.
+If the input `promise` resolves or rejects before `promise.resolve()` or `promise.reject()` are called, they won't have any effect. If the opposite occurs, the resolution or rejection value of the input promise will be discarded.
 
 ```javascript
 import { wait, deferrable } from 'promist';
@@ -263,11 +263,12 @@ Used to control async flow. It returns a promise returning function taking the s
 import { control } from 'promist';
 
 function* gen(n) {
-  // You can use yield as you'd use await; res = 20
+  // You can use yield as you'd use await
   let res = yield Promise.resolve(n * 2);
-  // If tasks have been triggered by some event this won't execute
+  // test() will be called here,
+  // if it returns falsy or throws an error this next line won't execute
   res = yield Promise.resolve(res * 5);
-  // res = 100
+
   return res;
 }
 

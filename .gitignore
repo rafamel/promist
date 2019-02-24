@@ -1,13 +1,12 @@
 # Project Specific #
 ####################
-/docs
+/lib
+/bin
+/dist
+_test.*
 
 # Node, Frameworks, Editors #
 #############################
-_test.js
-_test.ts
-build
-dist
 .cache
 .env
 .env.local
