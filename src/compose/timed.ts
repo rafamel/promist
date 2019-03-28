@@ -1,9 +1,15 @@
-import intercept from '~/helpers/intercept';
-import mark from '~/helpers/mark';
 import { ITimed } from '~/types';
+import { asNew, intercept, mark } from '~/helpers';
 
-export default function timed<A, T>(promise: A & Promise<T>) {
-  const p: A & ITimed & Promise<T> = promise as any;
+export default timed;
+
+function timed<A, T>(
+  promise: A & Promise<T>,
+  create?: false
+): A & ITimed & Promise<T>;
+function timed<T>(promise: Promise<T>, create: true): ITimed & Promise<T>;
+function timed<A, T>(promise: A & Promise<T>, create?: boolean) {
+  const p: A & ITimed & Promise<T> = asNew(promise, create);
   if (mark.get(p, 'timed')) return p;
   mark.set(p, 'timed');
 

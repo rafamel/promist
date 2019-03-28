@@ -1,14 +1,23 @@
-import intercept from '~/helpers/intercept';
-import mark from '~/helpers/mark';
+import { asNew, intercept, mark } from '~/helpers';
 import deferred from '~/create/deferred';
 import { IDeferrable } from '~/types';
 
-export default function defer<A, T>(promise: A & Promise<T>) {
-  const p: A & IDeferrable & Promise<T> = promise as any;
+export default deferrable;
+
+function deferrable<A, T>(
+  promise: A & Promise<T>,
+  create?: false
+): A & IDeferrable & Promise<T>;
+function deferrable<T>(
+  promise: Promise<T>,
+  create: true
+): IDeferrable & Promise<T>;
+function deferrable<A, T>(promise: A & Promise<T>, create?: boolean) {
+  const p: A & IDeferrable & Promise<T> = asNew(promise, create);
 
   if (mark.get(p, 'deferrable')) return p;
 
-  mark.set(promise, 'deferrable');
+  mark.set(p, 'deferrable');
   const px = deferred();
 
   p.resolve = px.resolve;

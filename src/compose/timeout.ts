@@ -1,11 +1,20 @@
-import intercept from '~/helpers/intercept';
 import cancellable from './cancellable';
 import deferrable from './deferrable';
+import { ICancellable, IDeferrable } from '~/types';
+import { asNew, intercept } from '~/helpers';
 
 export default function timeout(ms: number, reason?: boolean | Error) {
-  return <A, T>(promise: A & Promise<T>) => {
+  function trunk<A, T>(
+    promise: A & Promise<T>,
+    create?: false
+  ): A & ICancellable & IDeferrable & Promise<T>;
+  function trunk<T>(
+    promise: Promise<T>,
+    create: true
+  ): ICancellable & IDeferrable & Promise<T>;
+  function trunk<A, T>(promise: A & Promise<T>, create?: boolean) {
     const shouldCancel = reason === undefined || reason === false;
-    const p = cancellable(deferrable(promise));
+    const p = cancellable(deferrable(asNew(promise, create)));
 
     let done = false;
     let timeout: any;
@@ -16,7 +25,7 @@ export default function timeout(ms: number, reason?: boolean | Error) {
       p.reject(Error('Promise timed out'));
     });
 
-    return intercept(promise, (px) => {
+    return intercept(p, (px) => {
       return px
         .then((val) => {
           done = true;
@@ -29,5 +38,7 @@ export default function timeout(ms: number, reason?: boolean | Error) {
           return Promise.reject(err);
         });
     });
-  };
+  }
+
+  return trunk;
 }

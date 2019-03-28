@@ -1,9 +1,18 @@
-import intercept from '~/helpers/intercept';
-import mark from '~/helpers/mark';
+import { asNew, intercept, mark } from '~/helpers';
 import { ICancellable } from '~/types';
 
-export default function cancellable<A, T>(promise: A & Promise<T>) {
-  const p: A & ICancellable & Promise<T> = promise as any;
+export default cancellable;
+
+function cancellable<A, T>(
+  promise: A & Promise<T>,
+  create?: false
+): A & ICancellable & Promise<T>;
+function cancellable<T>(
+  promise: Promise<T>,
+  create: true
+): ICancellable & Promise<T>;
+function cancellable<A, T>(promise: A & Promise<T>, create?: boolean) {
+  const p: A & ICancellable & Promise<T> = asNew(promise, create);
 
   if (mark.get(p, 'cancellable')) return p;
   mark.set(p, 'cancellable');

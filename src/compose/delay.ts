@@ -1,5 +1,5 @@
-import intercept from '~/helpers/intercept';
 import wait from '~/create/wait';
+import { asNew, intercept } from '~/helpers';
 
 export default function delay(ms: number, delayRejection: boolean = false) {
   const init = Date.now();
@@ -10,8 +10,13 @@ export default function delay(ms: number, delayRejection: boolean = false) {
     return wait(remaining);
   };
 
-  return <A, T>(promise: A & Promise<T>): A & Promise<T> => {
-    return intercept(promise, (px) => {
+  function trunk<A, T>(promise: A & Promise<T>, create?: false): A & Promise<T>;
+  function trunk<T>(promise: Promise<T>, create: true): Promise<T>;
+  function trunk<A, T>(
+    promise: A & Promise<T>,
+    create?: boolean
+  ): A & Promise<T> {
+    return intercept(asNew(promise, create), (px) => {
       return px
         .then((val) => delayer().then(() => val))
         .catch((err) => {
@@ -20,5 +25,7 @@ export default function delay(ms: number, delayRejection: boolean = false) {
             : Promise.reject(err);
         });
     });
-  };
+  }
+
+  return trunk;
 }
