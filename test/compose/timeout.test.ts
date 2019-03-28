@@ -1,5 +1,21 @@
+import mark from '~/helpers/mark';
 import timeout from '~/compose/timeout';
 
+test(`returns new/mutated promise`, async () => {
+  expect.assertions(8);
+  const p = Promise.resolve('foo');
+  const m = timeout(100)(p);
+  const n = timeout(100)(p, true);
+
+  expect(m).toBe(p);
+  expect(n).not.toBe(p);
+  await expect(m).resolves.toBe('foo');
+  await expect(n).resolves.toBe('foo');
+  expect(mark.get(m, 'cancellable')).toBe(true);
+  expect(mark.get(n, 'cancellable')).toBe(true);
+  expect(mark.get(m, 'deferrable')).toBe(true);
+  expect(mark.get(n, 'deferrable')).toBe(true);
+});
 test(`cancels on timeout wo/ reason`, async () => {
   expect.assertions(1);
   const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));

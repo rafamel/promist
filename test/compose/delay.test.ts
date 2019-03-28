@@ -1,13 +1,21 @@
 import delay from '~/compose/delay';
 
-test(`delays when it's resolved`, async () => {
-  expect.assertions(3);
-
-  const init = Date.now();
+test(`delays when it's resolved; returns new/mutated promise`, async () => {
+  expect.assertions(8);
+  let init = Date.now();
   const p = Promise.resolve(10);
-  delay(200)(p);
+  const m = delay(200)(p);
 
-  await expect(p).resolves.toBe(10);
+  expect(m).toBe(p);
+  await expect(m).resolves.toBe(10);
+  expect(Date.now() - init).toBeGreaterThanOrEqual(200);
+  expect(Date.now() - init).toBeLessThan(400);
+
+  init = Date.now();
+  const n = delay(200)(p, true);
+
+  expect(n).not.toBe(p);
+  await expect(n).resolves.toBe(10);
   expect(Date.now() - init).toBeGreaterThanOrEqual(200);
   expect(Date.now() - init).toBeLessThan(400);
 });

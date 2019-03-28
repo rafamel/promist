@@ -2,11 +2,18 @@ import mark from '~/helpers/mark';
 import deferrable from '~/compose/deferrable';
 import { IDeferrable } from '~/types';
 
-test(`should be marked as deferrable`, () => {
-  const p = Promise.resolve();
-  deferrable(p);
+test(`returns new/mutated deferrable promise`, async () => {
+  expect.assertions(6);
+  const p = Promise.resolve('foo');
 
-  expect(mark.get(p, 'deferrable')).toBe(true);
+  const m = deferrable(p);
+  const n = deferrable(p, true);
+  expect(m).toBe(p);
+  expect(n).not.toBe(p);
+  expect(mark.get(m, 'deferrable')).toBe(true);
+  expect(mark.get(n, 'deferrable')).toBe(true);
+  await expect(m).resolves.toBe('foo');
+  await expect(n).resolves.toBe('foo');
 });
 test(`Should have resolve/reject`, () => {
   expect.assertions(2);

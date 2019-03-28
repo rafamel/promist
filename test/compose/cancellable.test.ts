@@ -2,11 +2,19 @@ import mark from '~/helpers/mark';
 import cancellable from '~/compose/cancellable';
 import { ICancellable } from '~/types';
 
-test(`should be marked as cancellable`, () => {
-  const p = Promise.resolve();
-  cancellable(p);
+test(`returns new/mutated cancellable promise`, async () => {
+  expect.assertions(6);
+  const p = Promise.resolve('foo');
 
-  expect(mark.get(p, 'cancellable')).toBe(true);
+  const m = cancellable(p);
+  const n = cancellable(p, true);
+
+  expect(m).toBe(p);
+  expect(n).not.toBe(p);
+  await expect(m).resolves.toBe('foo');
+  await expect(n).resolves.toBe('foo');
+  expect(mark.get(m, 'cancellable')).toBe(true);
+  expect(mark.get(n, 'cancellable')).toBe(true);
 });
 test(`should have cancel/cancelled`, async () => {
   expect.assertions(2);

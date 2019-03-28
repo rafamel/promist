@@ -2,11 +2,18 @@ import timed from '~/compose/timed';
 import mark from '~/helpers/mark';
 import { ITimed } from '~/types';
 
-test(`is marked as timed`, () => {
-  const p: ITimed & Promise<any> = Promise.resolve() as any;
-  timed(p);
+test(`returns new/mutated timed promise`, async () => {
+  expect.assertions(6);
+  const p = Promise.resolve('foo');
 
-  expect(mark.get(p, 'timed')).toBe(true);
+  const m = timed(p);
+  const n = timed(p, true);
+  expect(m).toBe(p);
+  expect(n).not.toBe(p);
+  expect(mark.get(m, 'timed')).toBe(true);
+  expect(mark.get(n, 'timed')).toBe(true);
+  await expect(m).resolves.toBe('foo');
+  await expect(n).resolves.toBe('foo');
 });
 test(`has promise.time`, () => {
   const p: ITimed & Promise<any> = Promise.resolve() as any;
