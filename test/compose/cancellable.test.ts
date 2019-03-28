@@ -3,7 +3,6 @@ import cancellable from '~/compose/cancellable';
 import { ICancellable } from '~/types';
 
 test(`returns new/mutated cancellable promise`, async () => {
-  expect.assertions(6);
   const p = Promise.resolve('foo');
 
   const m = cancellable(p);
@@ -17,7 +16,6 @@ test(`returns new/mutated cancellable promise`, async () => {
   expect(mark.get(n, 'cancellable')).toBe(true);
 });
 test(`should have cancel/cancelled`, async () => {
-  expect.assertions(2);
   const p: ICancellable & Promise<any> = Promise.resolve() as any;
   cancellable(p);
 
@@ -25,7 +23,6 @@ test(`should have cancel/cancelled`, async () => {
   expect(p.cancelled).toBe(false);
 });
 test(`should resolve`, async () => {
-  expect.assertions(2);
   const p: ICancellable & Promise<any> = new Promise((resolve) =>
     setTimeout(() => resolve(10), 250)
   ) as any;
@@ -35,7 +32,6 @@ test(`should resolve`, async () => {
   expect(p.cancelled).toBe(false);
 });
 test(`should reject`, async () => {
-  expect.assertions(2);
   const p: ICancellable & Promise<any> = new Promise((resolve, reject) =>
     // eslint-disable-next-line prefer-promise-reject-errors
     setTimeout(() => reject(10), 250)
@@ -46,7 +42,6 @@ test(`should reject`, async () => {
   expect(p.cancelled).toBe(false);
 });
 test(`should cancel`, async () => {
-  expect.assertions(2);
   const p: ICancellable & Promise<any> = new Promise((resolve) =>
     setTimeout(() => resolve(10), 250)
   ) as any;
@@ -60,7 +55,6 @@ test(`should cancel`, async () => {
   expect(p.cancelled).toBe(true);
 });
 test(`should cancel (2)`, async () => {
-  expect.assertions(2);
   const p: ICancellable & Promise<any> = new Promise((resolve, reject) =>
     // eslint-disable-next-line prefer-promise-reject-errors
     setTimeout(() => reject(10), 250)
@@ -75,7 +69,6 @@ test(`should cancel (2)`, async () => {
   expect(p.cancelled).toBe(true);
 });
 test(`should fail silently`, async () => {
-  expect.assertions(3);
   const p: ICancellable & Promise<any> = Promise.resolve(10) as any;
   cancellable(p);
   await p;

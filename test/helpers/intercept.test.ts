@@ -2,8 +2,6 @@ import intercept from '~/helpers/intercept';
 
 describe(`then`, () => {
   test(`Intercepts then`, async () => {
-    expect.assertions(1);
-
     const p = Promise.resolve(10);
     intercept(p, (p) => p.then((x) => x * 2));
 
@@ -11,8 +9,6 @@ describe(`then`, () => {
   });
 
   test(`Intercepts for inner async fns`, async () => {
-    expect.assertions(1);
-
     const p = Promise.resolve(10);
     intercept(p, (p) => p.then(async (x) => x * 2));
 
@@ -22,8 +18,6 @@ describe(`then`, () => {
 
 describe(`catch`, () => {
   test(`Intercepts catch`, async () => {
-    expect.assertions(1);
-
     // eslint-disable-next-line prefer-promise-reject-errors
     const p = Promise.reject(10);
     intercept(p, (p: Promise<any>) => {
@@ -34,8 +28,6 @@ describe(`catch`, () => {
     await expect(p).rejects.toBe(30);
   });
   test(`Intercepts for inner async fns`, async () => {
-    expect.assertions(1);
-
     // eslint-disable-next-line prefer-promise-reject-errors
     const p = Promise.reject(10);
     intercept(p, (p: Promise<any>) => {
@@ -49,16 +41,12 @@ describe(`catch`, () => {
 
 describe(`general`, () => {
   test(`Returns p`, () => {
-    expect.assertions(1);
-
     const p = Promise.resolve(10);
     const p2 = intercept(p, (p) => p.then((x) => x * 2));
 
     expect(p2).toBe(p);
   });
   test(`Allows for several interceptions & executes in order`, async () => {
-    expect.assertions(1);
-
     const p = Promise.resolve(10);
     intercept(p, (p) => p.then(async (x) => x / 2));
     intercept(p, (p) => p.then((x) => x / 5));
@@ -68,8 +56,6 @@ describe(`general`, () => {
     await expect(p).resolves.toBe(2);
   });
   test(`only executes the whole flow once`, async () => {
-    expect.assertions(2);
-
     const p = Promise.resolve(10);
     let count = 0;
     intercept(p, (p) =>
@@ -85,8 +71,6 @@ describe(`general`, () => {
     expect(count).toBe(1);
   });
   test(`executes the whole flow again when an intercept is added`, async () => {
-    expect.assertions(2);
-
     const p = Promise.resolve(10);
     let count = 0;
     intercept(p, (p) =>

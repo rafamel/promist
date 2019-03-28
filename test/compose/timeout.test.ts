@@ -2,7 +2,6 @@ import mark from '~/helpers/mark';
 import timeout from '~/compose/timeout';
 
 test(`returns new/mutated promise`, async () => {
-  expect.assertions(8);
   const p = Promise.resolve('foo');
   const m = timeout(100)(p);
   const n = timeout(100)(p, true);
@@ -17,7 +16,6 @@ test(`returns new/mutated promise`, async () => {
   expect(mark.get(n, 'deferrable')).toBe(true);
 });
 test(`cancels on timeout wo/ reason`, async () => {
-  expect.assertions(1);
   const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
   timeout(100)(p);
 
@@ -29,7 +27,6 @@ test(`cancels on timeout wo/ reason`, async () => {
 });
 
 test(`cancels on timeout w/ reason "false"`, async () => {
-  expect.assertions(1);
   const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
   timeout(100, false)(p);
 
@@ -41,7 +38,6 @@ test(`cancels on timeout w/ reason "false"`, async () => {
 });
 
 test(`rejects on timeout w/ reason`, async () => {
-  expect.assertions(1);
   const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
   // @ts-ignore
   timeout(100, 20)(p);
@@ -50,7 +46,6 @@ test(`rejects on timeout w/ reason`, async () => {
 });
 
 test(`rejects on timeout w/ reason for falsy value`, async () => {
-  expect.assertions(1);
   const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
   // @ts-ignore
   timeout(100, 0)(p);
@@ -59,7 +54,6 @@ test(`rejects on timeout w/ reason for falsy value`, async () => {
 });
 
 test(`rejects on timeout w/ reason as boolean`, async () => {
-  expect.assertions(1);
   const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
   timeout(100, true)(p);
 
@@ -67,7 +61,6 @@ test(`rejects on timeout w/ reason as boolean`, async () => {
 });
 
 test(`resolves before timeout`, async () => {
-  expect.assertions(1);
   const p = new Promise((resolve) => setTimeout(() => resolve(10), 100));
   // @ts-ignore
   timeout(200, 20)(p);
@@ -76,7 +69,6 @@ test(`resolves before timeout`, async () => {
 });
 
 test(`rejects before timeout`, async () => {
-  expect.assertions(1);
   // eslint-disable-next-line prefer-promise-reject-errors
   const p = new Promise((resolve, reject) => setTimeout(() => reject(10), 100));
   // @ts-ignore

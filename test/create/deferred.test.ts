@@ -7,8 +7,6 @@ test(`Is marked as deferrable`, () => {
 });
 
 test(`Resolves`, async () => {
-  expect.assertions(3);
-
   const p = deferred();
 
   expect(p).toHaveProperty('resolve');
@@ -18,8 +16,6 @@ test(`Resolves`, async () => {
 });
 
 test(`Calling resolve() twice doesn't change first resolution`, async () => {
-  expect.assertions(2);
-
   const p = deferred();
 
   p.resolve(100);
@@ -29,8 +25,6 @@ test(`Calling resolve() twice doesn't change first resolution`, async () => {
 });
 
 test(`Rejects`, async () => {
-  expect.assertions(3);
-
   const p = deferred();
 
   expect(p).toHaveProperty('reject');
@@ -41,8 +35,6 @@ test(`Rejects`, async () => {
 });
 
 test(`Calling reject() twice doesn't change first rejection`, async () => {
-  expect.assertions(2);
-
   const p = deferred();
 
   // @ts-ignore

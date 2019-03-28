@@ -17,21 +17,15 @@ test(`Executor is not run until catch is called`, () => {
   expect(run).toBe(true);
 });
 test(`Resolves`, async () => {
-  expect.assertions(1);
-
   const p = lazy((resolve) => resolve(1));
   await expect(p).resolves.toBe(1);
 });
 test(`Rejects`, async () => {
-  expect.assertions(1);
-
   // @ts-ignore
   const p = lazy((_, reject) => reject(1));
   await expect(p).rejects.toBe(1);
 });
 test(`Executor doesn't run twice`, async () => {
-  expect.assertions(5);
-
   let run = 0;
   const p = lazy((resolve) => {
     run++;

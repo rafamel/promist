@@ -3,7 +3,6 @@ import deferrable from '~/compose/deferrable';
 import { IDeferrable } from '~/types';
 
 test(`returns new/mutated deferrable promise`, async () => {
-  expect.assertions(6);
   const p = Promise.resolve('foo');
 
   const m = deferrable(p);
@@ -16,7 +15,6 @@ test(`returns new/mutated deferrable promise`, async () => {
   await expect(n).resolves.toBe('foo');
 });
 test(`Should have resolve/reject`, () => {
-  expect.assertions(2);
   const p: IDeferrable & Promise<any> = Promise.resolve() as any;
   deferrable(p);
 
@@ -24,7 +22,6 @@ test(`Should have resolve/reject`, () => {
   expect(typeof p.reject).toBe('function');
 });
 test(`Should resolve w/ origin promise`, async () => {
-  expect.assertions(1);
   const p: IDeferrable & Promise<any> = new Promise((resolve) =>
     setTimeout(() => resolve(10), 250)
   ) as any;
@@ -34,7 +31,6 @@ test(`Should resolve w/ origin promise`, async () => {
   await expect(p).resolves.toBe(10);
 });
 test(`Should reject w/ origin promise`, async () => {
-  expect.assertions(1);
   const p: IDeferrable & Promise<any> = new Promise((resolve, reject) =>
     // eslint-disable-next-line prefer-promise-reject-errors
     setTimeout(() => reject(10), 250)
@@ -46,7 +42,6 @@ test(`Should reject w/ origin promise`, async () => {
   await expect(p).rejects.toBe(10);
 });
 test(`Should resolve with promise.resolve()`, async () => {
-  expect.assertions(1);
   const p: IDeferrable & Promise<any> = new Promise((resolve) =>
     setTimeout(() => resolve(10), 250)
   ) as any;
@@ -56,7 +51,6 @@ test(`Should resolve with promise.resolve()`, async () => {
   await expect(p).resolves.toBe(20);
 });
 test(`Should reject with promise.reject()`, async () => {
-  expect.assertions(1);
   const p: IDeferrable & Promise<any> = new Promise((resolve) =>
     setTimeout(() => resolve(10), 250)
   ) as any;

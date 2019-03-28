@@ -1,7 +1,6 @@
 import waitUntil from '~/create/wait-until';
 
 test(`waits until truthy & resolves on value`, async () => {
-  expect.assertions(3);
   const init = Date.now();
   let res = false;
   const p = waitUntil(() => res);
@@ -14,8 +13,6 @@ test(`waits until truthy & resolves on value`, async () => {
 });
 
 test(`waits takes into account ms`, async () => {
-  expect.assertions(3);
-
   let res = false;
   const init = Date.now();
   const p1 = waitUntil(() => res, 20);

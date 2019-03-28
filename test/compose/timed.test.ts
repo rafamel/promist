@@ -3,7 +3,6 @@ import mark from '~/helpers/mark';
 import { ITimed } from '~/types';
 
 test(`returns new/mutated timed promise`, async () => {
-  expect.assertions(6);
   const p = Promise.resolve('foo');
 
   const m = timed(p);
@@ -22,8 +21,6 @@ test(`has promise.time`, () => {
   expect(p.time).toBe(null);
 });
 test(`Has promise.time in ms once resolved`, async () => {
-  expect.assertions(3);
-
   const p: ITimed & Promise<any> = Promise.resolve(10) as any;
   timed(p);
 
@@ -32,8 +29,6 @@ test(`Has promise.time in ms once resolved`, async () => {
   expect(p.time).toBeLessThan(50);
 });
 test(`Has promise.time in ms once rejected`, async () => {
-  expect.assertions(3);
-
   // eslint-disable-next-line prefer-promise-reject-errors
   const p: ITimed & Promise<any> = Promise.reject(10) as any;
   timed(p);
@@ -43,8 +38,6 @@ test(`Has promise.time in ms once rejected`, async () => {
   expect(p.time).toBeLessThan(50);
 });
 test(`Doesn't get timed again if already present`, async () => {
-  expect.assertions(1);
-
   const p: ITimed & Promise<any> = Promise.resolve(10) as any;
   timed(p);
   await p;

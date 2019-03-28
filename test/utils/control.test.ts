@@ -1,8 +1,6 @@
 import control from '~/utils/control';
 
 test(`Succeeds with test => true`, async () => {
-  expect.assertions(2);
-
   function* gen() {
     return 1;
   }
@@ -13,7 +11,6 @@ test(`Succeeds with test => true`, async () => {
   await expect(fnp()).resolves.toBe(1);
 });
 test(`Doesn't resolve with test => false`, async () => {
-  expect.assertions(1);
   function* gen() {
     return 1;
   }
@@ -28,7 +25,6 @@ test(`Doesn't resolve with test => false`, async () => {
   expect(res).toEqual([false, false]);
 });
 test(`Rejects with test => Error`, async () => {
-  expect.assertions(2);
   function* gen() {
     return 1;
   }
@@ -39,8 +35,6 @@ test(`Rejects with test => Error`, async () => {
   await expect(fnp()).rejects.toThrowError();
 });
 test(`Rejects with test throwing Error`, async () => {
-  expect.assertions(2);
-
   function* gen() {
     return 1;
   }
@@ -53,8 +47,6 @@ test(`Rejects with test throwing Error`, async () => {
   await expect(fnp()).rejects.toThrowError();
 });
 test(`Rejects with generator throwing Error`, async () => {
-  expect.assertions(1);
-
   const fn = control(() => true, function*(): IterableIterator<any> {
     throw Error();
   });
@@ -62,8 +54,6 @@ test(`Rejects with generator throwing Error`, async () => {
   await expect(fn()).rejects.toThrowError();
 });
 test(`Yields and succeeds with test => true`, async () => {
-  expect.assertions(2);
-
   function* gen(n = 10) {
     n = yield Promise.resolve(n);
     n = n * (yield Promise.resolve(10));
@@ -78,8 +68,6 @@ test(`Yields and succeeds with test => true`, async () => {
   await expect(fnp()).resolves.toBe(10000);
 });
 test(`Test is called as many times as yields are + 1`, async () => {
-  expect.assertions(1);
-
   let count = 0;
   const fn = control(
     () => {
@@ -99,8 +87,6 @@ test(`Test is called as many times as yields are + 1`, async () => {
   expect(count).toBe(4);
 });
 test(`Stops yielding on test => false`, async () => {
-  expect.assertions(2);
-
   let res = true;
   const done = [false, false, false, false, false];
   setTimeout(() => (res = false), 500);
@@ -124,8 +110,6 @@ test(`Stops yielding on test => false`, async () => {
   expect(done).toEqual([true, true, true, true, false]);
 });
 test(`Passes arguments to generator`, async () => {
-  expect.assertions(1);
-
   const fn = control(() => true, function*(a, b, c, d) {
     return [a, b, c, d];
   });

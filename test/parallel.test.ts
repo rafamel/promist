@@ -12,14 +12,10 @@ const createDelayedArr = (n = 50, ms = 1) => {
 
 describe(`map`, () => {
   test(`maps`, async () => {
-    expect.assertions(1);
-
     const p = parallel.map(createArr(), (x) => x + 1);
     await expect(p).resolves.toEqual([2, 3, 4, 5]);
   });
   test(`maps for async inner fn`, async () => {
-    expect.assertions(1);
-
     const p = parallel.map(createArr(), async (x) => x + 1);
     await expect(p).resolves.toEqual([2, 3, 4, 5]);
   });
@@ -35,8 +31,6 @@ describe(`map`, () => {
     await expect(p).resolves.toEqual([1, 2, 3, 4]);
   });
   test(`runs in parallel`, async () => {
-    expect.assertions(2);
-
     const arr = createDelayedArr();
     const init = Date.now();
     const p = parallel.map(arr, async (x) => x + 1);
@@ -47,14 +41,10 @@ describe(`map`, () => {
 
 describe(`filter`, () => {
   test(`filters`, async () => {
-    expect.assertions(1);
-
     const p = parallel.filter(createArr(), (x) => x % 2 === 0);
     await expect(p).resolves.toEqual([2, 4]);
   });
   test(`filters for async inner fn`, async () => {
-    expect.assertions(1);
-
     const p = parallel.filter(createArr(), async (x) => x % 2 === 0);
     await expect(p).resolves.toEqual([2, 4]);
   });
@@ -70,8 +60,6 @@ describe(`filter`, () => {
     await expect(p).resolves.toEqual([2, 4]);
   });
   test(`runs in parallel`, async () => {
-    expect.assertions(2);
-
     const arr = createDelayedArr();
     const init = Date.now();
     const p = parallel.filter(arr, async (x) => x % 2 === 0);
@@ -84,8 +72,6 @@ describe(`filter`, () => {
 
 describe(`reduce`, () => {
   test(`reduces`, async () => {
-    expect.assertions(1);
-
     const p = parallel.reduce(createArr(), async (acc, x) => (await acc) + x);
     await expect(p).resolves.toEqual(10);
   });
@@ -100,8 +86,6 @@ describe(`reduce`, () => {
     await expect(p).resolves.toEqual(14);
   });
   test(`reduces w/ initialValue as Promise`, async () => {
-    expect.assertions(1);
-
     const p = parallel.reduce(
       createArr(),
       async (acc, x) => (await acc) + x,
@@ -110,8 +94,6 @@ describe(`reduce`, () => {
     await expect(p).resolves.toEqual(14);
   });
   test(`reduces for async inner fn`, async () => {
-    expect.assertions(1);
-
     const p = parallel.reduce(createArr(), async (acc, x) => (await acc) + x);
     await expect(p).resolves.toEqual(10);
   });
@@ -138,8 +120,6 @@ describe(`reduce`, () => {
     await expect(p).resolves.toEqual(10);
   });
   test(`runs in parallel`, async () => {
-    expect.assertions(2);
-
     const arr = createDelayedArr();
     const init = Date.now();
     const p = parallel.reduce(arr, async (acc, x) => (await acc) + x);
@@ -152,8 +132,6 @@ describe(`reduce`, () => {
 
 describe(`each`, () => {
   test(`runs for each`, async () => {
-    expect.assertions(2);
-
     const resArr: any[] = [];
     const p = parallel.each(createArr(), (x) => {
       resArr.push(x);
@@ -194,8 +172,6 @@ describe(`each`, () => {
     expect(resArr).toEqual([1, 2, 3, 4]);
   });
   test(`runs in parallel`, async () => {
-    expect.assertions(1);
-
     const arr = createDelayedArr();
     const init = Date.now();
     const p = parallel.each(arr, async () => {});

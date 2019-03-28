@@ -1,7 +1,6 @@
 import delay from '~/compose/delay';
 
 test(`delays when it's resolved; returns new/mutated promise`, async () => {
-  expect.assertions(8);
   let init = Date.now();
   const p = Promise.resolve(10);
   const m = delay(200)(p);
@@ -21,8 +20,6 @@ test(`delays when it's resolved; returns new/mutated promise`, async () => {
 });
 
 test(`doesn't delay further when it's not resolved`, async () => {
-  expect.assertions(3);
-
   let init = Date.now();
   const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
   delay(200)(p);
@@ -33,8 +30,6 @@ test(`doesn't delay further when it's not resolved`, async () => {
 });
 
 test(`doesn't delay rejections`, async () => {
-  expect.assertions(2);
-
   const init = Date.now();
   // eslint-disable-next-line prefer-promise-reject-errors
   const p = Promise.reject(10);
@@ -45,8 +40,6 @@ test(`doesn't delay rejections`, async () => {
 });
 
 test(`delays rejections`, async () => {
-  expect.assertions(3);
-
   const init = Date.now();
   // eslint-disable-next-line prefer-promise-reject-errors
   const p = Promise.reject(10);

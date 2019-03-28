@@ -12,14 +12,10 @@ const createDelayedArr = (n = 50, ms = 1) => {
 
 describe(`map`, () => {
   test(`maps`, async () => {
-    expect.assertions(1);
-
     const p = series.map(createArr(), (x) => x + 1);
     await expect(p).resolves.toEqual([2, 3, 4, 5]);
   });
   test(`maps for async inner fn`, async () => {
-    expect.assertions(1);
-
     const p = series.map(createArr(), async (x) => x + 1);
     await expect(p).resolves.toEqual([2, 3, 4, 5]);
   });
@@ -35,8 +31,6 @@ describe(`map`, () => {
     await expect(p).resolves.toEqual([1, 2, 3, 4]);
   });
   test(`runs in series`, async () => {
-    expect.assertions(2);
-
     const arr = createDelayedArr();
     const init = Date.now();
     const p = series.map(arr, async (x) => x + 1);
@@ -47,14 +41,10 @@ describe(`map`, () => {
 
 describe(`filter`, () => {
   test(`filters`, async () => {
-    expect.assertions(1);
-
     const p = series.filter(createArr(), (x) => x % 2 === 0);
     await expect(p).resolves.toEqual([2, 4]);
   });
   test(`filters for async inner fn`, async () => {
-    expect.assertions(1);
-
     const p = series.filter(createArr(), async (x) => x % 2 === 0);
     await expect(p).resolves.toEqual([2, 4]);
   });
@@ -70,8 +60,6 @@ describe(`filter`, () => {
     await expect(p).resolves.toEqual([2, 4]);
   });
   test(`runs in series`, async () => {
-    expect.assertions(2);
-
     const arr = createDelayedArr();
     const init = Date.now();
     const p = series.filter(arr, async (x) => x % 2 === 0);
@@ -84,20 +72,14 @@ describe(`filter`, () => {
 
 describe(`reduce`, () => {
   test(`reduces`, async () => {
-    expect.assertions(1);
-
     const p = series.reduce(createArr(), (acc, x) => acc + x);
     await expect(p).resolves.toEqual(10);
   });
   test(`reduces w/ initialValue`, async () => {
-    expect.assertions(1);
-
     const p = series.reduce(createArr(), (acc, x) => acc + x, 4);
     await expect(p).resolves.toEqual(14);
   });
   test(`reduces w/ initialValue as Promise`, async () => {
-    expect.assertions(1);
-
     const p = series.reduce(
       createArr(),
       (acc, x) => acc + x,
@@ -106,8 +88,6 @@ describe(`reduce`, () => {
     await expect(p).resolves.toEqual(14);
   });
   test(`reduces for async inner fn`, async () => {
-    expect.assertions(1);
-
     const p = series.reduce(createArr(), async (acc, x) => x + acc);
     await expect(p).resolves.toEqual(10);
   });
@@ -133,8 +113,6 @@ describe(`reduce`, () => {
     await expect(p).resolves.toEqual(10);
   });
   test(`runs in series`, async () => {
-    expect.assertions(2);
-
     const arr = createDelayedArr();
     const init = Date.now();
     const p = series.reduce(arr, async (acc, x) => acc + x);
@@ -147,8 +125,6 @@ describe(`reduce`, () => {
 
 describe(`each`, () => {
   test(`runs for each`, async () => {
-    expect.assertions(2);
-
     const resArr: any[] = [];
     const p = series.each(createArr(), (x) => {
       resArr.push(x);
@@ -189,8 +165,6 @@ describe(`each`, () => {
     expect(resArr).toEqual([1, 2, 3, 4]);
   });
   test(`runs in series`, async () => {
-    expect.assertions(1);
-
     const arr = createDelayedArr();
     const init = Date.now();
     const p = series.each(arr, async () => {});

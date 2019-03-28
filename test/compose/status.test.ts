@@ -3,7 +3,6 @@ import mark from '~/helpers/mark';
 import { IStatus } from '~/types';
 
 test(`returns new/mutated status promise`, async () => {
-  expect.assertions(6);
   const p = Promise.resolve('foo');
 
   const m = status(p);
@@ -24,7 +23,6 @@ test(`initializes correctly`, () => {
   expect(p.reason).toBe(null);
 });
 test(`sets status on resolve`, async () => {
-  expect.assertions(4);
   const p: IStatus & Promise<any> = Promise.resolve(10) as any;
   status(p);
 
@@ -34,7 +32,6 @@ test(`sets status on resolve`, async () => {
   expect(p.reason).toBe(null);
 });
 test(`sets status on reject`, async () => {
-  expect.assertions(4);
   // eslint-disable-next-line prefer-promise-reject-errors
   const p: IStatus & Promise<any> = Promise.reject(10) as any;
   status(p);
@@ -45,8 +42,6 @@ test(`sets status on reject`, async () => {
   expect(p.reason).toBe(10);
 });
 test(`doesn't run again`, async () => {
-  expect.assertions(3);
-
   const p: IStatus & Promise<any> = Promise.resolve(10) as any;
   status(p);
   await p;
