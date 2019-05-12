@@ -1,7 +1,7 @@
-export default function isPromise(obj: any): boolean {
+export default function isPromise(value: any): value is Promise<any> {
   return Boolean(
-    obj &&
-      (typeof obj === 'object' || typeof obj === 'function') &&
-      typeof obj.then === 'function'
+    value &&
+      (typeof value === 'object' || typeof value === 'function') &&
+      typeof value.then === 'function'
   );
 }
