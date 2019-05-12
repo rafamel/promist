@@ -7,7 +7,7 @@ function status<A, T>(
   promise: A & Promise<T>,
   create?: false
 ): A & IStatus & Promise<T>;
-function status<T>(promise: Promise<T>, create: true): IStatus & Promise<T>;
+function status<T>(promise: Promise<T>, create?: boolean): IStatus & Promise<T>;
 function status<A, T>(promise: A & Promise<T>, create?: boolean) {
   const p: A & IStatus & Promise<T> = asNew(promise, create);
   if (mark.get(p, 'status')) return p;

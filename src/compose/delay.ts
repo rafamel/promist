@@ -11,7 +11,7 @@ export default function delay(ms: number, delayRejection: boolean = false) {
   };
 
   function trunk<A, T>(promise: A & Promise<T>, create?: false): A & Promise<T>;
-  function trunk<T>(promise: Promise<T>, create: true): Promise<T>;
+  function trunk<T>(promise: Promise<T>, create?: boolean): Promise<T>;
   function trunk<A, T>(
     promise: A & Promise<T>,
     create?: boolean

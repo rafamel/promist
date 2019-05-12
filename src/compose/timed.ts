@@ -7,7 +7,7 @@ function timed<A, T>(
   promise: A & Promise<T>,
   create?: false
 ): A & ITimed & Promise<T>;
-function timed<T>(promise: Promise<T>, create: true): ITimed & Promise<T>;
+function timed<T>(promise: Promise<T>, create?: boolean): ITimed & Promise<T>;
 function timed<A, T>(promise: A & Promise<T>, create?: boolean) {
   const p: A & ITimed & Promise<T> = asNew(promise, create);
   if (mark.get(p, 'timed')) return p;

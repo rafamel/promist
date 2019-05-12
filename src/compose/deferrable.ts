@@ -10,7 +10,7 @@ function deferrable<A, T>(
 ): A & IDeferrable & Promise<T>;
 function deferrable<T>(
   promise: Promise<T>,
-  create: true
+  create?: boolean
 ): IDeferrable & Promise<T>;
 function deferrable<A, T>(promise: A & Promise<T>, create?: boolean) {
   const p: A & IDeferrable & Promise<T> = asNew(promise, create);

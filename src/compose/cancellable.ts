@@ -9,7 +9,7 @@ function cancellable<A, T>(
 ): A & ICancellable & Promise<T>;
 function cancellable<T>(
   promise: Promise<T>,
-  create: true
+  create?: boolean
 ): ICancellable & Promise<T>;
 function cancellable<A, T>(promise: A & Promise<T>, create?: boolean) {
   const p: A & ICancellable & Promise<T> = asNew(promise, create);

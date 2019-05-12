@@ -10,7 +10,7 @@ export default function timeout(ms: number, reason?: boolean | Error) {
   ): A & ICancellable & IDeferrable & Promise<T>;
   function trunk<T>(
     promise: Promise<T>,
-    create: true
+    create?: boolean
   ): ICancellable & IDeferrable & Promise<T>;
   function trunk<A, T>(promise: A & Promise<T>, create?: boolean) {
     const shouldCancel = reason === undefined || reason === false;
