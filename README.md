@@ -44,16 +44,6 @@
   * [`reduce()`](#reducearr-promise-callback-function-initialvalue-any-promise)
   * [`each()`](#eacharr-promise-callback-function-promise)
 
-You can either `import` directly from the package root (as shown in the examples below), or:
-
-```javascript
-import { /* create functions to import */ } from 'promist/create';
-import { /* compose functions to import */ } from 'promist/compose';
-import { /* utils to import */ } from 'promist/utils';
-import parallel, { /* or the parallel function to import */ } from 'promist/parallel';
-import series, { /* or the series function to import */ }  from 'promist/series';
-```
-
 ## Promises
 
 ### Create functions
@@ -135,10 +125,11 @@ immediate().then(() => console.log('Next event loop')).
 
 *Compose* functions mutate an input promise in order to provide some added functionality:
 
+* They can optionally return a newly created promise: they take a second `create` argument -`false` by default.
 * They might not work adequately if you're using non-standard methods for resolution other than `promise.then()`, `promise.catch()`, or `promise.finally()`.
 * They can be chained via [`compose()`.](#composefns-function)
 
-#### `deferrable(promise: Promise): Promise`
+#### `deferrable(promise: Promise, create?: boolean): Promise`
 
 * `promise` will acquire:
   * `promise.resolve(value: any)`: Resolves the promise with the given `value`.
@@ -160,7 +151,7 @@ wait(100).then(() => b.resolve('Value 2'));
 b.then((val) => console.log('It will resolve with "Value 1"', val));
 ```
 
-#### `cancellable(promise: Promise): Promise`
+#### `cancellable(promise: Promise, create?: boolean): Promise`
 
 * `promise` will acquire:
   * `promise.cancel()`: Cancels the promise.
@@ -175,7 +166,7 @@ cancellable(myPromise);
 myPromise.cancel();
 ```
 
-#### `status(promise: Promise): Promise`
+#### `status(promise: Promise, create?: boolean): Promise`
 
 * `promise` will acquire:
   * `promise.status`: *String,* either `"pending"`, `"resolved"`, or `"rejected"`.
@@ -188,7 +179,7 @@ import { status } from 'promist';
 status(myPromise);
 ```
 
-#### `timed(promise: Promise): Promise`
+#### `timed(promise: Promise, create?: boolean): Promise`
 
 * `promise` will acquire:
   * `promise.time`: *(Number|void),* the number of milliseconds it took the promise to resolve or reject. Defaults to `null` before it's resolved/rejected. The count starts the moment `timed()` is called.
@@ -204,7 +195,7 @@ timed(myPromise);
 * `ms`: Threshold in milliseconds.
 * `delayRejection`: Whether or not to also delay a promise rejection. Default: `false`.
 
-Returns a function with signature: `(promise: Promise): Promise`.
+Returns a function with signature: `(promise: Promise, create?: boolean): Promise`.
 
 The returned promise will acquire a lower threshold in `ms` for promise resolution. If the original `promise` resolves before `ms`, the returned promise won't resolve until `ms` have passed; if it resolves after, it will resolve immediately. The count starts the moment `delay()()` is called.
 
@@ -226,7 +217,7 @@ myPromise.then(() => {
   * If none is passed (`undefined`) or `false`, the promise will cancel (not resolve) instead of rejecting. For other *falsy* values, it will reject with the value.
   * If a *boolean,* it will reject with a default error when `true`, and cancel as if no `reason` was passed when `false`.
 
-Returns a function with signature: `(promise: Promise): Promise`.
+Returns a function with signature: `(promise: Promise, create?: boolean): Promise`.
 
 The returned promise will acquire an upper threshold in `ms` after which, if it hasn't fulfilled, it will either cancel or reject, depending on whether a `reason` argument was passed. The count starts the moment `timeout()()` is called.
 
@@ -241,7 +232,7 @@ timeout(500, true)(promise2) // This one would reject with a default error
 
 #### `compose(...fns: Function[]): Function`
 
-Takes in an unlimited number of *compose* functions as arguments, and returns a function that should receive the promise to mutate.
+Takes in an unlimited number of *compose* functions as arguments, and returns a function with signature: `(promise: Promise, create?: boolean): Promise`.
 
 ```javascript
 import { compose, cancellable, delay, deferrrable } from 'promist';
@@ -249,7 +240,7 @@ import { compose, cancellable, delay, deferrrable } from 'promist';
 const p1 = compose(cancellable, delay(500), deferrable)(myPromise);
 ```
 
-#### `control(test: function, generator: function): function`
+#### `control(test: Function, generator: Function): Function`
 
 Used to control async flow. It returns a promise returning function taking the same arguments as `generator`.
 
@@ -281,7 +272,7 @@ willNotContinue(2).then(console.log); // Will not resolve
 willReject(3).then(console.log).catch(console.error); // Error: An error occurred
 ```
 
-#### `isPromise(object: any): boolean`
+#### `isPromise(item: any): boolean`
 
 Returns `true` if `object` is a *thenable,* `false` otherwise.
 
