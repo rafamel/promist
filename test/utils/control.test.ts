@@ -1,7 +1,7 @@
 import control from '~/utils/control';
 
 test(`Succeeds with test => true`, async () => {
-  function* gen() {
+  function* gen(): IterableIterator<number> {
     return 1;
   }
   const fn = control(() => true, gen);
@@ -11,7 +11,7 @@ test(`Succeeds with test => true`, async () => {
   await expect(fnp()).resolves.toBe(1);
 });
 test(`Doesn't resolve with test => false`, async () => {
-  function* gen() {
+  function* gen(): IterableIterator<number> {
     return 1;
   }
   const fn = control(() => false, gen);
@@ -25,7 +25,7 @@ test(`Doesn't resolve with test => false`, async () => {
   expect(res).toEqual([false, false]);
 });
 test(`Rejects with test => Error`, async () => {
-  function* gen() {
+  function* gen(): IterableIterator<number> {
     return 1;
   }
   const fn = control(() => Error(), gen);
@@ -35,7 +35,7 @@ test(`Rejects with test => Error`, async () => {
   await expect(fnp()).rejects.toThrowError();
 });
 test(`Rejects with test throwing Error`, async () => {
-  function* gen() {
+  function* gen(): IterableIterator<number> {
     return 1;
   }
   const fn = control(() => {
@@ -54,7 +54,7 @@ test(`Rejects with generator throwing Error`, async () => {
   await expect(fn()).rejects.toThrowError();
 });
 test(`Yields and succeeds with test => true`, async () => {
-  function* gen(n = 10) {
+  function* gen(n = 10): IterableIterator<Promise<number> | number> {
     n = yield Promise.resolve(n);
     n = n * (yield Promise.resolve(10));
     n = yield 10 * n;

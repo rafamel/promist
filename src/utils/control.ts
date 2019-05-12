@@ -3,8 +3,8 @@ export default function control<T, A extends any[]>(
   generator:
     | ((...args: A) => IterableIterator<Promise<T>>)
     | ((...args: A) => IterableIterator<T>)
-) {
-  return async (...args: A): Promise<T> => {
+): (...args: A) => Promise<T> {
+  return async (...args) => {
     const iterator = generator(...args);
     let value;
     let done;

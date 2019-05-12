@@ -8,8 +8,11 @@ function status<A, T>(
   create?: false
 ): A & IStatus & Promise<T>;
 function status<T>(promise: Promise<T>, create?: boolean): IStatus & Promise<T>;
-function status<A, T>(promise: A & Promise<T>, create?: boolean) {
-  const p: A & IStatus & Promise<T> = asNew(promise, create);
+function status<A, T>(
+  promise: A & Promise<T>,
+  create?: boolean
+): IStatus & Promise<T> {
+  const p = asNew(promise, create) as IStatus & Promise<T>;
   if (mark.get(p, 'status')) return p;
 
   mark.set(p, 'status');

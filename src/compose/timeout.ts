@@ -3,6 +3,7 @@ import deferrable from './deferrable';
 import { ICancellable, IDeferrable } from '~/types';
 import { asNew, intercept } from '~/helpers';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function timeout(ms: number, reason?: boolean | Error) {
   function trunk<A, T>(
     promise: A & Promise<T>,
@@ -12,7 +13,10 @@ export default function timeout(ms: number, reason?: boolean | Error) {
     promise: Promise<T>,
     create?: boolean
   ): ICancellable & IDeferrable & Promise<T>;
-  function trunk<A, T>(promise: A & Promise<T>, create?: boolean) {
+  function trunk<A, T>(
+    promise: A & Promise<T>,
+    create?: boolean
+  ): ICancellable & IDeferrable & Promise<T> {
     const shouldCancel = reason === undefined || reason === false;
     const p = cancellable(deferrable(asNew(promise, create)));
 

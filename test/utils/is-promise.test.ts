@@ -8,7 +8,7 @@ test(`Returns true for promise`, () => {
 
 test(`Returns true for thenables`, () => {
   const a = { then() {} };
-  const b = () => {};
+  const b = (): void => {};
   b.then = () => {};
 
   expect(isPromise(a)).toBe(true);

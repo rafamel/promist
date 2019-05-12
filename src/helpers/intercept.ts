@@ -17,7 +17,7 @@ export default function intercept<A, T>(
 
   p[INTERCEPT_SYMBOL] = intercept = [interceptFn];
   const _then = promise.then;
-  const run = () => {
+  const run = (): Promise<any> => {
     const res = p[RESPONSE_SYMBOL];
     return (
       res ||

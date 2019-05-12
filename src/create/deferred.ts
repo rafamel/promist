@@ -1,14 +1,14 @@
 import mark from '~/helpers/mark';
 import { IDeferrable } from '~/types';
 
-export default function deferred() {
+export default function deferred(): IDeferrable & Promise<any> {
   let _resolve: any;
   let _reject: any;
 
-  const p: IDeferrable & Promise<any> = new Promise((resolve, reject) => {
+  const p = new Promise((resolve, reject) => {
     _resolve = resolve;
     _reject = reject;
-  }) as any;
+  }) as IDeferrable & Promise<any>;
 
   mark.set(p, 'deferrable');
   p.resolve = _resolve;

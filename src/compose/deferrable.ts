@@ -12,8 +12,11 @@ function deferrable<T>(
   promise: Promise<T>,
   create?: boolean
 ): IDeferrable & Promise<T>;
-function deferrable<A, T>(promise: A & Promise<T>, create?: boolean) {
-  const p: A & IDeferrable & Promise<T> = asNew(promise, create);
+function deferrable<A, T>(
+  promise: A & Promise<T>,
+  create?: boolean
+): IDeferrable & Promise<T> {
+  const p = asNew(promise, create) as IDeferrable & Promise<T>;
 
   if (mark.get(p, 'deferrable')) return p;
 

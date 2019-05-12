@@ -11,8 +11,11 @@ function cancellable<T>(
   promise: Promise<T>,
   create?: boolean
 ): ICancellable & Promise<T>;
-function cancellable<A, T>(promise: A & Promise<T>, create?: boolean) {
-  const p: A & ICancellable & Promise<T> = asNew(promise, create);
+function cancellable<A, T>(
+  promise: A & Promise<T>,
+  create?: boolean
+): ICancellable & Promise<T> {
+  const p = asNew(promise, create) as ICancellable & Promise<T>;
 
   if (mark.get(p, 'cancellable')) return p;
   mark.set(p, 'cancellable');

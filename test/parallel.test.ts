@@ -1,8 +1,13 @@
 import parallel from '~/parallel';
 import lazy from '~/create/lazy';
 
-const createArr = (arr = [1, 2, 3, 4]) => arr.map((x) => Promise.resolve(x));
-const createDelayedArr = (n = 50, ms = 1) => {
+const createArr = (arr: number[] = [1, 2, 3, 4]): Array<Promise<number>> => {
+  return arr.map((x) => Promise.resolve(x));
+};
+const createDelayedArr = (
+  n: number = 50,
+  ms: number = 1
+): Array<Promise<number>> => {
   return Array(50)
     .fill(0)
     .map((_, i) => {

@@ -8,8 +8,11 @@ function timed<A, T>(
   create?: false
 ): A & ITimed & Promise<T>;
 function timed<T>(promise: Promise<T>, create?: boolean): ITimed & Promise<T>;
-function timed<A, T>(promise: A & Promise<T>, create?: boolean) {
-  const p: A & ITimed & Promise<T> = asNew(promise, create);
+function timed<A, T>(
+  promise: A & Promise<T>,
+  create?: boolean
+): ITimed & Promise<T> {
+  const p = asNew(promise, create) as ITimed & Promise<T>;
   if (mark.get(p, 'timed')) return p;
   mark.set(p, 'timed');
 
