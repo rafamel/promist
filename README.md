@@ -1,5 +1,13 @@
 # Promist
 
+[![Version](https://img.shields.io/npm/v/promist.svg)](https://www.npmjs.com/package/promist)
+[![Build Status](https://img.shields.io/travis/rafamel/promist/master.svg)](https://travis-ci.org/rafamel/promist)
+[![Coverage](https://img.shields.io/coveralls/rafamel/promist/master.svg)](https://coveralls.io/github/rafamel/promist)
+[![Dependencies](https://img.shields.io/david/rafamel/promist.svg)](https://david-dm.org/rafamel/promist)
+[![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/promist.svg)](https://snyk.io/test/npm/promist)
+[![License](https://img.shields.io/github/license/rafamel/promist.svg)](https://github.com/rafamel/promist/blob/master/LICENSE)
+[![Types](https://img.shields.io/npm/types/promist.svg)](https://www.npmjs.com/package/promist)
+
 > A dependable promises and async utility belt. Not a `Promise` implementation.
 
 If you find it useful, consider [starring the project](https://github.com/rafamel/promist) 💪 and/or following [its author](https://github.com/rafamel) ❤️ -there's more on the way!
