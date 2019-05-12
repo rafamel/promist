@@ -1,5 +1,5 @@
 import { asNew, mark, intercept } from '~/helpers';
-import { IStatus, EStatus } from '~/types';
+import { IStatus } from '~/types';
 
 export default status;
 
@@ -13,19 +13,19 @@ function status<A, T>(promise: A & Promise<T>, create?: boolean) {
   if (mark.get(p, 'status')) return p;
 
   mark.set(p, 'status');
-  p.status = EStatus.pending;
+  p.status = 'pending';
   p.value = null;
   p.reason = null;
 
   return intercept(p, (px) => {
     return px
       .then((val) => {
-        p.status = EStatus.resolved;
+        p.status = 'resolved';
         p.value = val;
         return val;
       })
       .catch((err) => {
-        p.status = EStatus.rejected;
+        p.status = 'rejected';
         p.reason = err;
         return Promise.reject(err);
       });

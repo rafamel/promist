@@ -7,14 +7,8 @@ export interface IDeferrable {
   reject: (reason: Error) => void;
 }
 
-export enum EStatus {
-  pending = 'pending',
-  resolved = 'resolved',
-  rejected = 'rejected'
-}
-
 export interface IStatus {
-  status: EStatus;
+  status: 'pending' | 'resolved' | 'rejected';
   value: any;
   reason: any;
 }
