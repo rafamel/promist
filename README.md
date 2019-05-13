@@ -111,6 +111,19 @@ const promise = lazy((resolve, reject) => {
 promise.then((value) => console.log('Executor has run and resolved:', value));
 ```
 
+##### `lazy.fn(fn: Function): Promise`
+
+Instead of taking an `executor`, `lazy.fn` takes a promise returning function that won't be executed until `promise.then()`, `promise.catch()`, or `promise.finally()` are called for the first time.
+
+```javascript
+import { lazy } from 'promist';
+
+const promise = lazy.fn(() => Promise.resolve(10));
+
+// Function hasn't run yet.
+promise.then((value) => console.log('Executor has run and resolved:', value));
+```
+
 #### `immediate(): Promise`
 
 Returns a promise that resolves in the next event loop (`setImmediate`).
