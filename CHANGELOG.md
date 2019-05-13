@@ -1,3 +1,12 @@
+# [0.7.0](https://github.com/rafamel/promist/compare/v0.6.0...v0.7.0) (2019-05-13)
+
+
+### Features
+
+* **create/lazy:** adds lazy.fn ([5212948](https://github.com/rafamel/promist/commit/5212948))
+
+
+
 # [0.6.0](https://github.com/rafamel/promist/compare/v0.5.3...v0.6.0) (2019-05-12)
 
 
