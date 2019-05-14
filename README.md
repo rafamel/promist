@@ -22,27 +22,27 @@ If you find it useful, consider [starring the project](https://github.com/rafame
 
 * [*Promises*:](#promises) There are *create* and *compose* functions:
   * [*Create* functions](#create-functions) return a newly formed promise.
-    * [`wait()`](#waitms-number-promise)
-    * [`waitUntil()`](#waituntiltestcb-function-ms-number-promise)
-    * [`deferred()`](#deferred-promise)
-    * [`lazy()`](#lazyexecutor-function-promise)
-    * [`immediate()`](#immediate-promise)
-  * [*Compose* functions](#compose-functions) mutate an input promise in order to provide some added functionality. They can be chained via [`compose()`.](#composefns-function)
-    * [`deferrable()`](#deferrablepromise-promise-promise)
-    * [`cancellable()`](#cancellablepromise-promise-promise)
-    * [`status()`](#statuspromise-promise-promise)
-    * [`timed()`](#timedpromise-promise-promise)
-    * [`delay()`](#delayms-number-delayrejection-boolean-function)
-    * [`timeout()`](#timeoutms-number-reason-any-function)
+    * [`wait`](#waitms-number-promise)
+    * [`waitUntil`](#waituntiltestcb-function-ms-number-promise)
+    * [`deferred`](#deferred-promise)
+    * [`lazy`](#lazyexecutor-function-promise)
+    * [`immediate`](#immediate-promise)
+  * [*Compose* functions](#compose-functions) mutate an input promise in order to provide some added functionality. They can be chained via [`compose`.](#composefns-function-function)
+    * [`deferrable`](#deferrablepromise-promise-promise)
+    * [`cancellable`](#cancellablepromise-promise-promise)
+    * [`status`](#statuspromise-promise-promise)
+    * [`timed`](#timedpromise-promise-promise)
+    * [`delay`](#delayms-number-delayrejection-boolean-function)
+    * [`timeout`](#timeoutms-number-reason-any-function)
   * There are also some [utility functions.](#utils)
-    * [`compose()`](#composefns-function-function)
-    * [`control()`](#controltest-function-generator-function-function)
-    * [`isPromise()`](#ispromiseobject-any-boolean)
+    * [`compose`](#composefns-function-function)
+    * [`control`](#controltest-function-generator-function-function)
+    * [`isPromise`](#ispromiseobject-any-boolean)
 * [*Collections*:](#collections) Handled either in *parallel* or *series.*
-  * [`map()`](#maparr-promise-callback-function-promise)
-  * [`filter()`](#filterarr-promise-callback-function-promise)
-  * [`reduce()`](#reducearr-promise-callback-function-initialvalue-any-promise)
-  * [`each()`](#eacharr-promise-callback-function-promise)
+  * [`map`](#maparr-promise-callback-function-promise)
+  * [`filter`](#filterarr-promise-callback-function-promise)
+  * [`reduce`](#reducearr-promise-callback-function-initialvalue-any-promise)
+  * [`each`](#eacharr-promise-callback-function-promise)
 
 ## Promises
 
@@ -140,7 +140,7 @@ immediate().then(() => console.log('Next event loop')).
 
 * They can optionally return a newly created promise: they take a second `create` argument -`false` by default.
 * They might not work adequately if you're using non-standard methods for resolution other than `promise.then()`, `promise.catch()`, or `promise.finally()`.
-* They can be chained via [`compose()`.](#composefns-function)
+* They can be chained via [`compose`.](#composefns-function-function)
 
 #### `deferrable(promise: Promise, create?: boolean): Promise`
 
