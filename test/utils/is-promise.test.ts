@@ -7,7 +7,7 @@ test(`Returns true for promise`, () => {
 });
 
 test(`Returns true for thenables`, () => {
-  const a = { then() {} };
+  const a = { then: (): void => {} };
   const b = (): void => {};
   b.then = () => {};
 
@@ -26,10 +26,10 @@ test(`Returns false for non-promises`, () => {
 
 test(`Returns false for non-promises (2)`, () => {
   const a = { then: 1 };
-  const b = { catch() {} };
+  const b = { catch: (): void => {} };
   const c = {
-    catch() {},
-    finally() {}
+    catch: (): void => {},
+    finally: (): void => {}
   };
 
   expect(isPromise(a)).toBe(false);

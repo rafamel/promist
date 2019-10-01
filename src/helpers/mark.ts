@@ -10,7 +10,7 @@ export const MARK_SYMBOL = Symbol('mark');
 
 export default {
   set<A, T>(promise: A & Promise<T>, ...as: string[]): A {
-    if (!promise.hasOwnProperty(MARK_SYMBOL)) {
+    if (!Object.hasOwnProperty.call(promise, MARK_SYMBOL)) {
       Object.assign(promise, { [MARK_SYMBOL]: Object.assign({}, defaults) });
     }
 
@@ -20,7 +20,8 @@ export default {
   },
   get<T>(promise: Promise<T>, as: string): boolean {
     return Boolean(
-      promise.hasOwnProperty(MARK_SYMBOL) && (promise as any)[MARK_SYMBOL][as]
+      Object.hasOwnProperty.call(promise, MARK_SYMBOL) &&
+        (promise as any)[MARK_SYMBOL][as]
     );
   }
 };

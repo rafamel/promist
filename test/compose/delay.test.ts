@@ -20,7 +20,7 @@ test(`delays when it's resolved; returns new/mutated promise`, async () => {
 });
 
 test(`doesn't delay further when it's not resolved`, async () => {
-  let init = Date.now();
+  const init = Date.now();
   const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
   delay(200)(p);
 

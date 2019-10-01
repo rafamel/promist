@@ -30,7 +30,7 @@ export default function intercept<A, T>(
 
   promise.then = (...args) => run().then(...args);
   promise.catch = (...args) => run().catch(...args);
-  if (promise.hasOwnProperty('finally')) {
+  if (Object.hasOwnProperty.call(promise, 'finally')) {
     promise.finally = (...args) => run().finally(...args);
   }
 
