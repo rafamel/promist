@@ -10,8 +10,6 @@
 
 > A dependable promises and async utility belt. Not a `Promise` implementation.
 
-If you find it useful, consider [starring the project](https://github.com/rafamel/promist) 💪 and/or following [its author](https://github.com/rafamel) ❤️ -there's more on the way!
-
 ## Install
 
 [`npm install promist`](https://www.npmjs.com/package/promist)
@@ -121,7 +119,7 @@ import { lazy } from 'promist';
 const promise = lazy.fn(() => Promise.resolve(10));
 
 // Function hasn't run yet.
-promise.then((value) => console.log('Executor has run and resolved:', value));
+promise.then((value) => console.log('Function has run and resolved:', value));
 ```
 
 #### `immediate(): Promise`
