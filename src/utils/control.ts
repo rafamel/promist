@@ -1,8 +1,6 @@
 export default function control<T, A extends any[]>(
   test: () => Promise<boolean | Error> | boolean | Error,
-  generator:
-    | ((...args: A) => IterableIterator<Promise<T>>)
-    | ((...args: A) => IterableIterator<T>)
+  generator: (...args: A) => Generator<Promise<T> | T, Promise<T> | T, T>
 ): (...args: A) => Promise<T> {
   return async (...args) => {
     const iterator = generator(...args);
