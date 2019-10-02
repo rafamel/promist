@@ -7,7 +7,7 @@ export interface IDeferrable {
   reject: (reason: Error) => void;
 }
 
-export interface IStatus {
+export interface IStateful {
   status: 'pending' | 'resolved' | 'rejected';
   value: any;
   reason: any;

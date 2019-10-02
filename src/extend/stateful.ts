@@ -1,21 +1,24 @@
 import { asNew, mark, intercept } from '~/helpers';
-import { IStatus } from '~/types';
+import { IStateful } from '~/types';
 
-export default status;
+export default stateful;
 
-function status<A, T>(
+function stateful<A, T>(
   promise: A & Promise<T>,
   create?: false
-): A & IStatus & Promise<T>;
-function status<T>(promise: Promise<T>, create?: boolean): IStatus & Promise<T>;
-function status<A, T>(
+): A & IStateful & Promise<T>;
+function stateful<T>(
+  promise: Promise<T>,
+  create?: boolean
+): IStateful & Promise<T>;
+function stateful<A, T>(
   promise: A & Promise<T>,
   create?: boolean
-): IStatus & Promise<T> {
-  const p = asNew(promise, create) as IStatus & Promise<T>;
-  if (mark.get(p, 'status')) return p;
+): IStateful & Promise<T> {
+  const p = asNew(promise, create) as IStateful & Promise<T>;
+  if (mark.get(p, 'stateful')) return p;
 
-  mark.set(p, 'status');
+  mark.set(p, 'stateful');
   p.status = 'pending';
   p.value = null;
   p.reason = null;

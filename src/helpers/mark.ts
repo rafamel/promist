@@ -3,7 +3,7 @@ const defaults = {
   resetable: false,
   deferrable: false,
   timed: false,
-  status: false
+  stateful: false
 };
 
 export const MARK_SYMBOL = Symbol('mark');
