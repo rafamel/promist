@@ -1,3 +1,42 @@
+# [1.0.0](https://github.com/rafamel/promist/compare/v0.7.0...v1.0.0) (2019-10-02)
+
+
+### Bug Fixes
+
+* **utils/control:** updates to latest typscript (Generator) ([798dbb0](https://github.com/rafamel/promist/commit/798dbb0))
+
+
+### Code Refactoring
+
+* **extend:** renames status to stateful ([54bdef6](https://github.com/rafamel/promist/commit/54bdef6))
+
+
+### Features
+
+* **create:** removes immediate ([0872f71](https://github.com/rafamel/promist/commit/0872f71))
+* **create/deferred:** guards agains unassigned values for resolve and reject ([b19294c](https://github.com/rafamel/promist/commit/b19294c))
+* improves typings; extend functions clone input promise ([71fb681](https://github.com/rafamel/promist/commit/71fb681))
+* **extend/timeout:** doesn't declare return type as an extended promise ([c87ff5f](https://github.com/rafamel/promist/commit/c87ff5f))
+* **utils:** adds isPromist ([c52e6e4](https://github.com/rafamel/promist/commit/c52e6e4))
+* **utils:** exports clone as an util ([7a738be](https://github.com/rafamel/promist/commit/7a738be))
+* **utils:** replaces compose with pipe ([4905d84](https://github.com/rafamel/promist/commit/4905d84))
+
+
+### BREAKING CHANGES
+
+* Typing improvements might break typescript codebases; extend functions clone the
+input promises, returning a new promise instance, which will break all usage relying on object
+mutation; extend functions don't take a second argument (previously used for returning a new promise
+instance instead of mutating the object)
+* **extend:** The `state` extend function -with its associated type- has been renamed `stateful`
+* **create:** Removes `immediate` create function, as it's entirely dispensable; it additionally
+relied on non-standard features
+* **utils:** The `compose` utility function has been replaced for `pipe` in order to preserve
+type safety
+* **utils/control:** latest TypeScript is required to get correct typings on control function
+
+
+
 # [0.7.0](https://github.com/rafamel/promist/compare/v0.6.0...v0.7.0) (2019-05-13)
 
 
