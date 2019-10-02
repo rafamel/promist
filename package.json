@@ -75,7 +75,9 @@
     "onchange": "^6.0.0",
     "typescript": "^3.6.3"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ts-functional-pipe": "^2.0.0"
+  },
   "@pika/pack": {
     "pipeline": [
       [
