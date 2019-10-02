@@ -1,4 +1,4 @@
-import timed from '~/compose/timed';
+import timed from '~/extend/timed';
 import mark from '~/helpers/mark';
 import { ITimed } from '~/types';
 

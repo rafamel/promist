@@ -1,4 +1,4 @@
-import delay from '~/compose/delay';
+import delay from '~/extend/delay';
 
 test(`delays when it's resolved; returns new/mutated promise`, async () => {
   let init = Date.now();

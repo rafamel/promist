@@ -1,5 +1,5 @@
 import mark from '~/helpers/mark';
-import timeout from '~/compose/timeout';
+import timeout from '~/extend/timeout';
 
 test(`returns new/mutated promise`, async () => {
   const p = Promise.resolve('foo');

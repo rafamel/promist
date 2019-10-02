@@ -1,5 +1,5 @@
 import mark from '~/helpers/mark';
-import cancellable from '~/compose/cancellable';
+import cancellable from '~/extend/cancellable';
 import { ICancellable } from '~/types';
 
 test(`returns new/mutated cancellable promise`, async () => {

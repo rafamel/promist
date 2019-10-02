@@ -1,4 +1,4 @@
-import status from '~/compose/status';
+import status from '~/extend/status';
 import mark from '~/helpers/mark';
 import { IStatus } from '~/types';
 

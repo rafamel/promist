@@ -1,5 +1,5 @@
 import mark from '~/helpers/mark';
-import deferrable from '~/compose/deferrable';
+import deferrable from '~/extend/deferrable';
 import { IDeferrable } from '~/types';
 
 test(`returns new/mutated deferrable promise`, async () => {
