@@ -1,38 +1,28 @@
-import { asNew, mark, intercept } from '~/helpers';
-import { IStateful } from '~/types';
+import { mark, intercept, extend } from '~/helpers';
+import { ExtensionKind, Promist, Stateful } from '~/types';
 
-export default stateful;
+export default function stateful<T, K extends ExtensionKind = never>(
+  promise: Promist<T, K> | Promise<T>
+): Promist<T, K | 'stateful'> {
+  if (mark.get(promise, 'stateful')) return promise;
+  mark.set(promise, 'stateful');
 
-function stateful<A, T>(
-  promise: A & Promise<T>,
-  create?: false
-): A & IStateful & Promise<T>;
-function stateful<T>(
-  promise: Promise<T>,
-  create?: boolean
-): IStateful & Promise<T>;
-function stateful<A, T>(
-  promise: A & Promise<T>,
-  create?: boolean
-): IStateful & Promise<T> {
-  const p = asNew(promise, create) as IStateful & Promise<T>;
-  if (mark.get(p, 'stateful')) return p;
+  const extended = extend(promise, {
+    status: 'pending',
+    value: null,
+    reason: null
+  } as Stateful<T>);
 
-  mark.set(p, 'stateful');
-  p.status = 'pending';
-  p.value = null;
-  p.reason = null;
-
-  return intercept(p, (px) => {
+  return intercept(extended, (px) => {
     return px
       .then((val) => {
-        p.status = 'resolved';
-        p.value = val;
+        extended.status = 'resolved';
+        extended.value = val;
         return val;
       })
       .catch((err) => {
-        p.status = 'rejected';
-        p.reason = err;
+        extended.status = 'rejected';
+        extended.reason = err;
         return Promise.reject(err);
       });
   });

@@ -1,38 +1,26 @@
-import { asNew, intercept, mark } from '~/helpers';
-import { ICancellable } from '~/types';
+import { extend, intercept, mark } from '~/helpers';
+import { Promist, ExtensionKind } from '~/types';
 
-export default cancellable;
-
-function cancellable<A, T>(
-  promise: A & Promise<T>,
-  create?: false
-): A & ICancellable & Promise<T>;
-function cancellable<T>(
-  promise: Promise<T>,
-  create?: boolean
-): ICancellable & Promise<T>;
-function cancellable<A, T>(
-  promise: A & Promise<T>,
-  create?: boolean
-): ICancellable & Promise<T> {
-  const p = asNew(promise, create) as ICancellable & Promise<T>;
-
-  if (mark.get(p, 'cancellable')) return p;
-  mark.set(p, 'cancellable');
+export default function cancellable<T, K extends ExtensionKind = never>(
+  promise: Promist<T, K> | Promise<T>
+): Promist<T, K | 'cancellable'> {
+  if (mark.get(promise, 'cancellable')) return promise;
+  mark.set(promise, 'cancellable');
 
   let cancellable = true;
-
-  p.cancelled = false;
-  p.cancel = function cancel() {
-    if (!cancellable) return;
-    this.cancelled = true;
-  };
+  const extended = extend(promise, {
+    cancelled: false as boolean,
+    cancel() {
+      if (!cancellable) return;
+      this.cancelled = true;
+    }
+  });
 
   const unfulfilled = new Promise(() => {});
-  p.then(() => (cancellable = false)).catch(() => (cancellable = false));
-  return intercept(p, (px: Promise<any>) => {
+  extended.then(() => (cancellable = false)).catch(() => (cancellable = false));
+  return intercept(extended, (px: Promise<any>) => {
     return px
-      .then((val) => (p.cancelled ? unfulfilled : val))
-      .catch((err) => (p.cancelled ? unfulfilled : Promise.reject(err)));
+      .then((val) => (extended.cancelled ? unfulfilled : val))
+      .catch((err) => (extended.cancelled ? unfulfilled : Promise.reject(err)));
   });
 }

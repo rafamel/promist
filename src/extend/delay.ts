@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import wait from '~/create/wait';
-import { asNew, intercept } from '~/helpers';
+import { intercept } from '~/helpers';
+import { Promist, ExtensionKind } from '~/types';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function delay(ms: number, delayRejection: boolean = false) {
   const init = Date.now();
 
@@ -11,10 +12,10 @@ export default function delay(ms: number, delayRejection: boolean = false) {
     return wait(remaining);
   };
 
-  function trunk<A, T>(promise: A & Promise<T>, create?: false): A & Promise<T>;
-  function trunk<T>(promise: Promise<T>, create?: boolean): Promise<T>;
-  function trunk<A, T>(promise: A & Promise<T>, create?: boolean): Promise<T> {
-    return intercept(asNew(promise, create), (px) => {
+  return function trunk<T, K extends ExtensionKind = never>(
+    promise: Promist<T, K> | Promise<T>
+  ): Promist<T, K> {
+    return intercept(promise, (px) => {
       return px
         .then((val) => delayer().then(() => val))
         .catch((err) => {
@@ -23,7 +24,5 @@ export default function delay(ms: number, delayRejection: boolean = false) {
             : Promise.reject(err);
         });
     });
-  }
-
-  return trunk;
+  };
 }

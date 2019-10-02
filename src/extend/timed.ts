@@ -1,32 +1,25 @@
-import { ITimed } from '~/types';
-import { asNew, intercept, mark } from '~/helpers';
+import { ExtensionKind, Promist, Timed } from '~/types';
+import { intercept, mark, extend } from '~/helpers';
 
-export default timed;
+export default function timed<T, K extends ExtensionKind = never>(
+  promise: Promist<T, K> | Promise<T>
+): Promist<T, K | 'timed'> {
+  if (mark.get(promise, 'timed')) return promise;
+  mark.set(promise, 'timed');
 
-function timed<A, T>(
-  promise: A & Promise<T>,
-  create?: false
-): A & ITimed & Promise<T>;
-function timed<T>(promise: Promise<T>, create?: boolean): ITimed & Promise<T>;
-function timed<A, T>(
-  promise: A & Promise<T>,
-  create?: boolean
-): ITimed & Promise<T> {
-  const p = asNew(promise, create) as ITimed & Promise<T>;
-  if (mark.get(p, 'timed')) return p;
-  mark.set(p, 'timed');
-
-  p.time = null;
+  const extended = extend(promise, {
+    time: null
+  } as Timed);
 
   const init = Date.now();
-  return intercept(p, (px) => {
+  return intercept(extended, (px) => {
     return px
       .then((val) => {
-        p.time = Date.now() - init;
+        extended.time = Date.now() - init;
         return val;
       })
       .catch((err) => {
-        p.time = Date.now() - init;
+        extended.time = Date.now() - init;
         return Promise.reject(err);
       });
   });

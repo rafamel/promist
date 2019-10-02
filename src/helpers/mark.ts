@@ -1,27 +1,34 @@
-const defaults = {
+import { Promist, ExtensionKind } from '~/types';
+
+export const MARK_SYMBOL = Symbol('mark');
+
+const defaults: { [P in ExtensionKind]: boolean } = {
   cancellable: false,
-  resetable: false,
   deferrable: false,
   timed: false,
   stateful: false
 };
 
-export const MARK_SYMBOL = Symbol('mark');
-
 export default {
-  set<A, T>(promise: A & Promise<T>, ...as: string[]): A {
+  list: Object.keys(defaults) as ExtensionKind[],
+  set<T, X extends ExtensionKind, K extends ExtensionKind = never>(
+    promise: Promist<T, K> | Promise<T>,
+    kind: X
+  ): Promist<T, K> {
     if (!Object.hasOwnProperty.call(promise, MARK_SYMBOL)) {
       Object.assign(promise, { [MARK_SYMBOL]: Object.assign({}, defaults) });
     }
 
-    as.forEach((key) => ((promise as any)[MARK_SYMBOL][key] = true));
-
-    return promise;
+    (promise as any)[MARK_SYMBOL][kind] = true;
+    return promise as Promist<T, K>;
   },
-  get<T>(promise: Promise<T>, as: string): boolean {
+  get<T, X extends ExtensionKind, K extends ExtensionKind = never>(
+    promise: Promist<T, K> | Promise<T>,
+    kind: X
+  ): promise is Promist<T, K | X> {
     return Boolean(
       Object.hasOwnProperty.call(promise, MARK_SYMBOL) &&
-        (promise as any)[MARK_SYMBOL][as]
+        (promise as any)[MARK_SYMBOL][kind]
     );
   }
 };

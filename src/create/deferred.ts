@@ -1,13 +1,14 @@
 import mark from '~/helpers/mark';
-import { IDeferrable, IStateful } from '~/types';
+import { Promist, Stateful, Deferrable } from '~/types';
+import { extend } from '~/helpers';
 
-export default function deferred(): IDeferrable & Promise<any> {
-  const state: IStateful = {
+export default function deferred<T = any>(): Promist<T, 'deferrable'> {
+  const state: Stateful<T> = {
     status: 'pending',
     value: null,
     reason: null
   };
-  let _resolve = (value: any): void => {
+  let _resolve = (value: T): void => {
     state.status = 'resolved';
     state.value = value;
   };
@@ -15,16 +16,16 @@ export default function deferred(): IDeferrable & Promise<any> {
     state.status = 'rejected';
     state.reason = reason;
   };
-
-  const p = new Promise((resolve, reject) => {
-    if (state.status === 'resolved') return resolve(state.value);
+  const promise: Promise<T> = new Promise((resolve, reject) => {
+    if (state.status === 'resolved') return resolve(state.value as T);
     if (state.status === 'rejected') return reject(state.reason);
     _resolve = resolve;
     _reject = reject;
-  }) as IDeferrable & Promise<any>;
+  });
 
-  mark.set(p, 'deferrable');
-  p.resolve = (value: any) => _resolve(value);
-  p.reject = (reason: Error) => _reject(reason);
-  return p;
+  mark.set(promise, 'deferrable');
+  return extend(promise, {
+    resolve: ((value: T) => _resolve(value)) as Deferrable<T>['resolve'],
+    reject: (reason: Error) => _reject(reason)
+  });
 }

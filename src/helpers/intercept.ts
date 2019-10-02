@@ -1,10 +1,12 @@
+import { ExtensionKind, Promist } from '~/types';
+
 const INTERCEPT_SYMBOL = Symbol('intercept');
 const RESPONSE_SYMBOL = Symbol('response');
 
-export default function intercept<A, T>(
-  promise: A & Promise<T>,
+export default function intercept<T, K extends ExtensionKind = never>(
+  promise: Promist<T, K> | Promise<T>,
   interceptFn: (promise: Promise<T>) => Promise<T>
-): A {
+): Promist<T, K> {
   const p: any = promise;
   let intercept: Array<(promise: Promise<T>) => Promise<T>> =
     p[INTERCEPT_SYMBOL];
@@ -12,7 +14,7 @@ export default function intercept<A, T>(
   if (intercept) {
     p[RESPONSE_SYMBOL] = null;
     intercept.push(interceptFn);
-    return promise;
+    return promise as Promist<T, K>;
   }
 
   p[INTERCEPT_SYMBOL] = intercept = [interceptFn];
@@ -34,5 +36,5 @@ export default function intercept<A, T>(
     promise.finally = (...args) => run().finally(...args);
   }
 
-  return promise;
+  return promise as Promist<T, K>;
 }
