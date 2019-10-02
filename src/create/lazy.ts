@@ -1,5 +1,4 @@
 import intercept from '~/helpers/intercept';
-import isPromise from '~/utils/is-promise';
 
 export type TExecutor = (
   resolve: (val?: any) => void,
@@ -20,9 +19,9 @@ function lazy(executor: TExecutor): Promise<any> {
 lazy.fn = function lazyFn<T>(fn: () => Promise<T> | T): Promise<T> {
   return lazy((resolve, reject) => {
     try {
-      const res = fn();
-      if (isPromise(res)) res.then(resolve).catch(reject);
-      else resolve(res);
+      return Promise.resolve(fn())
+        .then(resolve)
+        .catch(reject);
     } catch (err) {
       reject(err);
     }
