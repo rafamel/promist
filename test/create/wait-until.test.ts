@@ -23,3 +23,13 @@ test(`waits takes into account ms`, async () => {
   await p2;
   expect(Date.now() - init).toBeGreaterThanOrEqual(250);
 });
+test(`rejects on test callback error`, async () => {
+  await expect(
+    waitUntil(() => {
+      throw Error('Foo');
+    })
+  ).rejects.toThrowError('Foo');
+  await expect(
+    waitUntil(() => Promise.reject(Error('Foo')))
+  ).rejects.toThrowError('Foo');
+});

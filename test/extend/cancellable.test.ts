@@ -18,6 +18,14 @@ test(`default export returns a mutated promise`, async () => {
   await expect(m).resolves.toBe('foo');
   expect(mark.get(m, 'cancellable')).toBe(true);
 });
+test(`default export doesn't run again on a mutated promise`, async () => {
+  const p = Promise.resolve('foo');
+  let m = extend(p);
+  const cancel = m.cancel;
+  m = extend(m);
+
+  expect(m.cancel).toBe(cancel);
+});
 test(`should have cancel/cancelled`, async () => {
   const p = cancellable(Promise.resolve());
 

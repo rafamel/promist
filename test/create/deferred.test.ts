@@ -1,5 +1,6 @@
 import mark from '~/helpers/mark';
-import deferred from '~/create/deferred';
+import deferred, { fns } from '~/create/deferred';
+import { Stateful } from '~/types';
 
 test(`promise is marked as deferrable`, () => {
   const p = deferred();
@@ -37,4 +38,19 @@ test(`calling reject twice doesn't change first rejection`, async () => {
 
   p.reject(Error('Bar'));
   await expect(p).rejects.toThrowError('Foo');
+});
+test(`fns modify state`, () => {
+  const create = (): Stateful<any> => ({
+    status: 'pending',
+    value: null,
+    reason: null
+  });
+
+  const [a, b] = [create(), create()];
+  fns(a).resolve('foo');
+  const error = Error('Foo');
+  fns(b).reject(error);
+
+  expect(a).toEqual({ status: 'resolved', value: 'foo', reason: null });
+  expect(b).toEqual({ status: 'rejected', value: null, reason: error });
 });

@@ -18,6 +18,15 @@ test(`default export returns a mutated promise`, async () => {
   await expect(m).resolves.toBe('foo');
   expect(mark.get(m, 'stateful')).toBe(true);
 });
+test(`default export doesn't run again on a mutated promise`, async () => {
+  const p = Promise.resolve('foo');
+  let m = extend(p);
+  await m;
+  const status = m.status;
+  m = extend(m);
+
+  expect(m.status).toBe(status);
+});
 test(`initializes correctly`, () => {
   const p = stateful(Promise.resolve());
 

@@ -18,6 +18,14 @@ test(`default export returns a mutated promise`, async () => {
   await expect(m).resolves.toBe('foo');
   expect(mark.get(m, 'deferrable')).toBe(true);
 });
+test(`default export doesn't run again on a mutated promise`, async () => {
+  const p = Promise.resolve('foo');
+  let m = extend(p);
+  const resolve = m.resolve;
+  m = extend(m);
+
+  expect(m.resolve).toBe(resolve);
+});
 test(`Should have resolve/reject`, () => {
   const p = deferrable(Promise.resolve());
 

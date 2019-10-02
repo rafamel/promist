@@ -18,6 +18,15 @@ test(`default export returns a mutated promise`, async () => {
   await expect(m).resolves.toBe('foo');
   expect(mark.get(m, 'timed')).toBe(true);
 });
+test(`default export doesn't run again on a mutated promise`, async () => {
+  const p = Promise.resolve('foo');
+  let m = extend(p);
+  await m;
+  const time = m.time;
+  m = extend(m);
+
+  expect(m.time).toBe(time);
+});
 test(`has promise.time`, () => {
   const p = timed(Promise.resolve());
 
