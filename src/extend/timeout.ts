@@ -7,12 +7,12 @@ import { intercept } from '~/helpers';
 export default function timeout(ms: number, reason?: boolean | Error) {
   return function trunk<T, K extends ExtensionKind = never>(
     promise: Promist<T, K> | Promise<T>
-  ): Promist<T, K | 'cancellable' | 'deferrable'> {
+  ): Promist<T, K> {
     const shouldCancel = reason === undefined || reason === false;
     const extended = cancellable(deferrable(promise as Promise<T>));
 
     let done = false;
-    let timeout: any;
+    let timeout: NodeJS.Timeout | null = null;
     new Promise((resolve) => (timeout = setTimeout(resolve, ms))).then(() => {
       if (done) return;
       if (shouldCancel) return extended.cancel();
@@ -20,21 +20,18 @@ export default function timeout(ms: number, reason?: boolean | Error) {
       extended.reject(Error('Promise timed out'));
     });
 
-    return intercept(
-      extended as Promist<T, K | 'cancellable' | 'deferrable'>,
-      (px) => {
-        return px
-          .then((val) => {
-            done = true;
-            clearTimeout(timeout);
-            return val;
-          })
-          .catch((err) => {
-            done = true;
-            clearTimeout(timeout);
-            return Promise.reject(err);
-          });
-      }
-    );
+    return intercept(extended as Promist<T, K>, (px) => {
+      return px
+        .then((val) => {
+          done = true;
+          if (timeout) clearTimeout(timeout);
+          return val;
+        })
+        .catch((err) => {
+          done = true;
+          if (timeout) clearTimeout(timeout);
+          return Promise.reject(err);
+        });
+    });
   };
 }
