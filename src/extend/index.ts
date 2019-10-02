@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { pipe } from 'ts-functional-pipe';
-import { clone } from '~/helpers';
+import { clone } from '~/utils';
 import _cancellable from './cancellable';
 import _deferrable from './deferrable';
 import _delay from './delay';
