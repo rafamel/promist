@@ -16,26 +16,27 @@
 
 ## Basics
 
-`promist` intends to cover and abstract the most common day to day dealings with async behavior and promises. It doesn't intend to be the most complete library, or an incredibly slim one, but rather be a dependable set of functions that serve as go-to for most use cases.
+*Promist* intends to cover and abstract the most common day to day dealings with *async* behavior and promises. It doesn't intend to be the most complete library, or an incredibly slim one, but rather be a dependable set of functions that serve as go-to for most use cases.
 
-* [*Promises*:](#promises) There are *create* and *compose* functions:
-  * [*Create* functions](#create-functions) return a newly formed promise.
+* [*Promises*:](#promises) There are *create* and *extend* functions:
+  * [*Create* functions](#create-functions) return a new promise.
     * [`wait`](#waitms-number-promise)
-    * [`waitUntil`](#waituntiltestcb-function-ms-number-promise)
+    * [`waitUntil`](#waituntiltest-function-ms-number-promise)
     * [`deferred`](#deferred-promise)
     * [`lazy`](#lazyexecutor-function-promise)
-    * [`immediate`](#immediate-promise)
-  * [*Compose* functions](#compose-functions) mutate an input promise in order to provide some added functionality. They can be chained via [`compose`.](#composefns-function-function)
+  * [*Extend* functions](#extend-functions) return a new instance extending an input promise. They can be chained via [`pipe`.](#pipefns-function-function)
     * [`deferrable`](#deferrablepromise-promise-promise)
     * [`cancellable`](#cancellablepromise-promise-promise)
-    * [`status`](#statuspromise-promise-promise)
+    * [`stateful`](#statefulpromise-promise-promise)
     * [`timed`](#timedpromise-promise-promise)
     * [`delay`](#delayms-number-delayrejection-boolean-function)
-    * [`timeout`](#timeoutms-number-reason-any-function)
+    * [`timeout`](#timeoutms-number-reason-boolean--error-function)
   * There are also some [utility functions.](#utils)
-    * [`compose`](#composefns-function-function)
+    * [`pipe`](#pipefns-function-function)
+    * [`clone`](#clonepromise-promise-promise)
     * [`control`](#controltest-function-generator-function-function)
-    * [`isPromise`](#ispromiseobject-any-boolean)
+    * [`isPromise`](#ispromisevalue-any-boolean)
+    * [`isPromist`](#ispromistpromise-promise-kind-string-boolean)
 * [*Collections*:](#collections) Handled either in *parallel* or *series.*
   * [`map`](#maparr-promise-callback-function-promise)
   * [`filter`](#filterarr-promise-callback-function-promise)
@@ -46,9 +47,9 @@
 
 ### Create functions
 
-*Create* functions return a newly formed promise.
+*Create* functions return a new promise.
 
-#### `wait(ms: Number): Promise`
+#### `wait(ms: number): Promise`
 
 Returns a promise that will resolve after `ms` milliseconds;
 
@@ -60,19 +61,21 @@ import { wait } from 'promist';
 wait(100).then(() => console.log('Resolved after 100ms'));
 ```
 
-#### `waitUntil(testCb: Function, ms?: Number): Promise`
+#### `waitUntil(test: Function, ms?: number): Promise`
 
-Returns a promise that resolves when `testCb` returns truthy, with its value.
+Returns a promise that resolves when `test` returns truthy, with its value.
 
-* `testCb`: Test function.
-* `ms`: The frequency `testCb` should be called at until it returns truthy. Default: `20`.
+* `test`: Test function, with signature `() => boolean | Promise<boolean>`.
+* `ms`: The frequency `test` should be called at until it returns truthy. Default: `20`.
 
 ```javascript
 import { waitUntil } from 'promist';
 
 let example = 1;
 
-waitUntil(() => example === 10).then(() => console.log('Resolved after example = 10'));
+waitUntil(() => example === 10)
+  .then(() => console.log('Resolved after example = 10'));
+
 example = 10;
 ```
 
@@ -87,7 +90,7 @@ Returns a newly formed deferrable promise, with methods:
 import { deferred } from 'promist';
 
 const promise = deferred();
-promise.then(val => console.log('Resolves with "Hello":', val));
+promise.then(value => console.log(`Resolves with "Hello": ${value}`));
 promise.resolve('Hello');
 ```
 
@@ -95,18 +98,18 @@ promise.resolve('Hello');
 
 Returns a lazy promise: it's executor won't run until `promise.then()`, `promise.catch()`, or `promise.finally()` are called for the first time.
 
-* `executor`: A function with the same signature as in [`new Promise(executor)`.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+* `executor`: A function with the same signature [as the one taken by the `Promise` constructor.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
 
 ```javascript
 import { lazy } from 'promist';
 
 const promise = lazy((resolve, reject) => {
-  const value = 1 + 1; // expensive task
+  const value = 1 + 1; // Expensive task
   resolve(value);
 });
 
 // Executor hasn't run yet.
-promise.then((value) => console.log('Executor has run and resolved:', value));
+promise.then((value) => console.log(`Executor has run and resolved: ${value}`));
 ```
 
 ##### `lazy.fn(fn: Function): Promise`
@@ -119,28 +122,17 @@ import { lazy } from 'promist';
 const promise = lazy.fn(() => Promise.resolve(10));
 
 // Function hasn't run yet.
-promise.then((value) => console.log('Function has run and resolved:', value));
+promise.then((value) => console.log(`Function has run and resolved: ${value}`));
 ```
 
-#### `immediate(): Promise`
+### Extend functions
 
-Returns a promise that resolves in the next event loop (`setImmediate`).
+*Extend* functions return a new instance extending an input promise:
 
-```javascript
-import { immediate } from 'promist';
-
-immediate().then(() => console.log('Next event loop')).
-```
-
-### Compose functions
-
-*Compose* functions mutate an input promise in order to provide some added functionality:
-
-* They can optionally return a newly created promise: they take a second `create` argument -`false` by default.
+* They can be chained via [`pipe`.](#pipefns-function-function)
 * They might not work adequately if you're using non-standard methods for resolution other than `promise.then()`, `promise.catch()`, or `promise.finally()`.
-* They can be chained via [`compose`.](#composefns-function-function)
 
-#### `deferrable(promise: Promise, create?: boolean): Promise`
+#### `deferrable(promise: Promise): Promise`
 
 * `promise` will acquire:
   * `promise.resolve(value: any)`: Resolves the promise with the given `value`.
@@ -151,104 +143,120 @@ If the input `promise` resolves or rejects before `promise.resolve()` or `promis
 ```javascript
 import { wait, deferrable } from 'promist';
 
-const a = wait(100).then(() => 'Value 1');
-deferrable(a);
-a.resolve('Value 2');
-a.then((val) => console.log('It will resolve with "Value 2"', val));
+const foo = deferrable(wait(100).then(() => 'Value 1'));
+foo.resolve('Value 2');
+foo.then((value) => console.log(`It will resolve with "Value 2": ${value}`));
 
-const b = Promise.resolve('Value 1');
-deferrable(b);
-wait(100).then(() => b.resolve('Value 2'));
-b.then((val) => console.log('It will resolve with "Value 1"', val));
+const bar = deferrable(Promise.resolve('Value 1'));
+wait(100).then(() => bar.resolve('Value 2'));
+bar.then((value) => console.log(`It will resolve with "Value 1": ${value}`));
 ```
 
-#### `cancellable(promise: Promise, create?: boolean): Promise`
+#### `cancellable(promise: Promise): Promise`
 
 * `promise` will acquire:
   * `promise.cancel()`: Cancels the promise.
-  * `promise.cancelled`: *Boolean,* whether or not the promise has been cancelled.
+  * `promise.cancelled`: *boolean,* whether or not the promise has been cancelled.
 
 ```javascript
 import { cancellable } from 'promist';
 
-cancellable(myPromise);
+const extended = cancellable(promise);
 
 // Cancel the promise
-myPromise.cancel();
+extended.cancel();
 ```
 
-#### `status(promise: Promise, create?: boolean): Promise`
+#### `stateful(promise: Promise): Promise`
 
 * `promise` will acquire:
-  * `promise.status`: *String,* either `"pending"`, `"resolved"`, or `"rejected"`.
+  * `promise.status`: *string,* either `"pending"`, `"resolved"`, or `"rejected"`.
   * `promise.value`: Contains the resolution value. `null` if the promise is pending or rejected.
   * `promise.reason`: Contains the rejection reason. `null` if the promise is pending or resolved.
 
 ```javascript
-import { status } from 'promist';
+import { stateful } from 'promist';
 
-status(myPromise);
+const extended = stateful(promise);
 ```
 
-#### `timed(promise: Promise, create?: boolean): Promise`
+#### `timed(promise: Promise): Promise`
 
 * `promise` will acquire:
-  * `promise.time`: *(Number|void),* the number of milliseconds it took the promise to resolve or reject. Defaults to `null` before it's resolved/rejected. The count starts the moment `timed()` is called.
+  * `promise.time`: *number | void,* the number of milliseconds it took the promise to resolve or reject. Defaults to `null` before it's resolved/rejected. The count starts the moment `timed()` is called.
 
 ```javascript
 import { timed } from 'promist';
 
-timed(myPromise);
+const extended = timed(promise);
 ```
 
-#### `delay(ms: Number, delayRejection?: boolean): Function`
+#### `delay(ms: number, delayRejection?: boolean): Function`
 
 * `ms`: Threshold in milliseconds.
 * `delayRejection`: Whether or not to also delay a promise rejection. Default: `false`.
 
-Returns a function with signature: `(promise: Promise, create?: boolean): Promise`.
+Returns a function with signature: `(promise: Promise) => Promise`.
 
 The returned promise will acquire a lower threshold in `ms` for promise resolution. If the original `promise` resolves before `ms`, the returned promise won't resolve until `ms` have passed; if it resolves after, it will resolve immediately. The count starts the moment `delay()()` is called.
 
 ```javascript
 import { delay } from 'promist';
 
-delay(500)(myPromise);
+const extended = delay(500)(promise);
 
-myPromise.then(() => {
-  // Will be called once 500ms pass or whenever 'myPromise' resolves after that.
+extended.then(() => {
+  // Will be called once 500ms pass or whenever 'promise' resolves after that.
   // ...
 })
 ```
 
-#### `timeout(ms: Number, reason?: any): Function`
+#### `timeout(ms: number, reason?: boolean | Error): Function`
 
 * `ms`: Threshold in milliseconds.
 * `reason`: Value the promise will reject with if it doesn't fulfill in `ms` milliseconds:
-  * If none is passed (`undefined`) or `false`, the promise will cancel (not resolve) instead of rejecting. For other *falsy* values, it will reject with the value.
-  * If a *boolean,* it will reject with a default error when `true`, and cancel as if no `reason` was passed when `false`.
+  * If `undefined` or `false`, the promise will cancel (never resolve) instead of rejecting.
+  * If `true`, it will reject with a default error.
+  * If an *Error* instance, it will reject with it.
 
-Returns a function with signature: `(promise: Promise, create?: boolean): Promise`.
+Returns a function with signature: `(promise: Promise) => Promise`.
 
 The returned promise will acquire an upper threshold in `ms` after which, if it hasn't fulfilled, it will either cancel or reject, depending on whether a `reason` argument was passed. The count starts the moment `timeout()()` is called.
 
 ```javascript
 import { timeout } from 'promist';
 
-timeout(500)(promise1); // It will cancel if it hasn't been fulfilled in 500 ms
-timeout(500, true)(promise2) // This one would reject with a default error
+// It will cancel if it hasn't been fulfilled in 500 ms
+const foo = timeout(500)(promise);
+// Will reject with a default error
+const bar = timeout(500, true)(promise)
 ```
 
 ### Utils
 
-#### `compose(...fns: Function[]): Function`
+#### `clone(promise: Promise): Promise`
 
-Takes in an unlimited number of *compose* functions as arguments, and returns a function with signature: `(promise: Promise, create?: boolean): Promise`.
+Clones a *Promise* or *Promist* extended *Promise*, returning a new instance with the same extensions. Cloning is already done by default when using any *extend* function on a *Promise.*
+
+* `promise`: A standard *Promise* or *Promist* extended *Promise.*
 
 ```javascript
-import { compose, cancellable, delay, deferrrable } from 'promist';
+import { clone, deferrable } from 'promist';
 
-const p1 = compose(cancellable, delay(500), deferrable)(myPromise);
+const source = deferrable(Promise.resolve());
+const promise = clone(source);
+
+promise.resolve('foo');
+```
+
+#### `pipe(...fns: Function[]): Function`
+
+Takes in a number of *extend* functions as arguments, and returns a function with signature: `(promise: Promise): Promise`.
+
+```javascript
+import { pipe, cancellable, delay, deferrrable } from 'promist';
+
+const promise = pipe(delay(500), cancellable, deferrable)(source);
 ```
 
 #### `control(test: Function, generator: Function): Function`
@@ -283,14 +291,33 @@ willNotContinue(2).then(console.log); // Will not resolve
 willReject(3).then(console.log).catch(console.error); // Error: An error occurred
 ```
 
-#### `isPromise(item: any): boolean`
+#### `isPromise(value: any): boolean`
 
-Returns `true` if `object` is a *thenable,* `false` otherwise.
+Returns `true` if `value` is a *thenable,* `false` otherwise.
+
+* `value`: The *object* to test.
 
 ```javascript
 import { isPromise } from 'promist';
 
-isPromise(myPromise);
+if (isPromise(promise)) {
+  promise.then(() => { /* ... */ });
+}
+```
+
+#### `isPromist(promise: Promise, kind: string): boolean`
+
+Returns `true` if a *Promise* is of a particular *promist* extension `kind`.
+
+* `promise`: The *Promise* to test.
+* `kind`: *string,* one of `'cancellable'`, `'deferrable'`, `'stateful'`, or `'timed'`.
+
+```javascript
+import { isPromist } from 'promist';
+
+if (isPromist(promise, 'deferrable')) {
+  promise.resolve('foo');
+}
 ```
 
 ## Collections
@@ -308,13 +335,13 @@ isPromise(myPromise);
 import { parallel } from 'promist';
 import { series } from 'promist';
 
-parallel.map(myPromiseArr, (x, i, arr) => {
+parallel.map(promiseArr, (x, i, arr) => {
   // arr will contain the resolved values.
   return x;
 });
 
-series.map(myPromiseArr, (x, i, arr) => {
-  // arr will be myPromiseArr
+series.map(promiseArr, (x, i, arr) => {
+  // arr will be promiseArr
   return x;
 })
 ```
