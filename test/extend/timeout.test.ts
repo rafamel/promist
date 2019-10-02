@@ -1,23 +1,29 @@
+import { timeout } from '~/extend';
+import extend from '~/extend/timeout';
 import mark from '~/helpers/mark';
-import timeout from '~/extend/timeout';
 
-test(`returns new/mutated promise`, async () => {
+test(`named export returns a new promise`, async () => {
   const p = Promise.resolve('foo');
-  const m = timeout(100)(p);
-  const n = timeout(100)(p, true);
+  const n = timeout(100)(p);
 
-  expect(m).toBe(p);
   expect(n).not.toBe(p);
-  await expect(m).resolves.toBe('foo');
   await expect(n).resolves.toBe('foo');
-  expect(mark.get(m, 'cancellable')).toBe(true);
   expect(mark.get(n, 'cancellable')).toBe(true);
-  expect(mark.get(m, 'deferrable')).toBe(true);
   expect(mark.get(n, 'deferrable')).toBe(true);
 });
+test(`default export returns a mutated promise`, async () => {
+  const p = Promise.resolve('foo');
+  const m = extend(100)(p);
+
+  expect(m).toBe(p);
+  await expect(m).resolves.toBe('foo');
+  expect(mark.get(m, 'cancellable')).toBe(true);
+  expect(mark.get(m, 'deferrable')).toBe(true);
+});
 test(`cancels on timeout wo/ reason`, async () => {
-  const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
-  timeout(100)(p);
+  const p = timeout(100)(
+    new Promise((resolve) => setTimeout(() => resolve(10), 200))
+  );
 
   let hasResolved = false;
   p.then(() => (hasResolved = true));
@@ -25,10 +31,10 @@ test(`cancels on timeout wo/ reason`, async () => {
 
   expect(hasResolved).toBe(false);
 });
-
 test(`cancels on timeout w/ reason "false"`, async () => {
-  const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
-  timeout(100, false)(p);
+  const p = timeout(100, false)(
+    new Promise((resolve) => setTimeout(() => resolve(10), 200))
+  );
 
   let hasResolved = false;
   p.then(() => (hasResolved = true));
@@ -36,43 +42,33 @@ test(`cancels on timeout w/ reason "false"`, async () => {
 
   expect(hasResolved).toBe(false);
 });
-
 test(`rejects on timeout w/ reason`, async () => {
-  const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
-  // @ts-ignore
-  timeout(100, 20)(p);
+  const p = timeout(100, Error('Foo'))(
+    new Promise((resolve) => setTimeout(() => resolve(10), 200))
+  );
 
-  await expect(p).rejects.toBe(20);
+  await expect(p).rejects.toThrowError('Foo');
 });
-
-test(`rejects on timeout w/ reason for falsy value`, async () => {
-  const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
-  // @ts-ignore
-  timeout(100, 0)(p);
-
-  await expect(p).rejects.toBe(0);
-});
-
 test(`rejects on timeout w/ reason as boolean`, async () => {
-  const p = new Promise((resolve) => setTimeout(() => resolve(10), 200));
-  timeout(100, true)(p);
+  const p = timeout(100, true)(
+    new Promise((resolve) => setTimeout(() => resolve(10), 200))
+  );
 
   await expect(p).rejects.toThrowError('Promise timed out');
 });
-
 test(`resolves before timeout`, async () => {
-  const p = new Promise((resolve) => setTimeout(() => resolve(10), 100));
-  // @ts-ignore
-  timeout(200, 20)(p);
+  const p = timeout(200, Error('foo'))(
+    new Promise((resolve) => setTimeout(() => resolve(10), 100))
+  );
 
   await expect(p).resolves.toBe(10);
 });
-
 test(`rejects before timeout`, async () => {
-  // eslint-disable-next-line prefer-promise-reject-errors
-  const p = new Promise((resolve, reject) => setTimeout(() => reject(10), 100));
-  // @ts-ignore
-  timeout(200, 20)(p);
+  const p = timeout(200, Error('Bar'))(
+    new Promise((resolve, reject) =>
+      setTimeout(() => reject(Error('Foo')), 100)
+    )
+  );
 
-  await expect(p).rejects.toBe(10);
+  await expect(p).rejects.toThrowError('Foo');
 });

@@ -1,7 +1,7 @@
 import lazy from '~/create/lazy';
 
 describe(`lazy`, () => {
-  test(`Executor is not run until then is called`, () => {
+  test(`executor is not run until then is called`, () => {
     let run = false;
     const p = lazy((resolve) => (run = true) && resolve());
 
@@ -9,7 +9,7 @@ describe(`lazy`, () => {
     p.then();
     expect(run).toBe(true);
   });
-  test(`Executor is not run until catch is called`, () => {
+  test(`executor is not run until catch is called`, () => {
     let run = false;
     const p = lazy((resolve) => (run = true) && resolve());
 
@@ -17,16 +17,15 @@ describe(`lazy`, () => {
     p.catch();
     expect(run).toBe(true);
   });
-  test(`Resolves`, async () => {
+  test(`resolves`, async () => {
     const p = lazy((resolve) => resolve(1));
     await expect(p).resolves.toBe(1);
   });
-  test(`Rejects`, async () => {
-    // @ts-ignore
-    const p = lazy((_, reject) => reject(1));
-    await expect(p).rejects.toBe(1);
+  test(`rejects`, async () => {
+    const p = lazy((_, reject) => reject(Error('Foo')));
+    await expect(p).rejects.toThrowError('Foo');
   });
-  test(`Executor doesn't run twice`, async () => {
+  test(`executor doesn't run twice`, async () => {
     let run = 0;
     const p = lazy((resolve) => {
       run++;

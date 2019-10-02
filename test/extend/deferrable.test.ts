@@ -1,68 +1,65 @@
+import { deferrable } from '~/extend';
+import extend from '~/extend/deferrable';
 import mark from '~/helpers/mark';
-import deferrable from '~/extend/deferrable';
-import { IDeferrable } from '~/types';
 
-test(`returns new/mutated deferrable promise`, async () => {
+test(`named export returns a new promise`, async () => {
   const p = Promise.resolve('foo');
+  const n = deferrable(p);
 
-  const m = deferrable(p);
-  const n = deferrable(p, true);
-  expect(m).toBe(p);
   expect(n).not.toBe(p);
-  expect(mark.get(m, 'deferrable')).toBe(true);
-  expect(mark.get(n, 'deferrable')).toBe(true);
-  await expect(m).resolves.toBe('foo');
   await expect(n).resolves.toBe('foo');
+  expect(mark.get(n, 'deferrable')).toBe(true);
+});
+test(`default export returns a mutated promise`, async () => {
+  const p = Promise.resolve('foo');
+  const m = extend(p);
+
+  expect(m).toBe(p);
+  await expect(m).resolves.toBe('foo');
+  expect(mark.get(m, 'deferrable')).toBe(true);
 });
 test(`Should have resolve/reject`, () => {
-  const p: IDeferrable & Promise<any> = Promise.resolve() as any;
-  deferrable(p);
+  const p = deferrable(Promise.resolve());
 
   expect(typeof p.resolve).toBe('function');
   expect(typeof p.reject).toBe('function');
 });
-test(`Should resolve w/ origin promise`, async () => {
-  const p: IDeferrable & Promise<any> = new Promise((resolve) =>
-    setTimeout(() => resolve(10), 250)
-  ) as any;
-  deferrable(p);
+test(`should resolve w/ origin promise`, async () => {
+  const p = deferrable(
+    new Promise((resolve) => setTimeout(() => resolve(10), 250))
+  );
   setTimeout(() => p.resolve(20), 350);
 
   await expect(p).resolves.toBe(10);
 });
-test(`Should reject w/ origin promise`, async () => {
-  const p: IDeferrable & Promise<any> = new Promise((resolve, reject) =>
-    // eslint-disable-next-line prefer-promise-reject-errors
-    setTimeout(() => reject(10), 250)
-  ) as any;
-  deferrable(p);
-  // @ts-ignore
-  setTimeout(() => p.reject(20), 350);
+test(`should reject w/ origin promise`, async () => {
+  const p = deferrable(
+    new Promise((resolve, reject) =>
+      setTimeout(() => reject(Error('Foo')), 250)
+    )
+  );
+  setTimeout(() => p.reject(Error('Bar')), 350);
 
-  await expect(p).rejects.toBe(10);
+  await expect(p).rejects.toThrowError('Foo');
 });
-test(`Should resolve with promise.resolve()`, async () => {
-  const p: IDeferrable & Promise<any> = new Promise((resolve) =>
-    setTimeout(() => resolve(10), 250)
-  ) as any;
-  deferrable(p);
+test(`should resolve with promise.resolve()`, async () => {
+  const p = deferrable(
+    new Promise((resolve) => setTimeout(() => resolve(10), 250))
+  );
   p.resolve(20);
 
   await expect(p).resolves.toBe(20);
 });
-test(`Should reject with promise.reject()`, async () => {
-  const p: IDeferrable & Promise<any> = new Promise((resolve) =>
-    setTimeout(() => resolve(10), 250)
-  ) as any;
-  deferrable(p);
-  // @ts-ignore
-  p.reject(20);
+test(`should reject with promise.reject()`, async () => {
+  const p = deferrable(
+    new Promise((resolve) => setTimeout(() => resolve(10), 250))
+  );
+  p.reject(Error('Foo'));
 
-  await expect(p).rejects.toBe(20);
+  await expect(p).rejects.toThrowError('Foo');
 });
 test(`should not run twice for a deferrable promise`, () => {
-  const p: IDeferrable & Promise<any> = Promise.resolve() as any;
-  deferrable(p);
+  const p = deferrable(Promise.resolve());
   const [_resolve, _reject] = [p.resolve, p.reject];
   deferrable(p);
 

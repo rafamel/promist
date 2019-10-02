@@ -1,31 +1,29 @@
 import mark, { MARK_SYMBOL } from '~/helpers/mark';
 
-test(`Sets and gets a mark`, () => {
-  const p = Promise.resolve(0);
-
-  expect(() => mark.get(p, 'hello')).not.toThrow();
-  expect(mark.get(p, 'hello')).toBe(false);
-  expect(() => mark.set(p, 'hello')).not.toThrow();
-  expect(mark.get(p, 'hello')).toBe(true);
+test(`sets and gets a mark`, () => {
+  for (const kind of mark.list) {
+    const promise = Promise.resolve(0);
+    expect(mark.get(promise, kind)).toBe(false);
+    expect(mark.set(promise, kind)).toBe(promise);
+    expect(mark.get(promise, kind)).toBe(true);
+  }
 });
+test(`sets and gets all marks`, () => {
+  const promise = Promise.resolve(0);
 
-test(`Doesn't reset marks objects on new mark`, () => {
-  const p = Promise.resolve(0);
-
-  mark.set(p, 'hello');
-  const obj = (p as any)[MARK_SYMBOL];
-  mark.set(p, 'bye');
-
-  expect((p as any)[MARK_SYMBOL]).toBe(obj);
-  expect(mark.get(p, 'hello')).toBe(true);
-  expect(mark.get(p, 'bye')).toBe(true);
+  for (const kind of mark.list) {
+    expect(mark.get(promise, kind)).toBe(false);
+    expect(mark.set(promise, kind)).toBe(promise);
+  }
+  for (const kind of mark.list) {
+    expect(mark.get(promise, kind)).toBe(true);
+  }
 });
+test(`doesn't reset marks objects on new mark`, () => {
+  const promise = Promise.resolve(0);
 
-test(`Sets multiple marks`, () => {
-  const p = Promise.resolve(0);
-
-  mark.set(p, 'hello', 'bye');
-
-  expect(mark.get(p, 'hello')).toBe(true);
-  expect(mark.get(p, 'bye')).toBe(true);
+  mark.set(promise, 'cancellable');
+  const obj = (promise as any)[MARK_SYMBOL];
+  mark.set(promise, 'deferrable');
+  expect((promise as any)[MARK_SYMBOL]).toBe(obj);
 });

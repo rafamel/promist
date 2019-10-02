@@ -1,7 +1,7 @@
 import intercept from '~/helpers/intercept';
 
 describe(`then`, () => {
-  test(`Intercepts then`, async () => {
+  test(`intercepts then`, async () => {
     const p = Promise.resolve(10);
     intercept(p, (p) => p.then((x) => x * 2));
 
@@ -16,7 +16,7 @@ describe(`then`, () => {
 });
 
 describe(`catch`, () => {
-  test(`Intercepts catch`, async () => {
+  test(`intercepts catch`, async () => {
     const p = Promise.reject(Error('Foo'));
     intercept(p, (p: Promise<any>) => {
       return p
@@ -34,7 +34,7 @@ describe(`catch`, () => {
 
     await expect(p).rejects.toThrowError('Bar');
   });
-  test(`Intercepts for inner async fns`, async () => {
+  test(`intercepts for inner async fns`, async () => {
     const p = Promise.reject(Error('Foo'));
     intercept(p, (p: Promise<any>) => {
       return p
@@ -53,7 +53,7 @@ describe(`catch`, () => {
 });
 
 describe(`general`, () => {
-  test(`Returns p`, () => {
+  test(`returns promise`, () => {
     const p = Promise.resolve(10);
     const p2 = intercept(p, (p) => p.then((x) => x * 2));
 

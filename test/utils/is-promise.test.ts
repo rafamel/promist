@@ -1,11 +1,10 @@
 import isPromise from '~/utils/is-promise';
 
-test(`Returns true for promise`, () => {
+test(`returns true for promise`, () => {
   const p = Promise.resolve();
 
   expect(isPromise(p)).toBe(true);
 });
-
 test(`Returns true for thenables`, () => {
   const a = { then: (): void => {} };
   const b = (): void => {};
@@ -14,8 +13,7 @@ test(`Returns true for thenables`, () => {
   expect(isPromise(a)).toBe(true);
   expect(isPromise(b)).toBe(true);
 });
-
-test(`Returns false for non-promises`, () => {
+test(`returns false for non-promises`, () => {
   const [a, b, c, d] = [1, 'hi', {}, []];
 
   expect(isPromise(a)).toBe(false);
@@ -23,8 +21,7 @@ test(`Returns false for non-promises`, () => {
   expect(isPromise(c)).toBe(false);
   expect(isPromise(d)).toBe(false);
 });
-
-test(`Returns false for non-promises (2)`, () => {
+test(`returns false for non-promises (2)`, () => {
   const a = { then: 1 };
   const b = { catch: (): void => {} };
   const c = {

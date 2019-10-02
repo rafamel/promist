@@ -1,30 +1,32 @@
-import stateful from '~/extend/stateful';
+import { stateful } from '~/extend';
+import extend from '~/extend/stateful';
 import mark from '~/helpers/mark';
-import { IStateful } from '~/types';
 
-test(`returns new/mutated stateful promise`, async () => {
+test(`named export returns a new promise`, async () => {
   const p = Promise.resolve('foo');
+  const n = stateful(p);
 
-  const m = stateful(p);
-  const n = stateful(p, true);
-  expect(m).toBe(p);
   expect(n).not.toBe(p);
-  expect(mark.get(m, 'stateful')).toBe(true);
-  expect(mark.get(n, 'stateful')).toBe(true);
-  await expect(m).resolves.toBe('foo');
   await expect(n).resolves.toBe('foo');
+  expect(mark.get(n, 'stateful')).toBe(true);
+});
+test(`default export returns a mutated promise`, async () => {
+  const p = Promise.resolve('foo');
+  const m = extend(p);
+
+  expect(m).toBe(p);
+  await expect(m).resolves.toBe('foo');
+  expect(mark.get(m, 'stateful')).toBe(true);
 });
 test(`initializes correctly`, () => {
-  const p: IStateful & Promise<any> = Promise.resolve() as any;
-  stateful(p);
+  const p = stateful(Promise.resolve());
 
   expect(p.status).toBe('pending');
   expect(p.value).toBe(null);
   expect(p.reason).toBe(null);
 });
 test(`sets state on resolve`, async () => {
-  const p: IStateful & Promise<any> = Promise.resolve(10) as any;
-  stateful(p);
+  const p = stateful(Promise.resolve(10));
 
   await expect(p).resolves.toBe(10);
   expect(p.status).toBe('resolved');
@@ -32,22 +34,11 @@ test(`sets state on resolve`, async () => {
   expect(p.reason).toBe(null);
 });
 test(`sets state on reject`, async () => {
-  // eslint-disable-next-line prefer-promise-reject-errors
-  const p: IStateful & Promise<any> = Promise.reject(10) as any;
-  stateful(p);
+  const error = Error('Foo');
+  const p = stateful(Promise.reject(error));
 
-  await expect(p).rejects.toBe(10);
+  await expect(p).rejects.toThrowError('Foo');
   expect(p.status).toBe('rejected');
   expect(p.value).toBe(null);
-  expect(p.reason).toBe(10);
-});
-test(`doesn't run again`, async () => {
-  const p: IStateful & Promise<any> = Promise.resolve(10) as any;
-  stateful(p);
-  await p;
-  stateful(p);
-
-  expect(p.status).toBe('resolved');
-  expect(p.value).toBe(10);
-  expect(p.reason).toBe(null);
+  expect(p.reason).toBe(error);
 });

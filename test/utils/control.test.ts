@@ -1,6 +1,6 @@
 import control from '~/utils/control';
 
-test(`Succeeds with test => true`, async () => {
+test(`succeeds with test => true`, async () => {
   function* gen(): Generator<number, number, number> {
     return 1;
   }
@@ -10,7 +10,7 @@ test(`Succeeds with test => true`, async () => {
   await expect(fn()).resolves.toBe(1);
   await expect(fnp()).resolves.toBe(1);
 });
-test(`Doesn't resolve with test => false`, async () => {
+test(`doesn't resolve with test => false`, async () => {
   function* gen(): Generator<number, number, number> {
     return 1;
   }
@@ -24,7 +24,7 @@ test(`Doesn't resolve with test => false`, async () => {
 
   expect(res).toEqual([false, false]);
 });
-test(`Rejects with test => Error`, async () => {
+test(`rejects with test => Error`, async () => {
   function* gen(): Generator<number, number, number> {
     return 1;
   }
@@ -34,7 +34,7 @@ test(`Rejects with test => Error`, async () => {
   await expect(fn()).rejects.toThrowError();
   await expect(fnp()).rejects.toThrowError();
 });
-test(`Rejects with test throwing Error`, async () => {
+test(`rejects with test throwing Error`, async () => {
   function* gen(): Generator<number, number, number> {
     return 1;
   }
@@ -46,14 +46,14 @@ test(`Rejects with test throwing Error`, async () => {
   await expect(fn()).rejects.toThrowError();
   await expect(fnp()).rejects.toThrowError();
 });
-test(`Rejects with generator throwing Error`, async () => {
+test(`rejects with generator throwing Error`, async () => {
   const fn = control(() => true, function*(): Generator<any, any, any> {
     throw Error();
   });
 
   await expect(fn()).rejects.toThrowError();
 });
-test(`Yields and succeeds with test => true`, async () => {
+test(`yields and succeeds with test => true`, async () => {
   function* gen(
     n = 10
   ): Generator<Promise<number> | number, Promise<number> | number, number> {
@@ -69,7 +69,7 @@ test(`Yields and succeeds with test => true`, async () => {
   await expect(fn()).resolves.toBe(10000);
   await expect(fnp()).resolves.toBe(10000);
 });
-test(`Test is called as many times as yields are + 1`, async () => {
+test(`test is called as many times as yields are + 1`, async () => {
   let count = 0;
   const fn = control(
     () => {
@@ -88,7 +88,7 @@ test(`Test is called as many times as yields are + 1`, async () => {
   await fn();
   expect(count).toBe(4);
 });
-test(`Stops yielding on test => false`, async () => {
+test(`stops yielding on test => false`, async () => {
   let res = true;
   const done = [false, false, false, false, false];
   setTimeout(() => (res = false), 500);
@@ -111,7 +111,7 @@ test(`Stops yielding on test => false`, async () => {
   expect(resolved).toBe(false);
   expect(done).toEqual([true, true, true, true, false]);
 });
-test(`Passes arguments to generator`, async () => {
+test(`passes arguments to generator`, async () => {
   const fn = control(() => true, function*(
     a,
     b,

@@ -2,16 +2,14 @@ import waitUntil from '~/create/wait-until';
 
 test(`waits until truthy & resolves on value`, async () => {
   const init = Date.now();
-  let res = false;
-  const p = waitUntil(() => res);
-  // @ts-ignore
+  let res: boolean | number = false;
+  const p = waitUntil(() => Boolean(res));
   setTimeout(() => (res = 10), 100);
 
   await expect(p).resolves.toBe(undefined);
   expect(Date.now() - init).toBeLessThan(250);
   expect(Date.now() - init).toBeGreaterThanOrEqual(100);
 });
-
 test(`waits takes into account ms`, async () => {
   let res = false;
   const init = Date.now();
