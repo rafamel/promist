@@ -7,7 +7,6 @@ describe(`then`, () => {
 
     await expect(p).resolves.toBe(20);
   });
-
   test(`Intercepts for inner async fns`, async () => {
     const p = Promise.resolve(10);
     intercept(p, (p) => p.then(async (x) => x * 2));
@@ -18,24 +17,38 @@ describe(`then`, () => {
 
 describe(`catch`, () => {
   test(`Intercepts catch`, async () => {
-    // eslint-disable-next-line prefer-promise-reject-errors
-    const p = Promise.reject(10);
+    const p = Promise.reject(Error('Foo'));
     intercept(p, (p: Promise<any>) => {
-      // eslint-disable-next-line prefer-promise-reject-errors
-      return p.then((x) => x * 2).catch((x) => Promise.reject(x * 3));
+      return p
+        .then(() => 20)
+        .catch((x) =>
+          Promise.reject(
+            Error(
+              Object.hasOwnProperty.call(x, 'message') && x.message === 'Foo'
+                ? 'Bar'
+                : 'Baz'
+            )
+          )
+        );
     });
 
-    await expect(p).rejects.toBe(30);
+    await expect(p).rejects.toThrowError('Bar');
   });
   test(`Intercepts for inner async fns`, async () => {
-    // eslint-disable-next-line prefer-promise-reject-errors
-    const p = Promise.reject(10);
+    const p = Promise.reject(Error('Foo'));
     intercept(p, (p: Promise<any>) => {
-      // eslint-disable-next-line prefer-promise-reject-errors
-      return p.then((x) => x * 2).catch(async (x) => Promise.reject(x * 3));
+      return p
+        .then(() => 20)
+        .catch(async (x) => {
+          throw Error(
+            Object.hasOwnProperty.call(x, 'message') && x.message === 'Foo'
+              ? 'Bar'
+              : 'Baz'
+          );
+        });
     });
 
-    await expect(p).rejects.toBe(30);
+    await expect(p).rejects.toThrowError('Bar');
   });
 });
 
