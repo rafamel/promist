@@ -1,3 +1,33 @@
+# [2.0.0](https://github.com/rafamel/promist/compare/v1.0.0...v2.0.0) (2019-10-31)
+
+
+* chore(prepares class based rewrite): ([a05e28d](https://github.com/rafamel/promist/commit/a05e28d))
+
+
+### Bug Fixes
+
+* exports classes and collections from main entry point ([55d7f19](https://github.com/rafamel/promist/commit/55d7f19))
+* **classes:** fixes PromiseExecutor definition; fixes LazyPromist using PromiseExecutor instead of PromistExecutor ([3bed547](https://github.com/rafamel/promist/commit/3bed547))
+
+
+### Features
+
+* **classes:** adds LazyPromist ([86808b8](https://github.com/rafamel/promist/commit/86808b8))
+* **classes:** adds Promist ([ebec03c](https://github.com/rafamel/promist/commit/ebec03c))
+* **create:** adds subscribe; renames waitUntil to until; reafactors until and wait ([aab4ea4](https://github.com/rafamel/promist/commit/aab4ea4))
+* subscribe and Promist.subscribe take a second onComplete argument ([128dd31](https://github.com/rafamel/promist/commit/128dd31))
+
+
+### BREAKING CHANGES
+
+* **create:** waitUntil has been renamed to until; takes ms as a third parameter instead of as
+second; most other create functions have been removed
+* All extend functions have been deprecated, some of the previous create function
+remain, perhaps with different apis, while some other have been added. The pipe and clone utilities
+have also been deprecated.
+
+
+
 # [1.0.0](https://github.com/rafamel/promist/compare/v0.7.0...v1.0.0) (2019-10-02)
 
 
