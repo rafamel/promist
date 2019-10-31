@@ -1,5 +1,5 @@
-import series from '~/series';
-import lazy from '~/create/lazy';
+import series from '~/collections/series';
+import { LazyPromist } from '~/classes';
 
 const createArr = (arr: number[] = [1, 2, 3, 4]): Array<Promise<number>> => {
   return arr.map((x) => Promise.resolve(x));
@@ -11,7 +11,9 @@ const createDelayedArr = (
   return Array(50)
     .fill(0)
     .map((_, i) => {
-      return lazy((resolve) => setTimeout(() => resolve(i), ms * (n - i)));
+      return new LazyPromist((resolve) => {
+        setTimeout(() => resolve(i), ms * (n - i));
+      });
     });
 };
 

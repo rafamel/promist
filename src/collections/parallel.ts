@@ -1,4 +1,4 @@
-import deferred from './create/deferred';
+import { Promist } from '~/classes';
 
 export function map<T>(
   arr: Array<Promise<T> | T>,
@@ -37,7 +37,7 @@ export function reduce<T>(
   return Promise.all(arr).then((resArr) => {
     return resArr.slice(1).reduce(
       (acc, x, i) => {
-        const p = deferred();
+        const p = new Promist();
         acc.then((val) => p.resolve(val)).catch((err) => p.reject(err));
         return fn(p, x, i + 1, resArr);
       },
