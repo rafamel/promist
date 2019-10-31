@@ -423,11 +423,11 @@ describe(`static methods`, () => {
       let val = false;
       const p = Promist.until(() => val);
 
-      setTimeout(() => (val = true), 150);
+      setTimeout(() => (val = true), 200);
       const start = Date.now();
       await expect(p).resolves.toBe(undefined);
-      expect(Date.now() - start).toBeGreaterThanOrEqual(150);
-      expect(Date.now() - start).toBeLessThan(250);
+      expect(Date.now() - start).toBeGreaterThanOrEqual(200);
+      expect(Date.now() - start).toBeLessThan(400);
     });
     test(`unsafe rejects on sync throw`, async () => {
       const p = Promist.until(() => {
@@ -446,48 +446,48 @@ describe(`static methods`, () => {
         return true;
       }, true);
 
-      setTimeout(() => (val = true), 150);
+      setTimeout(() => (val = true), 200);
       const start = Date.now();
       await expect(p).resolves.toBe(undefined);
-      expect(Date.now() - start).toBeGreaterThanOrEqual(150);
-      expect(Date.now() - start).toBeLessThan(250);
+      expect(Date.now() - start).toBeGreaterThanOrEqual(200);
+      expect(Date.now() - start).toBeLessThan(400);
     });
     test(`safe takes rejections as false`, async () => {
       let val = false;
       const p = Promist.until(() => val || Promise.reject(Error(`foo`)), true);
 
-      setTimeout(() => (val = true), 150);
+      setTimeout(() => (val = true), 200);
       const start = Date.now();
       await expect(p).resolves.toBe(undefined);
-      expect(Date.now() - start).toBeGreaterThanOrEqual(150);
-      expect(Date.now() - start).toBeLessThan(250);
+      expect(Date.now() - start).toBeGreaterThanOrEqual(200);
+      expect(Date.now() - start).toBeLessThan(400);
     });
     test(`allows for external manipulation`, async () => {
       let val = false;
       const p = Promist.until(() => val);
 
       setTimeout(() => p.resolve(), 50);
-      setTimeout(() => (val = true), 150);
+      setTimeout(() => (val = true), 300);
       const start = Date.now();
       await expect(p).resolves.toBe(undefined);
       expect(Date.now() - start).toBeGreaterThanOrEqual(50);
-      expect(Date.now() - start).toBeLessThan(150);
+      expect(Date.now() - start).toBeLessThan(300);
     });
   });
   describe(`wait`, () => {
     test(`waits`, async () => {
-      const p = Promist.wait(250);
+      const p = Promist.wait(200);
       const start = Date.now();
       await expect(p).resolves.toBe(undefined);
-      expect(Date.now() - start).toBeGreaterThanOrEqual(250);
-      expect(Date.now() - start).toBeLessThan(350);
+      expect(Date.now() - start).toBeGreaterThanOrEqual(200);
+      expect(Date.now() - start).toBeLessThan(400);
     });
     test(`allows for external manipulation`, async () => {
-      const p = Promist.wait(250);
+      const p = Promist.wait(200);
       p.resolve();
       const start = Date.now();
       await expect(p).resolves.toBe(undefined);
-      expect(Date.now() - start).toBeLessThan(150);
+      expect(Date.now() - start).toBeLessThan(200);
     });
   });
 });

@@ -4,11 +4,11 @@ test(`unsafe resolves`, async () => {
   let val = false;
   const p = until(() => val);
 
-  setTimeout(() => (val = true), 150);
+  setTimeout(() => (val = true), 200);
   const start = Date.now();
   await expect(p).resolves.toBe(undefined);
-  expect(Date.now() - start).toBeGreaterThanOrEqual(150);
-  expect(Date.now() - start).toBeLessThan(250);
+  expect(Date.now() - start).toBeGreaterThanOrEqual(200);
+  expect(Date.now() - start).toBeLessThan(400);
 });
 test(`unsafe rejects on sync throw`, async () => {
   const p = until(() => {
@@ -27,19 +27,19 @@ test(`safe takes throws as false`, async () => {
     return true;
   }, true);
 
-  setTimeout(() => (val = true), 150);
+  setTimeout(() => (val = true), 200);
   const start = Date.now();
   await expect(p).resolves.toBe(undefined);
-  expect(Date.now() - start).toBeGreaterThanOrEqual(150);
-  expect(Date.now() - start).toBeLessThan(250);
+  expect(Date.now() - start).toBeGreaterThanOrEqual(200);
+  expect(Date.now() - start).toBeLessThan(400);
 });
 test(`safe takes rejections as false`, async () => {
   let val = false;
   const p = until(() => val || Promise.reject(Error(`foo`)), true);
 
-  setTimeout(() => (val = true), 150);
+  setTimeout(() => (val = true), 200);
   const start = Date.now();
   await expect(p).resolves.toBe(undefined);
-  expect(Date.now() - start).toBeGreaterThanOrEqual(150);
-  expect(Date.now() - start).toBeLessThan(250);
+  expect(Date.now() - start).toBeGreaterThanOrEqual(200);
+  expect(Date.now() - start).toBeLessThan(400);
 });

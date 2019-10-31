@@ -125,13 +125,13 @@ describe(`timeout`, () => {
   });
   test(`runs after executor does if it didn't run`, async () => {
     const p = new LazyPromist(() => {});
-    p.timeout(150, Error('foo'));
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    p.timeout(200, Error('foo'));
+    await new Promise((resolve) => setTimeout(resolve, 250));
 
     const start = Date.now();
     await expect(p).rejects.toThrowError('foo');
-    expect(Date.now() - start).toBeGreaterThanOrEqual(150);
-    expect(Date.now() - start).toBeLessThan(250);
+    expect(Date.now() - start).toBeGreaterThanOrEqual(200);
+    expect(Date.now() - start).toBeLessThan(400);
   });
   test(`earlier trumps later fallback/timeout`, async () => {
     const p = new LazyPromist(() => {});
@@ -151,13 +151,13 @@ describe(`fallback`, () => {
   });
   test(`runs after executor does if it didn't run`, async () => {
     const p = new LazyPromist(() => {});
-    p.fallback(150, 'foo');
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    p.fallback(200, 'foo');
+    await new Promise((resolve) => setTimeout(resolve, 250));
 
     const start = Date.now();
     await expect(p).resolves.toBe('foo');
-    expect(Date.now() - start).toBeGreaterThanOrEqual(150);
-    expect(Date.now() - start).toBeLessThan(250);
+    expect(Date.now() - start).toBeGreaterThanOrEqual(200);
+    expect(Date.now() - start).toBeLessThan(400);
   });
   test(`earlier trumps later fallback/timeout`, async () => {
     const p = new LazyPromist(() => {});
@@ -181,12 +181,12 @@ describe(`static methods`, () => {
     expect(fn).toHaveBeenCalledTimes(1);
   });
   test(`wait doesn't start until requested`, async () => {
-    const p = LazyPromist.wait(100);
+    const p = LazyPromist.wait(200);
 
-    await new Promise((resolve) => setTimeout(resolve, 150));
+    await new Promise((resolve) => setTimeout(resolve, 250));
     const start = Date.now();
     await expect(p).resolves.toBe(undefined);
-    expect(Date.now() - start).toBeGreaterThanOrEqual(100);
+    expect(Date.now() - start).toBeGreaterThanOrEqual(200);
   });
   test(`until doesn't start until requested`, async () => {
     const fn = jest.fn();
