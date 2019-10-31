@@ -109,9 +109,9 @@ subject.next('foo');
 
 `Promist` behaves just like a traditional `Promise`, with a few additional features:
 
-- It can be externally resolved and/or rejected.
-- It can also be externally cancelled. If using an executor on the `Promist` constructor, you can receive external completion events  (resolution/rejection/cancellation) via the returned callback, in order to free up resources, if needed. Externally, you also have access to this event (including cancellation) via the `Promist.react` promise.
-- It will always have the `finally` method available, regardless of the underlying `Promise` implementation.
+* It can be externally resolved and/or rejected.
+* It can also be externally cancelled. If using an executor on the `Promist` constructor, you can receive external completion events  (resolution/rejection/cancellation) via the returned callback, in order to free up resources, if needed. Externally, you also have access to this event (including cancellation) via the `Promist.react` promise.
+* It will always have the `finally` method available, regardless of the underlying `Promise` implementation.
 
 The difference between `Promist`s static methods and *create* functions is that in any completion event, they will always clean up after themselves, clearing the underlying timeouts and/or subscriptions.
 
