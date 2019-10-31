@@ -18,11 +18,11 @@
 
 *Promist* intends to cover and abstract the most common day to day dealings with *async* behavior and promises. It doesn't intend to be the most complete library, or an incredibly slim one, but rather be a dependable set of functions that serve as go-to for most use cases.
 
-* [*Create* functions](#create-functions) return a new promise.
+* [*Create* functions:](#create-functions) return a new promise.
   * [`wait`](#waitms-number-promise)
   * [`until`](#untiltest-function-safe-boolean-ms-number-promise)
   * [`subscribe`](#subscribeobservable-observable-oncomplete-function-promise)
-* [*Classes,*](#classes) both `Promist` and `LazyPromist`, behaving just like a traditional `Promise`, with a few additional features.
+* [*Classes:*](#classes) both `Promist` and `LazyPromist` behave just like a `Promise`, but pack a few additional features.
   * [`Promist`](#promist-class)
   * [`LazyPromist`](#lazypromist-class)
   * [Static methods](#static-methods)
@@ -108,10 +108,10 @@ subject.next('foo');
 
 ### `Promist` class
 
-`Promist` behaves just like a traditional `Promise`, with a few additional features:
+`Promist` behaves just like a `Promise`, but packs a few additional features.
 
 * It can be externally resolved and/or rejected.
-* It can also be externally cancelled. If using an executor on the `Promist` constructor, you can receive external completion events  (resolution/rejection/cancellation) via the returned callback, in order to free up resources, if needed. Externally, you also have access to this event (including cancellation) via the `Promist.react` promise.
+* It can also be externally cancelled. If using an executor on the `Promist` constructor, you can receive external completion events (resolution/rejection/cancellation) via the returned callback in order to free up resources, if needed. Externally, you also have access to this event -including cancellation- via the `Promist.react` promise.
 * It will always have the `finally` method available, regardless of the underlying `Promise` implementation.
 
 The difference between `Promist`s static methods and *create* functions is that in any completion event, they will always clean up after themselves, clearing the underlying timeouts and/or subscriptions.
@@ -134,7 +134,7 @@ const promist = new Promist((resolve, reject) => {
 
 ### `LazyPromist` class
 
-Inherits from `Promist`, having the same *constructor* signature, with the diference of the *executor* not being optional.
+Inherits from `Promist`, having the same *constructor* signature, with the diference of the *executor* not being optional. All of its static methods promises will execute lazily, as expected.
 
 `LazyPromist`s don't run their constructor `executor` until after they've been explicitly expected to resolve by a `then`, `catch`, or `finally` call.
 
@@ -177,7 +177,7 @@ See [`until`](#untiltest-function-safe-boolean-ms-number-promise) and [the diffe
 
 #### `Promist.subscribe(observable: Observable, onComplete?: Function): Promist`
 
-See [`subscribe`](##subscribeobservable-observable-promise) and [the differences between `Promist` static methods and *create* functions.](#promist-class)
+See [`subscribe`](#subscribeobservable-observable-oncomplete-function-promise) and [the differences between `Promist` static methods and *create* functions.](#promist-class)
 
 ### Instance fields
 
