@@ -2,7 +2,7 @@ import { AbstractObservable } from '~/types';
 import { until } from './until';
 
 /**
- * Subscribe to an observable and resolve/reject with its first value.
+ * Subscribes to an observable and resolves/rejects with its first value.
  * It will reject it the observable completes before emitting any values.
  */
 export function subscribe<T>(observable: AbstractObservable<T>): Promise<T> {

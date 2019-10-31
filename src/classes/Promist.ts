@@ -22,17 +22,17 @@ interface InternalActions<T> {
 }
 
 /**
- * `Promist` behaves just like a traditional `Promise`, with a few additional
- * features:
+ * `Promist` behaves just like a traditional `Promise`, with a few
+ * additional features:
  * - It can be externally resolved and/or rejected.
- * - It can also be externally cancelled. If using an executor on the `Promist`
+ * - It can also be externally cancelled. If using an executor on
+ * the `Promist` constructor, you can receive external completion
+ * events  (resolution/rejection/cancellation) via the returned
+ * callback, in order to free up resources, if needed. Externally,
+ * you also have access to this event (including cancellation)
+ * via the `Promist.react` promise.
  * - It will always have the `finally` method available,
  * regardless of the underlying `Promise` implementation.
- * constructor, you can receive external completion events
- * (resolution/rejection/cancellation) via the returned callback
- * of the executor, in order to free up resources, if needed.
- * Externally, you also have access to this event (including cancellation)
- * via the `Promist.react` promise.
  *
  * The difference between `Promist`s static methods and create functions
  * is that in any completion event, they will always clean up after themselves,
@@ -40,7 +40,7 @@ interface InternalActions<T> {
  */
 export default class Promist<T> {
   /**
-   * Create a `Promist` from a `Promise` or a *sync* or *async* function.
+   * Creates a `Promist` from a `Promise` or a *sync* or *async* function.
    */
   public static from<T>(
     promise: Promise<T> | (() => Promise<T> | T)
@@ -56,19 +56,12 @@ export default class Promist<T> {
     });
   }
   /**
-   * Subscribe to an observable and resolves/rejects with its first value.
-   * It will reject it the observable completes before emitting any values.
+   * Will wait for `ms` milliseconds before resolving with an empty response.
    */
-  public static subscribe<T>(observable: AbstractObservable<T>): Promist<T> {
-    return new this((resolve, reject) => {
-      const subscription = observable.subscribe({
-        next: (value) => resolve(value as any),
-        error: (error) => reject(error),
-        complete: () =>
-          reject(Error(`Source completed without emitting any values`))
-      });
-
-      return () => subscription.unsubscribe();
+  public static wait(ms: number): Promist<void> {
+    return new this((resolve) => {
+      const timeout = setTimeout(resolve, ms);
+      return () => clearTimeout(timeout);
     });
   }
   /**
@@ -109,12 +102,19 @@ export default class Promist<T> {
     });
   }
   /**
-   * Will wait for `ms` milliseconds before resolving with an empty response.
+   * Subscribe to an observable and resolves/rejects with its first value.
+   * It will reject it the observable completes before emitting any values.
    */
-  public static wait(ms: number): Promist<void> {
-    return new this((resolve) => {
-      const timeout = setTimeout(resolve, ms);
-      return () => clearTimeout(timeout);
+  public static subscribe<T>(observable: AbstractObservable<T>): Promist<T> {
+    return new this((resolve, reject) => {
+      const subscription = observable.subscribe({
+        next: (value) => resolve(value as any),
+        error: (error) => reject(error),
+        complete: () =>
+          reject(Error(`Source completed without emitting any values`))
+      });
+
+      return () => subscription.unsubscribe();
     });
   }
   private [INTERNAL_SYMBOL]: Internal<T>;
@@ -209,7 +209,8 @@ export default class Promist<T> {
     if (oncomplete) oncomplete();
   }
   /**
-   * Cancels the `Promist`. If it didn't already, it will never resolve.
+   * Cancels the `Promist`.
+   * If it didn't already, it will never resolve nor reject.
    */
   public cancel(): void {
     const { state, oncomplete } = this[INTERNAL_SYMBOL];
@@ -219,7 +220,7 @@ export default class Promist<T> {
     if (oncomplete) oncomplete();
   }
   /**
-   * Sets a timeout of `ms` milliseconds after which, it the `Promist`
+   * Sets a timeout of `ms` milliseconds after which, if the `Promist`
    * hasn't resolved, rejected, or cancelled, it will reject with `reason`.
    */
   public timeout(ms: number, reason?: Error): void {
@@ -232,7 +233,7 @@ export default class Promist<T> {
     this.react.then(() => clearTimeout(timeout));
   }
   /**
-   * Sets a timeout of `ms` milliseconds after which, it the `Promist`
+   * Sets a timeout of `ms` milliseconds after which, if the `Promist`
    * hasn't resolved, rejected, or cancelled, it will resolve
    * by falling back to `value`.
    */

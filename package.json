@@ -5,16 +5,18 @@
   "description": "A dependable promises and async utility belt",
   "keywords": [
     "async",
+    "promise",
     "promises",
+    "lazy",
     "series",
     "parallel",
     "map",
     "reduce",
-    "deferred",
+    "defer",
     "deferrable",
+    "cancel",
     "cancellable",
-    "timeout",
-    "delay"
+    "timeout"
   ],
   "engines": {
     "node": ">=8"

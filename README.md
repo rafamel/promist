@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/github/license/rafamel/promist.svg)](https://github.com/rafamel/promist/blob/master/LICENSE)
 [![Types](https://img.shields.io/npm/types/promist.svg)](https://www.npmjs.com/package/promist)
 
-> A dependable promises and async utility belt. Not a `Promise` implementation.
+> A dependable promises and async utility belt.
 
 ## Install
 
@@ -18,42 +18,47 @@
 
 *Promist* intends to cover and abstract the most common day to day dealings with *async* behavior and promises. It doesn't intend to be the most complete library, or an incredibly slim one, but rather be a dependable set of functions that serve as go-to for most use cases.
 
-* [*Promises*:](#promises) There are *create* and *extend* functions:
-  * [*Create* functions](#create-functions) return a new promise.
-    * [`wait`](#waitms-number-promise)
-    * [`waitUntil`](#waituntiltest-function-ms-number-promise)
-    * [`deferred`](#deferred-promise)
-    * [`lazy`](#lazyexecutor-function-promise)
-  * [*Extend* functions](#extend-functions) return a new instance extending an input promise. They can be chained via [`pipe`.](#pipefns-function-function)
-    * [`deferrable`](#deferrablepromise-promise-promise)
-    * [`cancellable`](#cancellablepromise-promise-promise)
-    * [`stateful`](#statefulpromise-promise-promise)
-    * [`timed`](#timedpromise-promise-promise)
-    * [`delay`](#delayms-number-delayrejection-boolean-function)
-    * [`timeout`](#timeoutms-number-reason-boolean--error-function)
-  * There are also some [utility functions.](#utils)
-    * [`pipe`](#pipefns-function-function)
-    * [`clone`](#clonepromise-promise-promise)
-    * [`control`](#controltest-function-generator-function-function)
-    * [`isPromise`](#ispromisevalue-any-boolean)
-    * [`isPromist`](#ispromistpromise-promise-kind-string-boolean)
-* [*Collections*:](#collections) Handled either in *parallel* or *series.*
+* [*Create* functions](#create-functions) return a new promise.
+  * [`wait`](#waitms-number-promise)
+  * [`until`](#untiltest-function-safe-boolean-ms-number-promise)
+  * [`subscribe`](#subscribeobservable-observable-promise)
+* [*Classes,*](#classes) both `Promist` and `LazyPromist`, behaving just like a traditional `Promise`, with a few additional features.
+  * [`Promist`](#promist-class)
+  * [`LazyPromist`](#lazypromist-class)
+  * [Static methods](#static-methods)
+    * [`from`](#promistfrompromise-promise--function-promist)
+    * [`wait`](#promistwaitms-number-promist)
+    * [`until`](#promistuntiltest-function-safe-boolean-ms-number-promist)
+    * [`subscribe`](#promistsubscribeobservable-observable-promist)
+  * [Instance fields](#instance-fields)
+    * [`status`](#promiststatus)
+    * [`value`](#promistvalue)
+    * [`reason`](#promistreason)
+    * [`react`](#promistreact)
+  * [Instance methods](#instance-methods)
+    * [`resolve`](#promistresolvevalue-any-void)
+    * [`reject`](#promistrejectreason-Error-void)
+    * [`cancel`](#promistcancel-void)
+    * [`timeout`](#promisttimeoutms-number-reason-error-void)
+    * [`fallback`](#promistfallbackms-number-value-any-void)
+* [*Utils:*](#utils) a set of conveniency utility functions.
+  * [`control`](#controltest-function-generator-function-function)
+  * [`isPromise`](#ispromisevalue-any-boolean)
+* [*Collections*:](#collections) handled either in *parallel* or *series.*
   * [`map`](#maparr-promise-callback-function-promise)
   * [`filter`](#filterarr-promise-callback-function-promise)
   * [`reduce`](#reducearr-promise-callback-function-initialvalue-any-promise)
   * [`each`](#eacharr-promise-callback-function-promise)
 
-## Promises
-
-### Create functions
+## Create functions
 
 *Create* functions return a new promise.
 
-#### `wait(ms: number): Promise`
+### `wait(ms: number): Promise`
 
 Returns a promise that will resolve after `ms` milliseconds;
 
-* `ms`: Number of milliseconds to wait for until resolution.
+* `ms`: number of milliseconds to wait for until resolution.
 
 ```javascript
 import { wait } from 'promist';
@@ -61,209 +66,229 @@ import { wait } from 'promist';
 wait(100).then(() => console.log('Resolved after 100ms'));
 ```
 
-#### `waitUntil(test: Function, ms?: number): Promise`
+### `until(test: Function, safe?: boolean, ms?: number): Promise`
 
-Returns a promise that resolves when `test` returns truthy, with its value.
+Returns a promise that resolves when `test` returns `true`.
 
-* `test`: Test function, with signature `() => boolean | Promise<boolean>`.
-* `ms`: The frequency `test` should be called at until it returns truthy. Default: `20`.
+* `test`: test function, with signature `() => boolean | Promise<boolean>`.
+* `safe`: if `true`, it will treat `test` throws and rejections as `false`, instead of rejecting itself.
+* `ms`: the frequency `test` should be called at until it returns truthy. Default: `25`.
 
 ```javascript
-import { waitUntil } from 'promist';
+import { until } from 'promist';
 
 let example = 1;
 
-waitUntil(() => example === 10)
+until(() => example === 10)
   .then(() => console.log('Resolved after example = 10'));
 
 example = 10;
 ```
 
-#### `deferred(): Promise`
+### `subscribe(observable: Observable): Promise`
 
-Returns a newly formed deferrable promise, with methods:
+Subscribes to an observable and resolves/rejects with its first value. It will reject it the observable completes before emitting any values.
 
-* `promise.resolve(value: any): void`: Resolves the promise.
-* `promise.reject(reason: any): void`: Rejects the promise.
+* `observable`: an *Observable* object.
 
 ```javascript
-import { deferred } from 'promist';
+import { subscribe } from 'promist';
+import { Subject } from 'rxjs';
 
-const promise = deferred();
-promise.then(value => console.log(`Resolves with "Hello": ${value}`));
-promise.resolve('Hello');
+const subject = new Subject();
+
+subscribe(subject)
+  .then(console.log); // foo
+
+subject.next('foo');
 ```
 
-#### `lazy(executor: Function): Promise`
+## Classes
 
-Returns a lazy promise: it's executor won't run until `promise.then()`, `promise.catch()`, or `promise.finally()` are called for the first time.
+### `Promist` class
 
-* `executor`: A function with the same signature [as the one taken by the `Promise` constructor.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+`Promist` behaves just like a traditional `Promise`, with a few additional features:
+
+- It can be externally resolved and/or rejected.
+- It can also be externally cancelled. If using an executor on the `Promist` constructor, you can receive external completion events  (resolution/rejection/cancellation) via the returned callback, in order to free up resources, if needed. Externally, you also have access to this event (including cancellation) via the `Promist.react` promise.
+- It will always have the `finally` method available, regardless of the underlying `Promise` implementation.
+
+The difference between `Promist`s static methods and *create* functions is that in any completion event, they will always clean up after themselves, clearing the underlying timeouts and/or subscriptions.
+
+Its *constructor* takes an optional *executor* function, just as
+you would use to instantiate a normal promise.
 
 ```javascript
-import { lazy } from 'promist';
+import { Promist } from 'promist';
 
-const promise = lazy((resolve, reject) => {
-  const value = 1 + 1; // Expensive task
-  resolve(value);
+const promist = new Promist((resolve, reject) => {
+  // Counter will start on instantiation
+  const timeout = setTimeout(() => resolve('foo'), 250);
+  return function cleanup() {
+    // Will run after the function resolves, rejects, or cancels
+    clearTimeout(timeout);
+  }
+});
+```
+
+### `LazyPromist` class
+
+Inherits from `Promist`, having the same *constructor* signature, with the diference of the *executor* not being optional.
+
+`LazyPromist`s don't run their constructor `executor` until after they've been explicitly expected to resolve by a `then`, `catch`, or `finally` call.
+
+```javascript
+import { LazyPromist } from 'promist';
+
+const promist = new LazyPromist((resolve, reject) => {
+  // Counter will start after `then`, `catch`, or `finally` are called.
+  const timeout = setTimeout(() => resolve('foo'), 250);
+  return function cleanup() {
+    // Will run after the function resolves, rejects, or cancels
+    clearTimeout(timeout);
+  }
+});
+```
+
+### Static methods
+
+#### `Promist.from(promise: Promise | Function): Promist`
+
+Creates a `Promist` from a `Promise` or a *sync* or *async* function.
+
+* `promise`: a `Promise` or a function.
+
+```javascript
+import { Promist } from 'promist';
+
+Promist.from(Promise.resolve('foo'));
+Promist.from(async () => 'bar');
+Promist.from(() => 'baz');
+```
+
+#### `Promist.wait(ms: number): Promist`
+
+See [`wait`](#waitms-number-promise) and [the differences between `Promist` static methods and *create* functions.](#promist-class)
+
+#### `Promist.until(test: Function, safe?: boolean, ms?: number): Promist`
+
+See [`until`](#untiltest-function-safe-boolean-ms-number-promise) and [the differences between `Promist` static methods and *create* functions.](#promist-class)
+
+#### `Promist.subscribe(observable: Observable): Promist`
+
+See [`subscribe`](##subscribeobservable-observable-promise) and [the differences between `Promist` static methods and *create* functions.](#promist-class)
+
+### Instance fields
+
+#### `promist.status`
+
+Any of `'pending'`, `'resolved'`, `'rejected'` and `'cancelled'`.
+
+#### `promist.value`
+
+The value the promise has resolved to, if any. Otherwise `null`.
+
+#### `promist.reason`
+
+The reason the promise has rejected with, if any. Otherwise `null`.
+
+#### `promist.react`
+
+An empty promise that resolves once the promise has resolved, rejected, or has gotten cancelled.
+
+### Instance methods
+
+#### `promist.resolve(value?: any): void`
+
+Resolves the `Promist` with `value`.
+
+* `value`: the value to resolve to.
+
+```javascript
+import { Promist } from 'promist';
+
+const promist = new Promist();
+
+promist.then(console.log); // foo
+promist.resolve('foo');
+```
+
+#### `promist.reject(reason: Error): void`
+
+Rejects the `Promist` with `reason`.
+
+* `reason`: the *Error* to reject with.
+
+```javascript
+import { Promist } from 'promist';
+
+const promist = new Promist();
+
+promist.catch(console.error); // Error: foo
+promist.reject(Error('foo'));
+```
+
+#### `promist.cancel(): void`
+
+Cancels the `Promist`. If it didn't already, it will never resolve nor reject.
+
+```javascript
+import { Promist } from 'promist';
+
+const promist = new Promist((resolve) => {
+  const timeout = setTimeout(resolve, 150);
+  return () => clearTimeout(timeout);
 });
 
-// Executor hasn't run yet.
-promise.then((value) => console.log(`Executor has run and resolved: ${value}`));
+promist.cancel();
+promist.then(console.log); // will never execute `then` callback
 ```
 
-##### `lazy.fn(fn: Function): Promise`
+#### `promist.timeout(ms: number, reason?: Error): void`
 
-Instead of taking an `executor`, `lazy.fn` takes a promise returning function that won't be executed until `promise.then()`, `promise.catch()`, or `promise.finally()` are called for the first time.
+Sets a timeout of `ms` milliseconds after which, if the `Promist` hasn't resolved, rejected, or cancelled, it will reject with `reason`, or a default error if no `reason` is passed.
+
+* `ms`: timeout in milliseconds.
+* `reason`: *Error* to reject with.
 
 ```javascript
-import { lazy } from 'promist';
+import { Promist } from 'promist';
 
-const promise = lazy.fn(() => Promise.resolve(10));
+const promist = new Promist((resolve) => {
+  const timeout = setTimeout(resolve, 150);
+  return () => clearTimeout(timeout);
+});
 
-// Function hasn't run yet.
-promise.then((value) => console.log(`Function has run and resolved: ${value}`));
+promist.timeout(50);
+promist.catch(console.error); // will reject
 ```
 
-### Extend functions
+#### `promist.fallback(ms: number, value: any): void`
 
-*Extend* functions return a new instance extending an input promise:
+Sets a timeout of `ms` milliseconds after which, if the `Promist` hasn't resolved, rejected, or cancelled, it will resolve by falling back to `value`.
 
-* They can be chained via [`pipe`.](#pipefns-function-function)
-* They might not work adequately if you're using non-standard methods for resolution other than `promise.then()`, `promise.catch()`, or `promise.finally()`.
-
-#### `deferrable(promise: Promise): Promise`
-
-* `promise` will acquire:
-  * `promise.resolve(value: any)`: Resolves the promise with the given `value`.
-  * `promise.reject(reason: any)`: Rejects the promise with the given `reason`.
-
-If the input `promise` resolves or rejects before `promise.resolve()` or `promise.reject()` are called, they won't have any effect. If the opposite occurs, the resolution or rejection value of the input promise will be discarded.
+* `ms`: timeout in milliseconds.
+* `value`: value to resolve with.
 
 ```javascript
-import { wait, deferrable } from 'promist';
+import { Promist } from 'promist';
 
-const foo = deferrable(wait(100).then(() => 'Value 1'));
-foo.resolve('Value 2');
-foo.then((value) => console.log(`It will resolve with "Value 2": ${value}`));
+const promist = new Promist((resolve) => {
+  const timeout = setTimeout(() => resolve('foo'), 150);
+  return () => clearTimeout(timeout);
+});
 
-const bar = deferrable(Promise.resolve('Value 1'));
-wait(100).then(() => bar.resolve('Value 2'));
-bar.then((value) => console.log(`It will resolve with "Value 1": ${value}`));
+promist.fallback(50, 'bar');
+promist.then(console.log); // 'bar'
 ```
 
-#### `cancellable(promise: Promise): Promise`
+## Utils
 
-* `promise` will acquire:
-  * `promise.cancel()`: Cancels the promise.
-  * `promise.cancelled`: *boolean,* whether or not the promise has been cancelled.
-
-```javascript
-import { cancellable } from 'promist';
-
-const extended = cancellable(promise);
-
-// Cancel the promise
-extended.cancel();
-```
-
-#### `stateful(promise: Promise): Promise`
-
-* `promise` will acquire:
-  * `promise.status`: *string,* either `"pending"`, `"resolved"`, or `"rejected"`.
-  * `promise.value`: Contains the resolution value. `null` if the promise is pending or rejected.
-  * `promise.reason`: Contains the rejection reason. `null` if the promise is pending or resolved.
-
-```javascript
-import { stateful } from 'promist';
-
-const extended = stateful(promise);
-```
-
-#### `timed(promise: Promise): Promise`
-
-* `promise` will acquire:
-  * `promise.time`: *number | void,* the number of milliseconds it took the promise to resolve or reject. Defaults to `null` before it's resolved/rejected. The count starts the moment `timed()` is called.
-
-```javascript
-import { timed } from 'promist';
-
-const extended = timed(promise);
-```
-
-#### `delay(ms: number, delayRejection?: boolean): Function`
-
-* `ms`: Threshold in milliseconds.
-* `delayRejection`: Whether or not to also delay a promise rejection. Default: `false`.
-
-Returns a function with signature: `(promise: Promise) => Promise`.
-
-The returned promise will acquire a lower threshold in `ms` for promise resolution. If the original `promise` resolves before `ms`, the returned promise won't resolve until `ms` have passed; if it resolves after, it will resolve immediately. The count starts the moment `delay()()` is called.
-
-```javascript
-import { delay } from 'promist';
-
-const extended = delay(500)(promise);
-
-extended.then(() => {
-  // Will be called once 500ms pass or whenever 'promise' resolves after that.
-  // ...
-})
-```
-
-#### `timeout(ms: number, reason?: boolean | Error): Function`
-
-* `ms`: Threshold in milliseconds.
-* `reason`: Value the promise will reject with if it doesn't fulfill in `ms` milliseconds:
-  * If `undefined` or `false`, the promise will cancel (never resolve) instead of rejecting.
-  * If `true`, it will reject with a default error.
-  * If an *Error* instance, it will reject with it.
-
-Returns a function with signature: `(promise: Promise) => Promise`.
-
-The returned promise will acquire an upper threshold in `ms` after which, if it hasn't fulfilled, it will either cancel or reject, depending on whether a `reason` argument was passed. The count starts the moment `timeout()()` is called.
-
-```javascript
-import { timeout } from 'promist';
-
-// It will cancel if it hasn't been fulfilled in 500 ms
-const foo = timeout(500)(promise);
-// Will reject with a default error
-const bar = timeout(500, true)(promise)
-```
-
-### Utils
-
-#### `clone(promise: Promise): Promise`
-
-Clones a *Promise* or *Promist* extended *Promise*, returning a new instance with the same extensions. Cloning is already done by default when using any *extend* function on a *Promise.*
-
-* `promise`: A standard *Promise* or *Promist* extended *Promise.*
-
-```javascript
-import { clone, deferrable } from 'promist';
-
-const source = deferrable(Promise.resolve());
-const promise = clone(source);
-
-promise.resolve('foo');
-```
-
-#### `pipe(...fns: Function[]): Function`
-
-Takes in a number of *extend* functions as arguments, and returns a function with signature: `(promise: Promise): Promise`.
-
-```javascript
-import { pipe, cancellable, delay, deferrrable } from 'promist';
-
-const promise = pipe(delay(500), cancellable, deferrable)(source);
-```
-
-#### `control(test: Function, generator: Function): Function`
+### `control(test: Function, generator: Function): Function`
 
 Used to control async flow. It returns a promise returning function taking the same arguments as `generator`.
 
-* `test`: A test *function* (can be `async`) that will be run before calling each `next()` on `generator`, with signature  `() => Promise<boolean | Error> | boolean | Error`. It can return:
+* `test`: a test *function* (can be `async`) that will be run before calling each `next()` on `generator`, with signature  `() => Promise<boolean | Error> | boolean | Error`. It can return:
   * `false`: `generator` will not continue execution (it will never resolve).
   * `true`: `generator` will continue execution until the next `yield`.
   * `Error`: `generator` call will return a rejected promise. The same behavior can be expected if the error is thrown instead of returned.
@@ -291,32 +316,17 @@ willNotContinue(2).then(console.log); // Will not resolve
 willReject(3).then(console.log).catch(console.error); // Error: An error occurred
 ```
 
-#### `isPromise(value: any): boolean`
+### `isPromise(value: any): boolean`
 
 Returns `true` if `value` is a *thenable,* `false` otherwise.
 
-* `value`: The *object* to test.
+* `value`: *object* to test.
 
 ```javascript
 import { isPromise } from 'promist';
 
 if (isPromise(promise)) {
   promise.then(() => { /* ... */ });
-}
-```
-
-#### `isPromist(promise: Promise, kind: string): boolean`
-
-Returns `true` if a *Promise* is of a particular *promist* extension `kind`.
-
-* `promise`: The *Promise* to test.
-* `kind`: *string,* one of `'cancellable'`, `'deferrable'`, `'stateful'`, or `'timed'`.
-
-```javascript
-import { isPromist } from 'promist';
-
-if (isPromist(promise, 'deferrable')) {
-  promise.resolve('foo');
 }
 ```
 
