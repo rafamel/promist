@@ -1,4 +1,4 @@
-import { PromiseExecutor, RequiredType } from './types';
+import { RequiredType, PromistExecutor } from './types';
 import Promist from './Promist';
 
 const INTERNAL_SYMBOL = Symbol('internal');
@@ -16,7 +16,7 @@ export interface Internal {
  */
 export default class LazyPromist<T> extends Promist<T> {
   private [INTERNAL_SYMBOL]: Internal;
-  public constructor(executor: PromiseExecutor) {
+  public constructor(executor: PromistExecutor) {
     super();
 
     let executed = false;
