@@ -1,5 +1,11 @@
 import { AbstractObservable } from '../types';
-import { PromistStatus, PromistExecutor, RequiredType } from './types';
+import {
+  PromistStatus,
+  PromistExecutor,
+  RequiredType,
+  PromiseExecutor
+} from './types';
+import { until } from '~/create';
 
 const INTERNAL_SYMBOL = Symbol('internal');
 
@@ -102,16 +108,37 @@ export default class Promist<T> {
     });
   }
   /**
-   * Subscribe to an observable and resolves/rejects with its first value.
-   * It will reject it the observable completes before emitting any values.
+   * Subscribes to an `observable` and resolves/rejects with
+   * its first value. By default, it will reject if the observable
+   * completes before emitting any values, though this behavior
+   * can be controlled via `onComplete`.
    */
-  public static subscribe<T>(observable: AbstractObservable<T>): Promist<T> {
+  public static subscribe<T>(
+    observable: AbstractObservable<T>,
+    onComplete?: PromiseExecutor
+  ): Promist<T> {
     return new this((resolve, reject) => {
+      let emitted = false;
       const subscription = observable.subscribe({
-        next: (value) => resolve(value as any),
-        error: (error) => reject(error),
-        complete: () =>
-          reject(Error(`Source completed without emitting any values`))
+        next: (value) => {
+          emitted = true;
+          resolve(value as any);
+        },
+        error: (error) => {
+          emitted = true;
+          reject(error);
+        },
+        complete: () => {
+          if (emitted) return;
+          if (onComplete) {
+            onComplete(resolve, reject);
+            until(() => Boolean(subscription), true).then(() =>
+              subscription.unsubscribe()
+            );
+          } else {
+            reject(Error(`Source completed without emitting any values`));
+          }
+        }
       });
 
       return () => subscription.unsubscribe();

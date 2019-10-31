@@ -21,7 +21,7 @@
 * [*Create* functions](#create-functions) return a new promise.
   * [`wait`](#waitms-number-promise)
   * [`until`](#untiltest-function-safe-boolean-ms-number-promise)
-  * [`subscribe`](#subscribeobservable-observable-promise)
+  * [`subscribe`](#subscribeobservable-observable-oncomplete-function-promise)
 * [*Classes,*](#classes) both `Promist` and `LazyPromist`, behaving just like a traditional `Promise`, with a few additional features.
   * [`Promist`](#promist-class)
   * [`LazyPromist`](#lazypromist-class)
@@ -29,7 +29,7 @@
     * [`from`](#promistfrompromise-promise--function-promist)
     * [`wait`](#promistwaitms-number-promist)
     * [`until`](#promistuntiltest-function-safe-boolean-ms-number-promist)
-    * [`subscribe`](#promistsubscribeobservable-observable-promist)
+    * [`subscribe`](#promistsubscribeobservable-observable-oncomplete-function-promist)
   * [Instance fields](#instance-fields)
     * [`status`](#promiststatus)
     * [`value`](#promistvalue)
@@ -85,11 +85,12 @@ until(() => example === 10)
 example = 10;
 ```
 
-### `subscribe(observable: Observable): Promise`
+### `subscribe(observable: Observable, onComplete?: Function): Promise`
 
-Subscribes to an observable and resolves/rejects with its first value. It will reject it the observable completes before emitting any values.
+Subscribes to an `observable` and resolves/rejects with its first value. By default, it will reject if the observable completes before emitting any values, though this behavior can be controlled via `onComplete`.
 
 * `observable`: an *Observable* object.
+* `onComplete`: a promise *executor* function, handling the event of the observable completing without emitting any values, and with signature: `(resolve: Function, reject: Function): void`.
 
 ```javascript
 import { subscribe } from 'promist';
@@ -174,7 +175,7 @@ See [`wait`](#waitms-number-promise) and [the differences between `Promist` stat
 
 See [`until`](#untiltest-function-safe-boolean-ms-number-promise) and [the differences between `Promist` static methods and *create* functions.](#promist-class)
 
-#### `Promist.subscribe(observable: Observable): Promist`
+#### `Promist.subscribe(observable: Observable, onComplete?: Function): Promist`
 
 See [`subscribe`](##subscribeobservable-observable-promise) and [the differences between `Promist` static methods and *create* functions.](#promist-class)
 
