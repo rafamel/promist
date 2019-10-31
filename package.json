@@ -62,18 +62,18 @@
   },
   "devDependencies": {
     "@pika/pack": "^0.4.0",
-    "@pika/plugin-build-web": "^0.6.1",
-    "@pika/plugin-standard-pkg": "^0.6.1",
+    "@pika/plugin-build-web": "^0.7.1",
+    "@pika/plugin-standard-pkg": "^0.7.1",
     "@riseup/library": "^0.4.0",
     "@riseup/tooling": "^0.4.0",
-    "@types/jest": "^24.0.13",
+    "@types/jest": "^24.0.21",
     "@zerollup/ts-transform-paths": "^1.7.3",
-    "coveralls": "^3.0.4",
-    "husky": "^3.0.0",
+    "coveralls": "^3.0.7",
+    "husky": "^3.0.9",
     "kpo": "^0.11.0",
     "onchange": "^6.0.0",
     "rxjs": "^6.5.3",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.4"
   },
   "dependencies": {},
   "@pika/pack": {
