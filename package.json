@@ -72,11 +72,10 @@
     "husky": "^3.0.0",
     "kpo": "^0.11.0",
     "onchange": "^6.0.0",
+    "rxjs": "^6.5.3",
     "typescript": "^3.6.3"
   },
-  "dependencies": {
-    "ts-functional-pipe": "^2.0.0"
-  },
+  "dependencies": {},
   "@pika/pack": {
     "pipeline": [
       [

@@ -1,12 +1,9 @@
-import wait from '~/create/wait';
+import { wait } from '~/create';
 
-test(`waits`, (done) => {
-  let resolved = false;
-  wait(100).then(() => (resolved = true));
-
-  setTimeout(() => expect(resolved).toBe(false), 90);
-  setTimeout(() => {
-    expect(resolved).toBe(true);
-    done();
-  }, 110);
+test(`waits`, async () => {
+  const p = wait(250);
+  const start = Date.now();
+  await expect(p).resolves.toBe(undefined);
+  expect(Date.now() - start).toBeGreaterThanOrEqual(250);
+  expect(Date.now() - start).toBeLessThan(350);
 });
