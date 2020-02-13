@@ -2,8 +2,8 @@ import { ObservableDefinition } from '../types';
 import {
   PromistStatus,
   PromistExecutor,
-  RequiredType,
-  PromiseExecutor
+  PromiseExecutor,
+  ValueType
 } from './types';
 import { until } from '~/create';
 
@@ -214,7 +214,7 @@ export default class Promist<T> {
   /**
    * Resolves the `Promist` with `value`.
    */
-  public resolve(value: T extends RequiredType ? T : T | void): void {
+  public resolve(value: ValueType<T>): void {
     const { state, actions, oncomplete } = this[INTERNAL_SYMBOL];
     if (state.status !== 'pending') return;
 
@@ -264,10 +264,7 @@ export default class Promist<T> {
    * hasn't resolved, rejected, or cancelled, it will resolve
    * by falling back to `value`.
    */
-  public fallback(
-    ms: number,
-    value: T extends RequiredType ? T : T | void
-  ): void {
+  public fallback(ms: number, value: ValueType<T>): void {
     const { state } = this[INTERNAL_SYMBOL];
     if (state.status !== 'pending') return;
 

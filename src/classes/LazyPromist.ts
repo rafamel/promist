@@ -1,4 +1,4 @@
-import { RequiredType, PromistExecutor } from './types';
+import { PromistExecutor, ValueType } from './types';
 import Promist from './Promist';
 
 const INTERNAL_SYMBOL = Symbol('internal');
@@ -60,10 +60,7 @@ export default class LazyPromist<T> extends Promist<T> {
         : () => super.timeout(ms, reason);
     }
   }
-  public fallback(
-    ms: number,
-    value: T extends RequiredType ? T : T | void
-  ): void {
+  public fallback(ms: number, value: ValueType<T>): void {
     const { executed, onstart } = this[INTERNAL_SYMBOL];
     if (executed) {
       super.fallback(ms, value);
