@@ -1,3 +1,12 @@
+## [2.0.1](https://github.com/rafamel/promist/compare/v2.0.0...v2.0.1) (2020-02-13)
+
+
+### Bug Fixes
+
+* fixes subscribe type inference ([f232232](https://github.com/rafamel/promist/commit/f232232c4a7f328a629ea247817d64d214005637))
+
+
+
 # [2.0.0](https://github.com/rafamel/promist/compare/v1.0.0...v2.0.0) (2019-10-31)
 
 
