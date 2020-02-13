@@ -1,13 +1,14 @@
-export interface AbstractObservable<T> {
-  subscribe: (observer: AbstractObserver<T>) => AbstractSubscription;
+export interface ObservableDefinition<T> {
+  subscribe(observer: (value: T) => void): SubscriptionDefinition;
+  subscribe(observer: ObserverDefinition<T>): SubscriptionDefinition;
 }
 
-export interface AbstractObserver<T> {
-  next: (value: T) => void;
-  error: (error: any) => void;
-  complete: () => void;
+export interface ObserverDefinition<T> {
+  next(value: T): void;
+  error(error: any): void;
+  complete(): void;
 }
 
-export interface AbstractSubscription {
-  unsubscribe: () => void;
+export interface SubscriptionDefinition {
+  unsubscribe(): void;
 }

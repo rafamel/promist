@@ -1,4 +1,4 @@
-import { AbstractObservable } from '~/types';
+import { ObservableDefinition } from '~/types';
 import { until } from './until';
 import { PromiseExecutor } from '~/classes';
 
@@ -9,7 +9,7 @@ import { PromiseExecutor } from '~/classes';
  * can be controlled via `onComplete`.
  */
 export function subscribe<T>(
-  observable: AbstractObservable<T>,
+  observable: ObservableDefinition<T>,
   onComplete?: PromiseExecutor
 ): Promise<T> {
   return new Promise((resolve, reject) => {

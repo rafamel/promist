@@ -1,4 +1,4 @@
-import { AbstractObservable } from '../types';
+import { ObservableDefinition } from '../types';
 import {
   PromistStatus,
   PromistExecutor,
@@ -114,21 +114,21 @@ export default class Promist<T> {
    * can be controlled via `onComplete`.
    */
   public static subscribe<T>(
-    observable: AbstractObservable<T>,
+    observable: ObservableDefinition<T>,
     onComplete?: PromiseExecutor
   ): Promist<T> {
     return new this((resolve, reject) => {
       let emitted = false;
       const subscription = observable.subscribe({
-        next: (value) => {
+        next(value) {
           emitted = true;
           resolve(value as any);
         },
-        error: (error) => {
+        error(error) {
           emitted = true;
           reject(error);
         },
-        complete: () => {
+        complete() {
           if (emitted) return;
           if (onComplete) {
             onComplete(resolve, reject);
