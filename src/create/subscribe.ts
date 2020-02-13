@@ -15,15 +15,15 @@ export function subscribe<T>(
   return new Promise((resolve, reject) => {
     let emitted = false;
     const subscription = observable.subscribe({
-      next: (value) => {
+      next(value) {
         resolve(value);
         unsubscribe();
       },
-      error: (error) => {
+      error(error) {
         reject(error);
         unsubscribe();
       },
-      complete: () => {
+      complete() {
         if (emitted) return;
         if (onComplete) onComplete(resolve, reject);
         else reject(Error(`Source completed without emitting any values`));
