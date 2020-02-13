@@ -1,3 +1,12 @@
+## [2.0.2](https://github.com/rafamel/promist/compare/v2.0.1...v2.0.2) (2020-02-13)
+
+
+### Bug Fixes
+
+* fixes Promist value type inference for generics ([b87e128](https://github.com/rafamel/promist/commit/b87e1285b0b9e43845de23fb0ec9f5ac9847932f))
+
+
+
 ## [2.0.1](https://github.com/rafamel/promist/compare/v2.0.0...v2.0.1) (2020-02-13)
 
 
