@@ -72,7 +72,7 @@ export function each<T>(
     .reduce((acc, x, i) => {
       return acc.then(() => x).then((val) => fn(val, i, arr));
     }, Promise.resolve())
-    .then(() => {});
+    .then(() => undefined);
 }
 
 export default {

@@ -15,6 +15,6 @@ export default function control<T, A extends any[]>(
     }
 
     if (testRes instanceof Error) throw testRes;
-    return testRes ? value : new Promise(() => {});
+    return testRes ? value : new Promise(() => undefined);
   };
 }

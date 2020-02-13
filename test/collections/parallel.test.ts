@@ -181,7 +181,7 @@ describe(`each`, () => {
   test(`runs in parallel`, async () => {
     const arr = createDelayedArr();
     const init = Date.now();
-    const p = parallel.each(arr, async () => {});
+    const p = parallel.each(arr, async () => undefined);
 
     await p;
     expect(Date.now() - init).toBeLessThan(150);

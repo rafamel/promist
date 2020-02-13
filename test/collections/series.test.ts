@@ -174,7 +174,7 @@ describe(`each`, () => {
   test(`runs in series`, async () => {
     const arr = createDelayedArr();
     const init = Date.now();
-    const p = series.each(arr, async () => {});
+    const p = series.each(arr, async () => undefined);
 
     await p;
     expect(Date.now() - init).toBeGreaterThan(1200);

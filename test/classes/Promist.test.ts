@@ -38,7 +38,7 @@ describe(`instance`, () => {
       const p = new Promist((resolve, reject) => reject(Error('foo')));
 
       const fn = jest.fn();
-      p.then(fn).catch(() => {});
+      p.then(fn).catch(() => undefined);
       await expect(p.then(fn, (x) => Promise.reject(x))).rejects.toThrowError(
         'foo'
       );
@@ -51,20 +51,20 @@ describe(`instance`, () => {
     test(`then is a Promise, not a Promist`, () => {
       const p = new Promist();
 
-      expect(p.then(() => {})).toBeInstanceOf(Promise);
-      expect(p.then(() => {})).not.toBeInstanceOf(Promist);
+      expect(p.then(() => undefined)).toBeInstanceOf(Promise);
+      expect(p.then(() => undefined)).not.toBeInstanceOf(Promist);
     });
     test(`catch is a Promise, not a Promist`, () => {
       const p = new Promist();
 
-      expect(p.catch(() => {})).toBeInstanceOf(Promise);
-      expect(p.catch(() => {})).not.toBeInstanceOf(Promist);
+      expect(p.catch(() => undefined)).toBeInstanceOf(Promise);
+      expect(p.catch(() => undefined)).not.toBeInstanceOf(Promist);
     });
     test(`finally is a Promise, not a Promist`, () => {
       const p = new Promist();
 
-      expect(p.finally(() => {})).toBeInstanceOf(Promise);
-      expect(p.finally(() => {})).not.toBeInstanceOf(Promist);
+      expect(p.finally(() => undefined)).toBeInstanceOf(Promise);
+      expect(p.finally(() => undefined)).not.toBeInstanceOf(Promist);
     });
   });
   describe(`resolution`, () => {
@@ -195,7 +195,7 @@ describe(`instance`, () => {
         return fns[0];
       });
 
-      await p.catch(() => {});
+      await p.catch(() => undefined);
       await p.react.then(fns[1]);
       expect(fns[0]).toHaveBeenCalledTimes(1);
       expect(fns[1]).toHaveBeenCalledTimes(1);
@@ -206,7 +206,7 @@ describe(`instance`, () => {
       const pr = p.react.then(fns[1]);
       p.reject(Error('foo'));
 
-      await p.catch(() => {});
+      await p.catch(() => undefined);
       await pr;
       expect(fns[0]).toHaveBeenCalledTimes(1);
       expect(fns[1]).toHaveBeenCalledTimes(1);

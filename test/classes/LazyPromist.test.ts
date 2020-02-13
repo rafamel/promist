@@ -7,7 +7,7 @@ describe(`laziness`, () => {
     const p = new LazyPromist(fn);
     await new Promise((resolve) => setTimeout(resolve, 150));
     expect(fn).not.toHaveBeenCalled();
-    p.then(() => {});
+    p.then(() => undefined);
   });
   test(`executor runs on then`, async () => {
     const p = new LazyPromist((resolve) => resolve('foo'));
@@ -33,9 +33,9 @@ describe(`laziness`, () => {
       fn();
       resolve('foo');
     });
-    await p.catch(() => {});
-    await p.then(() => {});
-    await p.finally(() => {});
+    await p.catch(() => undefined);
+    await p.then(() => undefined);
+    await p.finally(() => undefined);
 
     await expect(p).resolves.toBe('foo');
     expect(fn).toHaveBeenCalledTimes(1);
@@ -91,7 +91,7 @@ describe(`executor cleanup`, () => {
       setTimeout(() => resolve('foo'), 150);
       return fn;
     });
-    p.then(() => {});
+    p.then(() => undefined);
     p.resolve('bar');
 
     await expect(p).resolves.toBe('bar');
@@ -100,31 +100,31 @@ describe(`executor cleanup`, () => {
 });
 describe(`then, catch, finally, promises`, () => {
   test(`then is a Promise, not a LazyPromise`, () => {
-    const p = LazyPromist.from(() => {});
+    const p = LazyPromist.from(() => undefined);
 
-    expect(p.then(() => {})).toBeInstanceOf(Promise);
-    expect(p.then(() => {})).not.toBeInstanceOf(LazyPromist);
+    expect(p.then(() => undefined)).toBeInstanceOf(Promise);
+    expect(p.then(() => undefined)).not.toBeInstanceOf(LazyPromist);
   });
   test(`catch is a Promise, not a LazyPromise`, () => {
-    const p = LazyPromist.from(() => {});
-    expect(p.catch(() => {})).toBeInstanceOf(Promise);
-    expect(p.catch(() => {})).not.toBeInstanceOf(LazyPromist);
+    const p = LazyPromist.from(() => undefined);
+    expect(p.catch(() => undefined)).toBeInstanceOf(Promise);
+    expect(p.catch(() => undefined)).not.toBeInstanceOf(LazyPromist);
   });
   test(`finally is a Promise, not a LazyPromise`, () => {
-    const p = LazyPromist.from(() => {});
-    expect(p.finally(() => {})).toBeInstanceOf(Promise);
-    expect(p.finally(() => {})).not.toBeInstanceOf(LazyPromist);
+    const p = LazyPromist.from(() => undefined);
+    expect(p.finally(() => undefined)).toBeInstanceOf(Promise);
+    expect(p.finally(() => undefined)).not.toBeInstanceOf(LazyPromist);
   });
 });
 describe(`timeout`, () => {
   test(`runs if executor already run`, async () => {
-    const p = new LazyPromist(() => {});
-    p.catch(() => {});
+    const p = new LazyPromist(() => undefined);
+    p.catch(() => undefined);
     p.timeout(50, Error('foo'));
     await expect(p).rejects.toThrowError('foo');
   });
   test(`runs after executor does if it didn't run`, async () => {
-    const p = new LazyPromist(() => {});
+    const p = new LazyPromist(() => undefined);
     p.timeout(200, Error('foo'));
     await new Promise((resolve) => setTimeout(resolve, 250));
 
@@ -134,7 +134,7 @@ describe(`timeout`, () => {
     expect(Date.now() - start).toBeLessThan(400);
   });
   test(`earlier trumps later fallback/timeout`, async () => {
-    const p = new LazyPromist(() => {});
+    const p = new LazyPromist(() => undefined);
     p.timeout(50, Error(`baz`));
     p.fallback(150, 'bar');
     p.timeout(100, Error('foo'));
@@ -144,13 +144,13 @@ describe(`timeout`, () => {
 });
 describe(`fallback`, () => {
   test(`runs if executor already run`, async () => {
-    const p = new LazyPromist(() => {});
-    p.then(() => {});
+    const p = new LazyPromist(() => undefined);
+    p.then(() => undefined);
     p.fallback(50, 'foo');
     await expect(p).resolves.toBe('foo');
   });
   test(`runs after executor does if it didn't run`, async () => {
-    const p = new LazyPromist(() => {});
+    const p = new LazyPromist(() => undefined);
     p.fallback(200, 'foo');
     await new Promise((resolve) => setTimeout(resolve, 250));
 
@@ -160,7 +160,7 @@ describe(`fallback`, () => {
     expect(Date.now() - start).toBeLessThan(400);
   });
   test(`earlier trumps later fallback/timeout`, async () => {
-    const p = new LazyPromist(() => {});
+    const p = new LazyPromist(() => undefined);
     p.fallback(100, 'foo');
     p.timeout(150, Error(`bar`));
     p.fallback(50, 'baz');
@@ -193,7 +193,7 @@ describe(`static methods`, () => {
     const p = LazyPromist.until(fn);
 
     expect(fn).not.toHaveBeenCalled();
-    p.then(() => {});
+    p.then(() => undefined);
     p.cancel();
     expect(fn).toHaveBeenCalledTimes(1);
   });
@@ -202,7 +202,7 @@ describe(`static methods`, () => {
     const p = LazyPromist.subscribe(subject);
     subject.next('foo');
 
-    p.then(() => {});
+    p.then(() => undefined);
     subject.next('bar');
     await expect(p).resolves.toBe('bar');
   });

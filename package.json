@@ -64,18 +64,18 @@
   },
   "devDependencies": {
     "@pika/pack": "^0.4.0",
-    "@pika/plugin-build-web": "^0.7.1",
-    "@pika/plugin-standard-pkg": "^0.7.1",
+    "@pika/plugin-build-web": "^0.8.1",
+    "@pika/plugin-standard-pkg": "^0.8.1",
     "@riseup/library": "^0.4.0",
     "@riseup/tooling": "^0.4.0",
-    "@types/jest": "^24.0.21",
-    "@zerollup/ts-transform-paths": "^1.7.3",
-    "coveralls": "^3.0.7",
-    "husky": "^3.0.9",
-    "kpo": "^0.11.0",
+    "@types/jest": "^25.1.2",
+    "@zerollup/ts-transform-paths": "^1.7.11",
+    "coveralls": "^3.0.9",
+    "husky": "^4.2.3",
+    "kpo": "^0.11.1",
     "onchange": "^6.0.0",
-    "rxjs": "^6.5.3",
-    "typescript": "^3.6.4"
+    "rxjs": "^6.5.4",
+    "typescript": "^3.7.5"
   },
   "dependencies": {},
   "@pika/pack": {

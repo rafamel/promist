@@ -54,7 +54,7 @@ export function each<T>(
   arr: Array<Promise<T> | T>,
   fn: (value: T, index: number, arr: T[]) => any
 ): Promise<void> {
-  return map(arr, fn).then(() => {});
+  return map(arr, fn).then(() => undefined);
 }
 
 export default {
