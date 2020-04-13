@@ -18,6 +18,7 @@ _test*
 .env.test.local
 .env.production.local
 coverage
+hint-report
 node_modules
 npm-debug.log
 

@@ -1,4 +1,4 @@
-# Promist
+# promist
 
 [![Version](https://img.shields.io/npm/v/promist.svg)](https://www.npmjs.com/package/promist)
 [![Build Status](https://img.shields.io/travis/rafamel/promist/master.svg)](https://travis-ci.org/rafamel/promist)
