@@ -1,3 +1,22 @@
+# [3.0.0](https://github.com/rafamel/promist/compare/v2.0.2...v3.0.0) (2020-04-13)
+
+
+### Bug Fixes
+
+* **utils:** declares control w/ more permissive types for Generator ([3703e94](https://github.com/rafamel/promist/commit/3703e94e0d5548dd1cc66fedefa3def02902ad3c))
+
+
+### chore
+
+* updates setup and dependencies ([a0454b4](https://github.com/rafamel/promist/commit/a0454b404e273713207e4317d2eada94f44ee27d))
+
+
+### BREAKING CHANGES
+
+* Requires node +12
+
+
+
 ## [2.0.2](https://github.com/rafamel/promist/compare/v2.0.1...v2.0.2) (2020-02-13)
 
 
