@@ -1,9 +1,9 @@
 import { PromistExecutor, ValueType } from './types';
-import Promist from './Promist';
+import { Promist } from './Promist';
 
 const INTERNAL_SYMBOL = Symbol('internal');
 
-export interface Internal {
+interface Internal {
   executed: boolean;
   execute: () => void;
   onstart?: () => void;
@@ -14,7 +14,7 @@ export interface Internal {
  * after they've been explicitly expected to resolve
  * by a `then`, `catch`, or `finally` call.
  */
-export default class LazyPromist<T> extends Promist<T> {
+export class LazyPromist<T> extends Promist<T> {
   private [INTERNAL_SYMBOL]: Internal;
   public constructor(executor: PromistExecutor) {
     super();

@@ -1,4 +1,4 @@
-import { Promist } from '~/classes';
+import { Promist } from '../classes';
 
 export function map<T>(
   arr: Array<Promise<T> | T>,

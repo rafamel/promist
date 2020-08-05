@@ -1,4 +1,3 @@
-import { ObservableDefinition } from '../types';
 import {
   PromistStatus,
   PromistExecutor,
@@ -6,17 +5,18 @@ import {
   ValueType
 } from './types';
 import { until } from '~/create';
+import { Observable } from '../definitions';
 
 const INTERNAL_SYMBOL = Symbol('internal');
 
-export interface Internal<T> {
+interface Internal<T> {
   promise: Promise<T>;
   state: InternalState<T>;
   actions: InternalActions<T>;
   oncomplete?: () => void;
 }
 
-export interface InternalState<T> {
+interface InternalState<T> {
   status: PromistStatus;
   value: T | null;
   reason: Error | null;
@@ -44,7 +44,7 @@ interface InternalActions<T> {
  * is that in any completion event, they will always clean up after themselves,
  * clearing the underlying timeouts and/or subscriptions.
  */
-export default class Promist<T> {
+export class Promist<T> {
   /**
    * Creates a `Promist` from a `Promise` or a *sync* or *async* function.
    */
@@ -114,7 +114,7 @@ export default class Promist<T> {
    * can be controlled via `onComplete`.
    */
   public static subscribe<T>(
-    observable: ObservableDefinition<T>,
+    observable: Observable<T>,
     onComplete?: PromiseExecutor
   ): Promist<T> {
     return new this((resolve, reject) => {

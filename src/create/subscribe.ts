@@ -1,6 +1,6 @@
-import { ObservableDefinition } from '~/types';
 import { until } from './until';
-import { PromiseExecutor } from '~/classes';
+import { PromiseExecutor } from '../classes';
+import { Observable } from '../definitions';
 
 /**
  * Subscribes to an `observable` and resolves/rejects with
@@ -9,7 +9,7 @@ import { PromiseExecutor } from '~/classes';
  * can be controlled via `onComplete`.
  */
 export function subscribe<T>(
-  observable: ObservableDefinition<T>,
+  observable: Observable<T>,
   onComplete?: PromiseExecutor
 ): Promise<T> {
   return new Promise((resolve, reject) => {
