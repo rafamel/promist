@@ -1,3 +1,18 @@
+# [4.0.0](https://github.com/rafamel/promist/compare/v3.0.0...v4.0.0) (2020-08-05)
+
+
+### Features
+
+* **utils:** adds isPromiseLike ([8cb7af2](https://github.com/rafamel/promist/commit/8cb7af25c5746784cb746f799388a9002e24410e))
+
+
+### BREAKING CHANGES
+
+* **utils:** isPromise behavior is more restrictive and will return false for thenables; will
+only return true for thenable and catchable objects
+
+
+
 # [3.0.0](https://github.com/rafamel/promist/compare/v2.0.2...v3.0.0) (2020-04-13)
 
 
