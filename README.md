@@ -44,6 +44,7 @@
 * [*Utils:*](#utils) a set of conveniency utility functions.
   * [`control`](#controltest-function-generator-function-function)
   * [`isPromise`](#ispromisevalue-any-boolean)
+  * [`isPromiseLike`](#ispromiselikevalue-any-boolean)
 * [*Collections*:](#collections) handled either in *parallel* or *series.*
   * [`map`](#maparr-promise-callback-function-promise)
   * [`filter`](#filterarr-promise-callback-function-promise)
@@ -319,7 +320,7 @@ willReject(3).then(console.log).catch(console.error); // Error: An error occurre
 
 ### `isPromise(value: any): boolean`
 
-Returns `true` if `value` is a *thenable,* `false` otherwise.
+Returns `true` if `value` is a *thenable* and *catchable,* `false` otherwise.
 
 * `value`: *object* to test.
 
@@ -327,6 +328,20 @@ Returns `true` if `value` is a *thenable,* `false` otherwise.
 import { isPromise } from 'promist';
 
 if (isPromise(promise)) {
+  promise.then(() => { /* ... */ }).catch(() => { /* ... */ });
+}
+```
+
+### `isPromiseLike(value: any): boolean`
+
+Returns `true` if `value` is a *thenable,* `false` otherwise.
+
+* `value`: *object* to test.
+
+```javascript
+import { isPromiseLike } from 'promist';
+
+if (isPromiseLike(promise)) {
   promise.then(() => { /* ... */ });
 }
 ```

@@ -1,4 +1,4 @@
-import control from '~/utils/control';
+import { control } from '~/utils/control';
 
 test(`succeeds with test => true`, async () => {
   function* gen(): Generator<number, number, number> {
@@ -47,9 +47,12 @@ test(`rejects with test throwing Error`, async () => {
   await expect(fnp()).rejects.toThrowError();
 });
 test(`rejects with generator throwing Error`, async () => {
-  const fn = control(() => true, function*(): Generator<any, any, any> {
-    throw Error();
-  });
+  const fn = control(
+    () => true,
+    function*(): Generator<any, any, any> {
+      throw Error();
+    }
+  );
 
   await expect(fn()).rejects.toThrowError();
 });
@@ -92,17 +95,20 @@ test(`stops yielding on test => false`, async () => {
   let res = true;
   const done = [false, false, false, false, false];
   setTimeout(() => (res = false), 500);
-  const fn = control(() => res, function*(): Generator<any, any, any> {
-    done[0] = true;
-    yield Promise.resolve();
-    done[1] = true;
-    yield new Promise((resolve) => setTimeout(resolve, 250));
-    done[2] = true;
-    yield new Promise((resolve) => setTimeout(resolve, 300));
-    done[3] = true;
-    yield new Promise((resolve) => setTimeout(resolve, 100));
-    done[4] = true;
-  });
+  const fn = control(
+    () => res,
+    function*(): Generator<any, any, any> {
+      done[0] = true;
+      yield Promise.resolve();
+      done[1] = true;
+      yield new Promise((resolve) => setTimeout(resolve, 250));
+      done[2] = true;
+      yield new Promise((resolve) => setTimeout(resolve, 300));
+      done[3] = true;
+      yield new Promise((resolve) => setTimeout(resolve, 100));
+      done[4] = true;
+    }
+  );
 
   let resolved = false;
   fn().then(() => (resolved = true));
@@ -112,14 +118,12 @@ test(`stops yielding on test => false`, async () => {
   expect(done).toEqual([true, true, true, true, false]);
 });
 test(`passes arguments to generator`, async () => {
-  const fn = control(() => true, function*(
-    a,
-    b,
-    c,
-    d
-  ): Generator<any, any, any> {
-    return [a, b, c, d];
-  });
+  const fn = control(
+    () => true,
+    function*(a, b, c, d): Generator<any, any, any> {
+      return [a, b, c, d];
+    }
+  );
 
   await expect(fn(1, 2, 3, 4)).resolves.toEqual([1, 2, 3, 4]);
 });

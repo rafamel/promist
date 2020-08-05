@@ -1,4 +1,4 @@
-export default function control<T, A extends any[]>(
+export function control<T, A extends any[]>(
   test: () => Promise<boolean | Error> | boolean | Error,
   generator: (...args: A) => Generator<any, Promise<T> | T, any>
 ): (...args: A) => Promise<T> {
