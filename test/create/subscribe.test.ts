@@ -1,4 +1,5 @@
-import { subscribe } from '~/create';
+import { test, expect, jest } from '@jest/globals';
+import { subscribe } from '../../src/create';
 import { Observable } from 'rxjs';
 
 test(`resolves with next`, async () => {
@@ -52,7 +53,7 @@ test(`if onComplete is passed, defers to its rejection`, async () => {
     return fn;
   });
 
-  const p = subscribe(obs, (resolve, reject) => reject(Error('foo')));
+  const p = subscribe(obs, (_resolve, reject) => reject(Error('foo')));
   await expect(p).rejects.toThrowError('foo');
   expect(fn).toHaveBeenCalledTimes(1);
 });

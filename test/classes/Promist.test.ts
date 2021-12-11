@@ -1,4 +1,5 @@
-import { Promist } from '~/classes';
+import { test, describe, expect, jest } from '@jest/globals';
+import { Promist } from '../../src/classes';
 import { Observable } from 'rxjs';
 
 describe(`instance`, () => {
@@ -35,7 +36,7 @@ describe(`instance`, () => {
       expect(fn).not.toHaveBeenCalled();
     });
     test(`catch and finally get called on reject, not then`, async () => {
-      const p = new Promist((resolve, reject) => reject(Error('foo')));
+      const p = new Promist((_resolve, reject) => reject(Error('foo')));
 
       const fn = jest.fn();
       p.then(fn).catch(() => undefined);
@@ -100,7 +101,7 @@ describe(`instance`, () => {
       expect(p.reason).toHaveProperty('message', 'foo');
     });
     test(`rejects inside`, async () => {
-      const p = new Promist((resolve, reject) => reject(Error('foo')));
+      const p = new Promist((_resolve, reject) => reject(Error('foo')));
       await expect(p).rejects.toThrowError('foo');
       expect([p.status, p.value]).toEqual(['rejected', null]);
       expect(p.reason).toHaveProperty('message', 'foo');
@@ -190,7 +191,7 @@ describe(`instance`, () => {
     });
     test(`execute on internal rejection`, async () => {
       const fns = [jest.fn(), jest.fn()];
-      const p = new Promist((resolve, reject) => {
+      const p = new Promist((_resolve, reject) => {
         reject(Error('foo'));
         return fns[0];
       });
@@ -388,7 +389,7 @@ describe(`static methods`, () => {
         return fn;
       });
 
-      const p = Promist.subscribe(obs, (resolve, reject) =>
+      const p = Promist.subscribe(obs, (_resolve, reject) =>
         reject(Error('foo'))
       );
       await expect(p).rejects.toThrowError('foo');

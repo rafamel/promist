@@ -1,4 +1,5 @@
-import { until } from '~/create';
+import { test, expect } from '@jest/globals';
+import { until } from '../../src/create';
 
 test(`unsafe resolves`, async () => {
   let val = false;

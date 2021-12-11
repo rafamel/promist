@@ -1,5 +1,6 @@
-import series from '~/collections/series';
-import { LazyPromist } from '~/classes';
+import { test, describe, expect } from '@jest/globals';
+import { series } from '../../src/collections';
+import { LazyPromist } from '../../src/classes';
 
 const createArr = (arr: number[] = [1, 2, 3, 4]): Array<Promise<number>> => {
   return arr.map((x) => Promise.resolve(x));

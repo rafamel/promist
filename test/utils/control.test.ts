@@ -1,4 +1,5 @@
-import { control } from '~/utils/control';
+import { test, expect } from '@jest/globals';
+import { control } from '../../src/utils/control';
 
 test(`succeeds with test => true`, async () => {
   function* gen(): Generator<number, number, number> {
@@ -49,7 +50,7 @@ test(`rejects with test throwing Error`, async () => {
 test(`rejects with generator throwing Error`, async () => {
   const fn = control(
     () => true,
-    function*(): Generator<any, any, any> {
+    function* (): Generator<any, any, any> {
       throw Error();
     }
   );
@@ -79,7 +80,7 @@ test(`test is called as many times as yields are + 1`, async () => {
       count++;
       return true;
     },
-    function*(n = 10) {
+    function* (n = 10) {
       n = yield Promise.resolve(n);
       n = n * (yield Promise.resolve(10));
       n = yield 10 * n;
@@ -97,7 +98,7 @@ test(`stops yielding on test => false`, async () => {
   setTimeout(() => (res = false), 500);
   const fn = control(
     () => res,
-    function*(): Generator<any, any, any> {
+    function* (): Generator<any, any, any> {
       done[0] = true;
       yield Promise.resolve();
       done[1] = true;
@@ -120,7 +121,7 @@ test(`stops yielding on test => false`, async () => {
 test(`passes arguments to generator`, async () => {
   const fn = control(
     () => true,
-    function*(a, b, c, d): Generator<any, any, any> {
+    function* (a, b, c, d): Generator<any, any, any> {
       return [a, b, c, d];
     }
   );

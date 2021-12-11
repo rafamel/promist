@@ -1,4 +1,5 @@
-import { isPromise, isPromiseLike } from '~/utils/is-promise';
+import { test, describe, expect } from '@jest/globals';
+import { isPromise, isPromiseLike } from '../../src/utils/is-promise';
 
 describe(`isPromise`, () => {
   test(`returns true for promise`, () => {

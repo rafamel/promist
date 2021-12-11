@@ -1,4 +1,5 @@
-import { wait } from '~/create';
+import { test, expect } from '@jest/globals';
+import { wait } from '../../src/create';
 
 test(`waits`, async () => {
   const p = wait(200);

@@ -4,7 +4,7 @@ import {
   PromiseExecutor,
   ValueType
 } from './types';
-import { until } from '~/create';
+import { until } from '../create';
 import { Observable } from '../definitions';
 
 const INTERNAL_SYMBOL = Symbol('internal');
@@ -56,7 +56,7 @@ export class Promist<T> {
         Promise.resolve(typeof promise === 'function' ? promise() : promise)
           .then(resolve as any)
           .catch(reject);
-      } catch (err) {
+      } catch (err: any) {
         return reject(err);
       }
     });
@@ -96,7 +96,7 @@ export class Promist<T> {
             (value) => (value ? resolve() : reset()),
             (reason) => (safe ? reset() : reject(reason))
           );
-        } catch (err) {
+        } catch (err: any) {
           safe ? reset() : reject(err);
         }
       }

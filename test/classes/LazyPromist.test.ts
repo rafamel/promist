@@ -1,9 +1,10 @@
-import { LazyPromist } from '~/classes';
+import { test, describe, expect, jest } from '@jest/globals';
+import { LazyPromist } from '../../src/classes';
 import { Subject } from 'rxjs';
 
 describe(`laziness`, () => {
   test(`executor doesn't run on instantiation`, async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
     const p = new LazyPromist(fn);
     await new Promise((resolve) => setTimeout(resolve, 150));
     expect(fn).not.toHaveBeenCalled();
@@ -16,7 +17,7 @@ describe(`laziness`, () => {
     expect(fn).toHaveBeenCalledWith('foo');
   });
   test(`executor runs on catch`, async () => {
-    const p = new LazyPromist((resolve, reject) => reject(Error(`foo`)));
+    const p = new LazyPromist((_resolve, reject) => reject(Error(`foo`)));
     const fn = jest.fn();
     await p.catch(fn);
     expect(fn.mock.calls[0][0]).toHaveProperty('message', 'foo');
@@ -41,21 +42,21 @@ describe(`laziness`, () => {
     expect(fn).toHaveBeenCalledTimes(1);
   });
   test(`executor never runs on early resolution`, async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
     const p = new LazyPromist(fn);
     p.resolve('foo');
     await expect(p).resolves.toBe('foo');
     expect(fn).not.toHaveBeenCalled();
   });
   test(`executor never runs on early rejection`, async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
     const p = new LazyPromist(fn);
     p.reject(Error('foo'));
     await expect(p).rejects.toThrowError('foo');
     expect(fn).not.toHaveBeenCalled();
   });
   test(`executor never runs on early cancellation`, async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
     const p = new LazyPromist(fn);
     p.cancel();
     p.then(fn);
@@ -189,7 +190,7 @@ describe(`static methods`, () => {
     expect(Date.now() - start).toBeGreaterThanOrEqual(200);
   });
   test(`until doesn't start until requested`, async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
     const p = LazyPromist.until(fn);
 
     expect(fn).not.toHaveBeenCalled();

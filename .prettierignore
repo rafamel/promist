@@ -1,10 +1,13 @@
 pkg
 build
+deploy
+vendor
 lib
 dist
 out
+public
+coverage
 .vscode
 .cache
-coverage
 node_modules
 *.md

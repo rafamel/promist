@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 export type PromistStatus = 'pending' | 'resolved' | 'rejected' | 'cancelled';
 
 export type PromistExecutor<T = any> = (
