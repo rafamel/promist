@@ -1,3 +1,33 @@
+# [5.0.0](https://github.com/rafamel/promist/compare/v4.0.0...v5.0.0) (2021-12-13)
+
+
+### chore
+
+* reboot package development ([0a3d779](https://github.com/rafamel/promist/commit/0a3d779da8996cd6d92b5dd2e9b8b0fe28114a38))
+
+
+### Features
+
+* **classes:** add CancellablePromise ([1aa340e](https://github.com/rafamel/promist/commit/1aa340ee9f3c374f3e2646ce9d1bde7b00b90742))
+* **classes:** add DeferredPromise ([c24ad6b](https://github.com/rafamel/promist/commit/c24ad6bdef4907d01d042e4bc868f9b7ce6ad74c))
+* **classes:** add ExtensiblePromise ([0166da2](https://github.com/rafamel/promist/commit/0166da2fe1548b814ed1cc55159481f9c71bdc7b))
+* **classes:** add LazyPromise ([d9b5984](https://github.com/rafamel/promist/commit/d9b598467c31d7c1943afe0ca2c28b9288663775))
+* **classes:** add SyncPromise ([e34ca8d](https://github.com/rafamel/promist/commit/e34ca8d0307fd257b8b2eaf7ac85a24058c5fcb9))
+* **collection:** add Parallel ([2ed3bdf](https://github.com/rafamel/promist/commit/2ed3bdf7728e589891ebf246aab7e98b0bf4c668))
+* **collection:** add Series methods ([87ca458](https://github.com/rafamel/promist/commit/87ca4589b825e373a9e0951cc5a74408ed3c8ba1))
+* **creation:** add timeout ([17d3edb](https://github.com/rafamel/promist/commit/17d3edb958340e53bf53dae498443ab7336235b1))
+* **creation:** add until ([8cc3dd2](https://github.com/rafamel/promist/commit/8cc3dd28e191c4870894880e8b5e3d85347fbbac))
+* **creation:** add wait ([67b9da7](https://github.com/rafamel/promist/commit/67b9da749fa6b0a6ede8b55950443c4d0fd4e958))
+* **utils:** add control and type guards utils ([ec0cff2](https://github.com/rafamel/promist/commit/ec0cff272ce3896b82a18053f76f742fe0bd1ec0))
+
+
+### BREAKING CHANGES
+
+* Promist has been almost entirely rewritten and its api redesigned. Please check the
+latest documentation.
+
+
+
 # [4.0.0](https://github.com/rafamel/promist/compare/v3.0.0...v4.0.0) (2020-08-05)
 
 
@@ -53,21 +83,21 @@ only return true for thenable and catchable objects
 # [2.0.0](https://github.com/rafamel/promist/compare/v1.0.0...v2.0.0) (2019-10-31)
 
 
-* chore(prepares class based rewrite): ([a05e28d](https://github.com/rafamel/promist/commit/a05e28d))
-
-
 ### Bug Fixes
 
-* exports classes and collections from main entry point ([55d7f19](https://github.com/rafamel/promist/commit/55d7f19))
-* **classes:** fixes PromiseExecutor definition; fixes LazyPromist using PromiseExecutor instead of PromistExecutor ([3bed547](https://github.com/rafamel/promist/commit/3bed547))
+* **classes:** fixes PromiseExecutor definition; fixes LazyPromist using PromiseExecutor instead of PromistExecutor ([3bed547](https://github.com/rafamel/promist/commit/3bed547f36944f2028f7fed6487d0350b2a3f851))
+* exports classes and collections from main entry point ([55d7f19](https://github.com/rafamel/promist/commit/55d7f1992bd0bdec2a9c109b69ff1ec994b782f5))
+
+
+* chore(prepares class based rewrite): ([a05e28d](https://github.com/rafamel/promist/commit/a05e28d9dd9672bd9eae601df4b31f4cd69347d5))
 
 
 ### Features
 
-* **classes:** adds LazyPromist ([86808b8](https://github.com/rafamel/promist/commit/86808b8))
-* **classes:** adds Promist ([ebec03c](https://github.com/rafamel/promist/commit/ebec03c))
-* **create:** adds subscribe; renames waitUntil to until; reafactors until and wait ([aab4ea4](https://github.com/rafamel/promist/commit/aab4ea4))
-* subscribe and Promist.subscribe take a second onComplete argument ([128dd31](https://github.com/rafamel/promist/commit/128dd31))
+* **classes:** adds LazyPromist ([86808b8](https://github.com/rafamel/promist/commit/86808b864ada0b28201700ab4fe4903e96273bc0))
+* **classes:** adds Promist ([ebec03c](https://github.com/rafamel/promist/commit/ebec03cda0c548cd093765455db602af4ec03e45))
+* **create:** adds subscribe; renames waitUntil to until; reafactors until and wait ([aab4ea4](https://github.com/rafamel/promist/commit/aab4ea4319cc3044e3c52cb17c6c229d77d20dbe))
+* subscribe and Promist.subscribe take a second onComplete argument ([128dd31](https://github.com/rafamel/promist/commit/128dd313e73b6ebc60788a4283099518689f54e1))
 
 
 ### BREAKING CHANGES
@@ -85,23 +115,23 @@ have also been deprecated.
 
 ### Bug Fixes
 
-* **utils/control:** updates to latest typscript (Generator) ([798dbb0](https://github.com/rafamel/promist/commit/798dbb0))
+* **utils/control:** updates to latest typscript (Generator) ([798dbb0](https://github.com/rafamel/promist/commit/798dbb0df674fc7855aa42e830dfebab72848ea7))
 
 
 ### Code Refactoring
 
-* **extend:** renames status to stateful ([54bdef6](https://github.com/rafamel/promist/commit/54bdef6))
+* **extend:** renames status to stateful ([54bdef6](https://github.com/rafamel/promist/commit/54bdef61b7288ae19fda31e22cd0e1a3562b5844))
 
 
 ### Features
 
-* **create:** removes immediate ([0872f71](https://github.com/rafamel/promist/commit/0872f71))
-* **create/deferred:** guards agains unassigned values for resolve and reject ([b19294c](https://github.com/rafamel/promist/commit/b19294c))
-* improves typings; extend functions clone input promise ([71fb681](https://github.com/rafamel/promist/commit/71fb681))
-* **extend/timeout:** doesn't declare return type as an extended promise ([c87ff5f](https://github.com/rafamel/promist/commit/c87ff5f))
-* **utils:** adds isPromist ([c52e6e4](https://github.com/rafamel/promist/commit/c52e6e4))
-* **utils:** exports clone as an util ([7a738be](https://github.com/rafamel/promist/commit/7a738be))
-* **utils:** replaces compose with pipe ([4905d84](https://github.com/rafamel/promist/commit/4905d84))
+* **create/deferred:** guards agains unassigned values for resolve and reject ([b19294c](https://github.com/rafamel/promist/commit/b19294c091531758219ca1792c1cc4b688f00bba))
+* **create:** removes immediate ([0872f71](https://github.com/rafamel/promist/commit/0872f713d88e10d4ed8333b24bb205428922c23b))
+* **extend/timeout:** doesn't declare return type as an extended promise ([c87ff5f](https://github.com/rafamel/promist/commit/c87ff5fd480ede631297c05d416068acce781506))
+* improves typings; extend functions clone input promise ([71fb681](https://github.com/rafamel/promist/commit/71fb6818a5525f767b61590ed7d1a18853239326))
+* **utils:** adds isPromist ([c52e6e4](https://github.com/rafamel/promist/commit/c52e6e4e12b68eefb2bf8eb8b2809ee97b4afdca))
+* **utils:** exports clone as an util ([7a738be](https://github.com/rafamel/promist/commit/7a738be081fd7f5628883130a088ccb3aa0d5f6e))
+* **utils:** replaces compose with pipe ([4905d84](https://github.com/rafamel/promist/commit/4905d8419d27b4639328e2124e2dba06eeeb5186))
 
 
 ### BREAKING CHANGES
@@ -124,7 +154,7 @@ type safety
 
 ### Features
 
-* **create/lazy:** adds lazy.fn ([5212948](https://github.com/rafamel/promist/commit/5212948))
+* **create/lazy:** adds lazy.fn ([5212948](https://github.com/rafamel/promist/commit/5212948eec183de81d8bb30029067df3270a0a68))
 
 
 
@@ -133,13 +163,13 @@ type safety
 
 ### Features
 
-* **compose:** adds second argument (create) for compose functions ([344fcd7](https://github.com/rafamel/promist/commit/344fcd7))
-* **helpers:** adds asNew() ([e5921c6](https://github.com/rafamel/promist/commit/e5921c6))
-* **helpers:** adds helpers index w/ named exports ([20c433c](https://github.com/rafamel/promist/commit/20c433c))
-* **types:** defines statuses as literals instead of enums ([c6e9c50](https://github.com/rafamel/promist/commit/c6e9c50))
-* exports types from entry point ([a47f043](https://github.com/rafamel/promist/commit/a47f043))
-* **utils/compose:** adds create argument to compose; improves typings ([a051a63](https://github.com/rafamel/promist/commit/a051a63))
-* **utils/is-promise:** adds type guard to isPromise ([70d3e62](https://github.com/rafamel/promist/commit/70d3e62))
+* **compose:** adds second argument (create) for compose functions ([344fcd7](https://github.com/rafamel/promist/commit/344fcd715eab46917b613c5755b3a9d426b1e8e2))
+* exports types from entry point ([a47f043](https://github.com/rafamel/promist/commit/a47f043eb9b9989fffab5a09471676b3dcf0aeab))
+* **helpers:** adds asNew() ([e5921c6](https://github.com/rafamel/promist/commit/e5921c6c73275845b984993280616c5105389389))
+* **helpers:** adds helpers index w/ named exports ([20c433c](https://github.com/rafamel/promist/commit/20c433cb5c31ba73a05707309ba3310199f0ddbf))
+* **types:** defines statuses as literals instead of enums ([c6e9c50](https://github.com/rafamel/promist/commit/c6e9c500befcba8cc80664c625e721ca6fa58621))
+* **utils/compose:** adds create argument to compose; improves typings ([a051a63](https://github.com/rafamel/promist/commit/a051a6325a1dbcc0094823005215ad27f0428a32))
+* **utils/is-promise:** adds type guard to isPromise ([70d3e62](https://github.com/rafamel/promist/commit/70d3e62b196cc58f0e566a6f80ed5f8da561231c))
 
 
 
@@ -200,5 +230,6 @@ type safety
 
 
 # 0.1.0 (2018-12-06)
+
 
 
