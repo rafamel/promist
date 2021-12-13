@@ -58,5 +58,8 @@
   },
   "simple-git-hooks": {
     "pre-commit": "kpo validate"
+  },
+  "dependencies": {
+    "type-core": "^0.12.0"
   }
 }
