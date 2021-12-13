@@ -11,7 +11,7 @@ export declare namespace SyncPromise {
 
 /**
  * A promise that will make its resolved or rejected values
- * synchronously available.
+ * synchronously available and operable.
  */
 export class SyncPromise<T> extends ExtensiblePromise<T> {
   /**

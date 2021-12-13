@@ -11,7 +11,7 @@ export declare namespace LazyPromise {
 
 /**
  * A Promise whose executor will not execute
- * until the first time it is awaited for.
+ * until the first time it is awaited.
  */
 export class LazyPromise<T> extends ExtensiblePromise<T> {
   /**

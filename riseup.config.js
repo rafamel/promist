@@ -32,7 +32,7 @@ module.exports = library(
     },
     docs: {
       // Build typedoc documentation
-      build: false,
+      build: true,
       // Documentation build folder
       destination: 'docs/',
       // Configuration overrides for typedoc
