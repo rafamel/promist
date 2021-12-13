@@ -60,6 +60,7 @@
     "pre-commit": "kpo validate"
   },
   "dependencies": {
+    "abort-controller": "^3.0.0",
     "type-core": "^0.12.0"
   }
 }
