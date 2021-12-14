@@ -14,6 +14,12 @@ test(`succeeds w/ number arg`, async () => {
   expect(Date.now() - start).toBeGreaterThanOrEqual(200);
   expect(Date.now() - start).toBeLessThan(400);
 });
+test(`succeeds w/ null arg`, async () => {
+  let value = false;
+  wait(null).then(() => (value = true));
+  await Promise.resolve();
+  expect(value).toBe(true);
+});
 test(`succeeds w/ options args`, async () => {
   const p = wait({ delay: 200 });
   const start = Date.now();
