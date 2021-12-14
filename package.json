@@ -1,7 +1,7 @@
 {
   "name": "promist",
   "description": "A dependable promises and async utility belt",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "author": "Rafa Mel",
   "license": "MIT",
   "private": false,

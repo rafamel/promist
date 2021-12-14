@@ -1,3 +1,12 @@
+# [5.1.0](https://github.com/rafamel/promist/compare/v5.0.0...v5.1.0) (2021-12-14)
+
+
+### Features
+
+* **creation:** wait can take a null delay for immediate resolution ([972968f](https://github.com/rafamel/promist/commit/972968ff47fc0c1b937167fa203cc40f0ada883b))
+
+
+
 # [5.0.0](https://github.com/rafamel/promist/compare/v4.0.0...v5.0.0) (2021-12-13)
 
 
