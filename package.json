@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^27.0.3",
-    "@riseup/library": "^0.13.1",
+    "@riseup/library": "^0.21.0",
     "coveralls": "^3.0.9",
     "kpo": "^0.22.0",
     "simple-git-hooks": "^2.7.0",
