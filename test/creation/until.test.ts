@@ -1,5 +1,6 @@
-import { test, expect } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { AbortController } from 'abort-controller';
+
 import { CancellablePromise } from '../../src/classes';
 import { until } from '../../src/creation';
 
@@ -31,7 +32,7 @@ test(`treats error as false w/ ignoreError`, async () => {
   let val = false;
   const p = until({ delay: 0, ignoreError: true }, () => {
     if (val) return true;
-    else throw Error();
+    else throw new Error('...');
   });
 
   const start = Date.now();
@@ -43,7 +44,7 @@ test(`treats error as false w/ ignoreError`, async () => {
 test(`treats rejection as false w/ ignoreError`, async () => {
   let val = false;
   const p = until({ delay: 0, ignoreError: true }, () => {
-    return val ? Promise.resolve(val) : Promise.reject(Error());
+    return val ? Promise.resolve(val) : Promise.reject(new Error('...'));
   });
 
   const start = Date.now();
@@ -54,12 +55,12 @@ test(`treats rejection as false w/ ignoreError`, async () => {
 });
 test(`rejects on test error`, async () => {
   const p = until(0, () => {
-    throw Error(`foo`);
+    throw new Error('foo');
   });
   await expect(p).rejects.toThrowError('foo');
 });
 test(`rejects on test rejection`, async () => {
-  const p = until(0, () => Promise.reject(Error(`foo`)));
+  const p = until(0, () => Promise.reject(new Error(`foo`)));
   await expect(p).rejects.toThrowError('foo');
 });
 test(`uses delay value`, async () => {

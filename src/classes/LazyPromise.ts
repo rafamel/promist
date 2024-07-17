@@ -1,4 +1,5 @@
-import { NullaryFn, UnaryFn } from 'type-core';
+import type { NullaryFn, UnaryFn } from 'type-core';
+
 import { Util } from './helpers/Util';
 import { ExtensiblePromise } from './ExtensiblePromise';
 

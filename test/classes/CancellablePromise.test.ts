@@ -1,9 +1,10 @@
-import { test, expect, jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { AbortController } from 'abort-controller';
+
 import { CancellablePromise } from '../../src/classes';
 
 test(`succeeds wo/ cancel (sync)`, async () => {
-  const error = Error();
+  const error = new Error('...');
   const p1 = new CancellablePromise((resolve) => {
     resolve('foo');
     return () => resolve('bar');
@@ -17,7 +18,7 @@ test(`succeeds wo/ cancel (sync)`, async () => {
   await expect(p2).rejects.toBe(error);
 });
 test(`succeeds wo/ cancel (async)`, async () => {
-  const error = Error();
+  const error = new Error('...');
   const p1 = new CancellablePromise((resolve) => {
     const timeout = setTimeout(() => resolve('foo'), 100);
     return () => {
@@ -90,7 +91,7 @@ test(`cancellation doesn't cause signal abort`, async () => {
   expect(controller.signal.aborted).toBe(false);
 });
 test(`repeat calls to cancel don't cause repeat executions`, async () => {
-  const fn = jest.fn();
+  const fn = vi.fn();
   const p = new CancellablePromise(() => () => fn());
 
   expect(fn).toHaveBeenCalledTimes(0);

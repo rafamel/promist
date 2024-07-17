@@ -1,4 +1,5 @@
-import { test, describe, expect } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
+
 import { Parallel } from '../../src/collection';
 import { LazyPromise } from '../../src/classes';
 

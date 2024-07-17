@@ -1,5 +1,6 @@
-import { test, expect } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { AbortController } from 'abort-controller';
+
 import { timeout } from '../../src/creation';
 import { CancellablePromise } from '../../src/classes';
 

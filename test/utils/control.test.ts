@@ -1,4 +1,5 @@
-import { test, expect } from '@jest/globals';
+import { expect, test } from 'vitest';
+
 import { control } from '../../src/utils';
 
 test(`succeeds with test => true`, async () => {
@@ -29,8 +30,8 @@ test(`rejects with test => Error`, async () => {
   function* gen(): Generator<number, number, number> {
     return 1;
   }
-  const fn = control(() => Error(), gen);
-  const fnp = control(() => Promise.resolve(Error()), gen);
+  const fn = control(() => new Error('...'), gen);
+  const fnp = control(() => Promise.resolve(new Error('...')), gen);
 
   await expect(fn()).rejects.toThrowError();
   await expect(fnp()).rejects.toThrowError();
@@ -40,9 +41,9 @@ test(`rejects with test throwing Error`, async () => {
     return 1;
   }
   const fn = control(() => {
-    throw Error();
+    throw new Error('...');
   }, gen);
-  const fnp = control(() => Promise.reject(Error()), gen);
+  const fnp = control(() => Promise.reject(new Error('...')), gen);
 
   await expect(fn()).rejects.toThrowError();
   await expect(fnp()).rejects.toThrowError();
@@ -51,7 +52,7 @@ test(`rejects with generator throwing Error`, async () => {
   const fn = control(
     () => true,
     function* (): Generator<any, any, any> {
-      throw Error();
+      throw new Error('...');
     }
   );
 

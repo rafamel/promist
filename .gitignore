@@ -1,15 +1,16 @@
 # Project Specific #
 ####################
-pkg
-build
-deploy
-vendor
 lib
-dist
+pkg
 out
+dist
+build
+vendor
+deploy
 public
 coverage
 _test*
+!**/deps/*.tgz
 
 # Environment Variables #
 #########################
@@ -23,6 +24,7 @@ _test*
 #############################
 .cache
 .vercel
+.tsup
 .pnp
 .pnp.js
 hint-report
@@ -51,6 +53,7 @@ yarn-error.log*
 *.jar
 *.rar
 *.tar
+*.tgz
 *.zip
 
 # Logs and databases #

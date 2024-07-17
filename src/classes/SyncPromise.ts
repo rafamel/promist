@@ -1,4 +1,5 @@
-import { NullaryFn, TypeGuard, UnaryFn } from 'type-core';
+import { type NullaryFn, TypeGuard, type UnaryFn } from 'type-core';
+
 import { Util } from './helpers/Util';
 import { ExtensiblePromise } from './ExtensiblePromise';
 

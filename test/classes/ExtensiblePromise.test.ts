@@ -1,4 +1,5 @@
-import { test, expect, jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
+
 import { ExtensiblePromise } from '../../src/classes';
 
 test(`ExtensiblePromise.prototype: mimics Promise`, () => {
@@ -22,7 +23,7 @@ test(`ExtensiblePromise.prototype.then: is a Promise, not a ExtensiblePromise`, 
   expect(p.then(() => undefined)).not.toBeInstanceOf(ExtensiblePromise);
 });
 test(`ExtensiblePromise.prototype.then: resolves with value`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const p1 = new ExtensiblePromise((resolve) => resolve('foo'));
   const p2 = new ExtensiblePromise((_, reject) => reject(err));
 
@@ -35,7 +36,7 @@ test(`ExtensiblePromise.prototype.catch: is a Promise, not a ExtensiblePromise`,
   expect(p.catch(() => undefined)).not.toBeInstanceOf(ExtensiblePromise);
 });
 test(`ExtensiblePromise.prototype.catch: resolves with value`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const p = new ExtensiblePromise((_, reject) => reject(err));
 
   await expect(p.catch((val) => val)).resolves.toBe(err);
@@ -46,10 +47,10 @@ test(`ExtensiblePromise.prototype.finally: is a Promise, not a ExtensiblePromise
   expect(p.finally(() => undefined)).not.toBeInstanceOf(ExtensiblePromise);
 });
 test(`ExtensiblePromise.prototype.catch: always executes`, async () => {
-  const fn1 = jest.fn();
-  const fn2 = jest.fn();
+  const fn1 = vi.fn();
+  const fn2 = vi.fn();
   const p1 = new ExtensiblePromise((resolve) => resolve('foo'));
-  const p2 = new ExtensiblePromise((_, reject) => reject(Error()));
+  const p2 = new ExtensiblePromise((_, reject) => reject(new Error('...')));
 
   await p1.finally(fn1);
   await p2.finally(fn2).catch(() => undefined);

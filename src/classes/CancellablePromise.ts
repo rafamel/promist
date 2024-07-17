@@ -1,5 +1,6 @@
-import { NullaryFn, UnaryFn } from 'type-core';
-import { AbortSignal } from 'abort-controller';
+import type { NullaryFn, UnaryFn } from 'type-core';
+import type { AbortSignal } from 'abort-controller';
+
 import { ExtensiblePromise } from './ExtensiblePromise';
 
 export declare namespace CancellablePromise {

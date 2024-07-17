@@ -1,4 +1,4 @@
-import { NullaryFn, UnaryFn, TypeGuard } from 'type-core';
+import { type NullaryFn, TypeGuard, type UnaryFn } from 'type-core';
 
 export class Util {
   static noop(): void {

@@ -1,12 +1,8 @@
 # promist
 
-[![Version](https://img.shields.io/npm/v/promist.svg)](https://www.npmjs.com/package/promist)
-[![Build Status](https://img.shields.io/travis/rafamel/promist/master.svg)](https://travis-ci.org/rafamel/promist)
-[![Coverage](https://img.shields.io/coveralls/rafamel/promist/master.svg)](https://coveralls.io/github/rafamel/promist)
-[![Dependencies](https://img.shields.io/david/rafamel/promist.svg)](https://david-dm.org/rafamel/promist)
-[![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/promist.svg)](https://snyk.io/test/npm/promist)
-[![License](https://img.shields.io/github/license/rafamel/promist.svg)](https://github.com/rafamel/promist/blob/master/LICENSE)
+[![Version](https://img.shields.io/npm/v/@promist.svg)](https://www.npmjs.com/package/promist)
 [![Types](https://img.shields.io/npm/types/promist.svg)](https://www.npmjs.com/package/promist)
+[![License](https://img.shields.io/github/license/rafamel/promist.svg)](https://github.com/rafamel/promist/blob/master/LICENSE)
 
 > A dependable promises and async utility belt.
 
@@ -17,22 +13,22 @@
 ## Documentation
 
 * *Classes:* a set of promise classes.
-  * [`ExtensiblePromise`:](https://rafamel.github.io/promist/classes/ExtensiblePromise.html) a safe to extend promise class.
-  * [`CancellablePromise`:](https://rafamel.github.io/promist/classes/CancellablePromise.html) a cancellable promise.
-    * [`cancel`](https://rafamel.github.io/promist/classes/CancellablePromise.html#cancel)
+  * [`ExtensiblePromise`:](https://rafamel.github.io/promist/classes/ExtensiblePromise-1.html) a safe to extend promise class.
+  * [`CancellablePromise`:](https://rafamel.github.io/promist/classes/CancellablePromise-1.html) a cancellable promise.
+    * [`cancel`](https://rafamel.github.io/promist/classes/CancellablePromise-1.html#cancel)
   * [`DeferredPromise`:](https://rafamel.github.io/promist/classes/DeferredPromise.html) an externally actionable promise.
     * [`resolve`](https://rafamel.github.io/promist/classes/DeferredPromise.html#resolve)
     * [`reject`](https://rafamel.github.io/promist/classes/DeferredPromise.html#reject)
-  * [`LazyPromise`:](https://rafamel.github.io/promist/classes/LazyPromise.html) a promise that will not execute until awaited.
-    * [static `from`](https://rafamel.github.io/promist/classes/LazyPromise.html#from)
-    * [`consume`](https://rafamel.github.io/promist/classes/LazyPromise.html#consume)
-    * [`operate`](https://rafamel.github.io/promist/classes/LazyPromise.html#operate)
-  * [`SyncPromise`:](https://rafamel.github.io/promist/classes/SyncPromise.html) a promise with values synchronously available and operable.
-    * [static `from`](https://rafamel.github.io/promist/classes/SyncPromise.html#from)
+  * [`LazyPromise`:](https://rafamel.github.io/promist/classes/LazyPromise-1.html) a promise that will not execute until awaited.
+    * [static `from`](https://rafamel.github.io/promist/classes/LazyPromise-1.html#from)
+    * [`consume`](https://rafamel.github.io/promist/classes/LazyPromise-1.html#consume)
+    * [`operate`](https://rafamel.github.io/promist/classes/LazyPromise-1.html#operate)
+  * [`SyncPromise`:](https://rafamel.github.io/promist/classes/SyncPromise-1.html) a promise with values synchronously available and operable.
+    * [static `from`](https://rafamel.github.io/promist/classes/SyncPromise-1.html#from)
 * *Creation*: a set of promise returning conveniency functions.
-  * [`wait`:](https://rafamel.github.io/promist/modules.html#wait) waits for a set time.
-  * [`until`:](https://rafamel.github.io/promist/modules.html#until) resolves once a test function returns true.
-  * [`timeout`:](https://rafamel.github.io/promist/modules.html#timeout) cancels a promise after a set time.
+  * [`wait`:](https://rafamel.github.io/promist/functions/wait.html) waits for a set time.
+  * [`until`:](https://rafamel.github.io/promist/functions/until.html) resolves once a test function returns true.
+  * [`timeout`:](https://rafamel.github.io/promist/functions/timeout.html) cancels a promise after a set time.
 * *Iterables*: a set of functions to deal with iterables of promises.
   * [`Series`:](https://rafamel.github.io/promist/classes/Series.html) executes operations' callbacks in series.
     * [`map`](https://rafamel.github.io/promist/classes/Series.html#map)
@@ -76,7 +72,7 @@ function* gen(n) {
 
 const willContinue = control(() => true, gen);
 const willNotContinue = control(() => false, gen);
-const willReject = control(() => Error('An error ocurred'), gen);
+const willReject = control(() => new Error('An error ocurred'), gen);
 
 willContinue(1).then(console.log); // 10
 willNotContinue(2).then(console.log); // Will not resolve

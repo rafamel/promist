@@ -1,4 +1,4 @@
-import { NullaryFn, UnaryFn } from 'type-core';
+import type { NullaryFn, UnaryFn } from 'type-core';
 
 export declare namespace ExtensiblePromise {
   type Executor<T> = (

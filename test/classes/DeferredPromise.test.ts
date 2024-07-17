@@ -1,4 +1,5 @@
-import { test, expect } from '@jest/globals';
+import { expect, test } from 'vitest';
+
 import { DeferredPromise } from '../../src/classes';
 
 test(`DeferredPromise.prototype[Symbol.toStringTag]: is "DeferredPromise"`, () => {
@@ -12,7 +13,7 @@ test(`DeferredPromise.prototype.resolve: resolves promise`, async () => {
 });
 test(`DeferredPromise.prototype.reject: rejects promise`, async () => {
   const p = new DeferredPromise();
-  const error = new Error();
+  const error = new Error('...');
   p.reject(error);
   await expect(p).rejects.toBe(error);
 });

@@ -1,4 +1,5 @@
-import { test, expect, jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
+
 import { wait } from '../../src';
 import { SyncPromise } from '../../src/classes';
 
@@ -13,7 +14,7 @@ test(`SyncPromise.prototype.consume: returns value when resolve is called synchr
   await expect(p).resolves.toBe('foo');
 });
 test(`SyncPromise.prototype.consume: throws when reject is called synchronously`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const p = new SyncPromise((_, reject) => reject(err));
 
   expect(() => p.consume()).toThrowError(err);
@@ -29,7 +30,7 @@ test(`SyncPromise.prototype.consume: returns resolving promise when it has not b
   await expect(p).resolves.toBe('foo');
 });
 test(`SyncPromise.prototype.consume: returns rejecting promise when it has not been rejected yet`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const p = new SyncPromise((_, reject) => {
     setTimeout(() => reject(err), 100);
   });
@@ -48,7 +49,7 @@ test(`SyncPromise.prototype.consume: returns value after resolve has been called
   expect(p.consume()).toBe('foo');
 });
 test(`SyncPromise.prototype.consume: throws after reject has been called`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const p = new SyncPromise((_, reject) => {
     setTimeout(() => reject(err), 100);
   });
@@ -66,7 +67,7 @@ test(`SyncPromise.prototype.consume: returns resolving promise when resolve is c
   await expect(p).resolves.toBe('foo');
 });
 test(`SyncPromise.prototype.consume: returns rejecting promise when resolve is called with a rejecting promise`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const p = new SyncPromise((resolve) => {
     resolve(Promise.reject(err));
   });
@@ -85,7 +86,7 @@ test(`SyncPromise.prototype.consume: returns value when resolve is called with a
   expect(p.consume()).toBe('foo');
 });
 test(`SyncPromise.prototype.consume: throws when resolve is called with a rejected promise`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const p = new SyncPromise((resolve) => {
     resolve(Promise.reject(err));
   });
@@ -108,7 +109,7 @@ test(`SyncPromise.prototype.operate: case, sync resolution w/ sync returning suc
   expect(value).toBe('foobar');
 });
 test(`SyncPromise.prototype.operate: case, sync resolution w/ sync throwing success`, () => {
-  const err = Error();
+  const err = new Error('...');
   expect(() => {
     new SyncPromise((resolve) => resolve('foo'))
       .operate(() => {
@@ -125,7 +126,7 @@ test(`SyncPromise.prototype.operate: case, sync resolution w/ async resolving su
   await expect(value).resolves.toBe('foobar');
 });
 test(`SyncPromise.prototype.operate: case, sync resolution w/ async rejecting success`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const value = new SyncPromise((resolve) => resolve('foo'))
     .operate(() => Promise.reject(err))
     .consume();
@@ -133,7 +134,7 @@ test(`SyncPromise.prototype.operate: case, sync resolution w/ async rejecting su
   await expect(value).rejects.toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, sync resolution w/ sync returning success and finalize`, () => {
-  const fn: any = jest.fn();
+  const fn: any = vi.fn();
   const v1 = new SyncPromise((resolve) => resolve('foo'))
     .operate((value) => value + 'bar', null, fn)
     .consume();
@@ -149,13 +150,13 @@ test(`SyncPromise.prototype.operate: case, sync resolution w/ sync returning suc
   expect(fn).toHaveBeenCalledTimes(2);
 });
 test(`SyncPromise.prototype.operate: case, sync resolution w/ sync throwing success and finalize`, () => {
-  const err = Error();
+  const err = new Error('...');
 
   expect(() => {
     new SyncPromise((resolve) => resolve('foo'))
       .operate(
         () => {
-          throw Error();
+          throw new Error('...');
         },
         null,
         () => {
@@ -174,7 +175,7 @@ test(`SyncPromise.prototype.operate: case, sync resolution w/ sync throwing succ
   }).toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, sync resolution w/ async resolving success and finalize`, async () => {
-  const fn: any = jest.fn(() => wait(250));
+  const fn: any = vi.fn(() => wait(250));
   const v1 = new SyncPromise((resolve) => resolve('foo'))
     .operate((value) => Promise.resolve(value + 'bar'), null, fn)
     .consume();
@@ -191,10 +192,10 @@ test(`SyncPromise.prototype.operate: case, sync resolution w/ async resolving su
   expect(fn).toHaveBeenCalledTimes(2);
 });
 test(`SyncPromise.prototype.operate: case, sync resolution w/ async rejecting success and finalize`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const v1 = new SyncPromise((resolve) => resolve('foo'))
     .operate(
-      () => Promise.reject(Error()),
+      () => Promise.reject(new Error('...')),
       null,
       () => Promise.reject(err)
     )
@@ -209,7 +210,7 @@ test(`SyncPromise.prototype.operate: case, sync resolution w/ async rejecting su
   await expect(v2).rejects.toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, sync rejection`, () => {
-  const err = Error();
+  const err = new Error('...');
 
   expect(() => {
     new SyncPromise((_, reject) => reject(err)).operate(null).consume();
@@ -223,7 +224,7 @@ test(`SyncPromise.prototype.operate: case, sync rejection w/ sync returning fail
   expect(value).toBe('foobar');
 });
 test(`SyncPromise.prototype.operate: case, sync rejection w/ sync throwing failure`, () => {
-  const err = Error();
+  const err = new Error('...');
 
   expect(() => {
     new SyncPromise((_, reject) => reject('foo'))
@@ -241,7 +242,7 @@ test(`SyncPromise.prototype.operate: case, sync rejection w/ async resolving fai
   await expect(value).resolves.toBe('foobar');
 });
 test(`SyncPromise.prototype.operate: case, sync rejection w/ async rejecting failure`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const value = new SyncPromise((_, reject) => reject('foo'))
     .operate(null, () => Promise.reject(err))
     .consume();
@@ -249,7 +250,7 @@ test(`SyncPromise.prototype.operate: case, sync rejection w/ async rejecting fai
   await expect(value).rejects.toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, sync rejection w/ sync returning failure and finalize`, () => {
-  const fn: any = jest.fn();
+  const fn: any = vi.fn();
   const value = new SyncPromise((_, reject) => reject('foo'))
     .operate(null, (reason) => reason + 'bar', fn)
     .consume();
@@ -257,7 +258,7 @@ test(`SyncPromise.prototype.operate: case, sync rejection w/ sync returning fail
   expect(value).toBe('foobar');
   expect(fn).toHaveBeenCalledTimes(1);
 
-  const err = new Error();
+  const err = new Error('...');
   expect(() => {
     new SyncPromise((_, reject) => reject(err))
       .operate(null, null, fn)
@@ -265,14 +266,14 @@ test(`SyncPromise.prototype.operate: case, sync rejection w/ sync returning fail
   }).toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, sync rejection w/ sync throwing failure and finalize`, () => {
-  const err = new Error();
+  const err = new Error('...');
 
   expect(() => {
     new SyncPromise((_, reject) => reject('foo'))
       .operate(
         null,
         () => {
-          throw Error();
+          throw new Error('...');
         },
         () => {
           throw err;
@@ -290,7 +291,7 @@ test(`SyncPromise.prototype.operate: case, sync rejection w/ sync throwing failu
   }).toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, sync rejection w/ async resolving failure and finalize`, async () => {
-  const fn: any = jest.fn(() => wait(250));
+  const fn: any = vi.fn(() => wait(250));
   const v1 = new SyncPromise((_, reject) => reject('foo'))
     .operate(null, (reason) => reason + 'bar', fn)
     .consume();
@@ -300,7 +301,7 @@ test(`SyncPromise.prototype.operate: case, sync rejection w/ async resolving fai
   expect(fn).toHaveBeenCalledTimes(1);
   expect(Date.now() - start).toBeGreaterThanOrEqual(250);
 
-  const v2 = new SyncPromise((_, reject) => reject(Error()))
+  const v2 = new SyncPromise((_, reject) => reject(new Error('...')))
     .operate(null, null, fn)
     .consume();
 
@@ -308,11 +309,11 @@ test(`SyncPromise.prototype.operate: case, sync rejection w/ async resolving fai
   expect(fn).toHaveBeenCalledTimes(2);
 });
 test(`SyncPromise.prototype.operate: case, sync rejection w/ async rejecting failure and finalize`, async () => {
-  const err = new Error();
+  const err = new Error('...');
   const v1 = new SyncPromise((_, reject) => reject('foo'))
     .operate(
       null,
-      () => Promise.reject(Error()),
+      () => Promise.reject(new Error('...')),
       () => Promise.reject(err)
     )
     .consume();
@@ -344,7 +345,7 @@ test(`SyncPromise.prototype.operate: case, async resolution w/ sync returning su
   await expect(value).resolves.toBe('foobar');
 });
 test(`SyncPromise.prototype.operate: case, async resolution w/ sync throwing success`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const value = new SyncPromise((resolve) => {
     setTimeout(() => resolve('foo'), 0);
   })
@@ -365,7 +366,7 @@ test(`SyncPromise.prototype.operate: case, async resolution w/ async resolving s
   await expect(value).resolves.toBe('foobar');
 });
 test(`SyncPromise.prototype.operate: case, async resolution w/ async rejecting success`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const value = new SyncPromise((resolve) => {
     setTimeout(() => resolve('foo'), 0);
   })
@@ -375,7 +376,7 @@ test(`SyncPromise.prototype.operate: case, async resolution w/ async rejecting s
   await expect(value).rejects.toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, async resolution w/ sync returning success and finalize`, async () => {
-  const fn: any = jest.fn();
+  const fn: any = vi.fn();
   const v1 = new SyncPromise((resolve) => {
     setTimeout(() => resolve('foo'), 0);
   })
@@ -395,13 +396,13 @@ test(`SyncPromise.prototype.operate: case, async resolution w/ sync returning su
   expect(fn).toHaveBeenCalledTimes(2);
 });
 test(`SyncPromise.prototype.operate: case, async resolution w/ sync throwing success and finalize`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const v1 = new SyncPromise((resolve) => {
     setTimeout(() => resolve('foo'), 0);
   })
     .operate(
       () => {
-        throw Error();
+        throw new Error('...');
       },
       null,
       () => {
@@ -423,7 +424,7 @@ test(`SyncPromise.prototype.operate: case, async resolution w/ sync throwing suc
   await expect(v2).rejects.toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, async resolution w/ async resolving success and finalize`, async () => {
-  const fn: any = jest.fn(() => wait(250));
+  const fn: any = vi.fn(() => wait(250));
   const v1 = new SyncPromise((resolve) => {
     setTimeout(() => resolve('foo'), 0);
   })
@@ -444,12 +445,12 @@ test(`SyncPromise.prototype.operate: case, async resolution w/ async resolving s
   expect(fn).toHaveBeenCalledTimes(2);
 });
 test(`SyncPromise.prototype.operate: case, async resolution w/ async rejecting success and finalize`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const v1 = new SyncPromise((resolve) => {
     setTimeout(() => resolve('foo'), 0);
   })
     .operate(
-      () => Promise.reject(Error()),
+      () => Promise.reject(new Error('...')),
       null,
       () => Promise.reject(err)
     )
@@ -466,7 +467,7 @@ test(`SyncPromise.prototype.operate: case, async resolution w/ async rejecting s
   await expect(v2).rejects.toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, async rejection`, async () => {
-  const err = new Error();
+  const err = new Error('...');
   const value = new SyncPromise((_, reject) => {
     setTimeout(() => reject(err), 0);
   })
@@ -485,7 +486,7 @@ test(`SyncPromise.prototype.operate: case, async rejection w/ sync returning fai
   await expect(value).resolves.toBe('foobar');
 });
 test(`SyncPromise.prototype.operate: case, async rejection w/ sync throwing failure`, async () => {
-  const err = Error();
+  const err = new Error('...');
 
   const value = new SyncPromise((_, reject) => {
     setTimeout(() => reject('foo'), 0);
@@ -507,7 +508,7 @@ test(`SyncPromise.prototype.operate: case, async rejection w/ async resolving fa
   await expect(value).resolves.toBe('foobar');
 });
 test(`SyncPromise.prototype.operate: case, async rejection w/ async rejecting failure`, async () => {
-  const err = Error();
+  const err = new Error('...');
   const value = new SyncPromise((_, reject) => {
     setTimeout(() => reject('foo'), 0);
   })
@@ -517,7 +518,7 @@ test(`SyncPromise.prototype.operate: case, async rejection w/ async rejecting fa
   await expect(value).rejects.toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, async rejection w/ sync returning failure and finalize`, async () => {
-  const fn: any = jest.fn();
+  const fn: any = vi.fn();
   const v1 = new SyncPromise((_, reject) => {
     setTimeout(() => reject('foo'), 0);
   })
@@ -527,7 +528,7 @@ test(`SyncPromise.prototype.operate: case, async rejection w/ sync returning fai
   await expect(v1).resolves.toBe('foobar');
   expect(fn).toHaveBeenCalledTimes(1);
 
-  const err = new Error();
+  const err = new Error('...');
   const v2 = new SyncPromise((_, reject) => {
     setTimeout(() => reject(err), 0);
   })
@@ -537,14 +538,14 @@ test(`SyncPromise.prototype.operate: case, async rejection w/ sync returning fai
   await expect(v2).rejects.toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, async rejection w/ sync throwing failure and finalize`, async () => {
-  const err = new Error();
+  const err = new Error('...');
   const v1 = new SyncPromise((_, reject) => {
     setTimeout(() => reject('foo'), 0);
   })
     .operate(
       null,
       () => {
-        throw Error();
+        throw new Error('...');
       },
       () => {
         throw err;
@@ -565,7 +566,7 @@ test(`SyncPromise.prototype.operate: case, async rejection w/ sync throwing fail
   await expect(v2).rejects.toThrowError(err);
 });
 test(`SyncPromise.prototype.operate: case, async rejection w/ async resolving failure and finalize`, async () => {
-  const fn: any = jest.fn(() => wait(250));
+  const fn: any = vi.fn(() => wait(250));
   const v1 = new SyncPromise((_, reject) => {
     setTimeout(() => reject('foo'), 0);
   })
@@ -578,7 +579,7 @@ test(`SyncPromise.prototype.operate: case, async rejection w/ async resolving fa
   expect(Date.now() - start).toBeGreaterThanOrEqual(250);
 
   const v2 = new SyncPromise((_, reject) => {
-    setTimeout(() => reject(Error()), 0);
+    setTimeout(() => reject(new Error('...')), 0);
   })
     .operate(null, null, fn)
     .consume();
@@ -587,13 +588,13 @@ test(`SyncPromise.prototype.operate: case, async rejection w/ async resolving fa
   expect(fn).toHaveBeenCalledTimes(2);
 });
 test(`SyncPromise.prototype.operate: case, async rejection w/ async rejecting failure and finalize`, async () => {
-  const err = new Error();
+  const err = new Error('...');
   const v1 = new SyncPromise((_, reject) => {
     setTimeout(() => reject('foo'), 0);
   })
     .operate(
       null,
-      () => Promise.reject(Error()),
+      () => Promise.reject(new Error('...')),
       () => Promise.reject(err)
     )
     .consume();
@@ -614,7 +615,7 @@ test(`SyncPromise.from: case, sync return`, () => {
   expect(value).toBe('foo');
 });
 test(`SyncPromise.from: case, sync throw`, () => {
-  const err = new Error();
+  const err = new Error('...');
 
   expect(() => {
     SyncPromise.from(() => {
@@ -628,7 +629,7 @@ test(`SyncPromise.from: case, sync resolution`, async () => {
   await expect(value).resolves.toBe('foo');
 });
 test(`SyncPromise.from: case, sync rejection`, async () => {
-  const err = new Error();
+  const err = new Error('...');
   const value = SyncPromise.from(() => Promise.reject(err)).consume();
 
   await expect(value).rejects.toThrowError(err);

@@ -1,5 +1,6 @@
 import { TypeGuard } from 'type-core';
-import { AbortSignal } from 'abort-controller';
+import type { AbortSignal } from 'abort-controller';
+
 import { CancellablePromise } from '../classes';
 
 export interface TimeoutOptions {
