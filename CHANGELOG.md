@@ -1,3 +1,43 @@
+
+
+# [6.0.0](https://github.com/rafamel/promist/compare/v4.0.0...v6.0.0) (2024-07-17)
+
+
+### Bug Fixes
+
+* remove external AbortController dependency ([36df93c](https://github.com/rafamel/promist/commit/36df93c7480d0886101510b974099f2df8ea3c97))
+* update type-core dependency ([0e506d1](https://github.com/rafamel/promist/commit/0e506d1779f027faf152f243e02a6bf0b931dad2))
+
+
+### chore
+
+* reboot package development ([0a3d779](https://github.com/rafamel/promist/commit/0a3d779da8996cd6d92b5dd2e9b8b0fe28114a38))
+* update setup ([e115067](https://github.com/rafamel/promist/commit/e115067522f3124ddab0252823694efe64e0cab1))
+
+
+### Features
+
+* **classes:** add CancellablePromise ([1aa340e](https://github.com/rafamel/promist/commit/1aa340ee9f3c374f3e2646ce9d1bde7b00b90742))
+* **classes:** add DeferredPromise ([c24ad6b](https://github.com/rafamel/promist/commit/c24ad6bdef4907d01d042e4bc868f9b7ce6ad74c))
+* **classes:** add ExtensiblePromise ([0166da2](https://github.com/rafamel/promist/commit/0166da2fe1548b814ed1cc55159481f9c71bdc7b))
+* **classes:** add LazyPromise ([d9b5984](https://github.com/rafamel/promist/commit/d9b598467c31d7c1943afe0ca2c28b9288663775))
+* **classes:** add SyncPromise ([e34ca8d](https://github.com/rafamel/promist/commit/e34ca8d0307fd257b8b2eaf7ac85a24058c5fcb9))
+* **collection:** add Parallel ([2ed3bdf](https://github.com/rafamel/promist/commit/2ed3bdf7728e589891ebf246aab7e98b0bf4c668))
+* **collection:** add Series methods ([87ca458](https://github.com/rafamel/promist/commit/87ca4589b825e373a9e0951cc5a74408ed3c8ba1))
+* **creation:** add timeout ([17d3edb](https://github.com/rafamel/promist/commit/17d3edb958340e53bf53dae498443ab7336235b1))
+* **creation:** add until ([8cc3dd2](https://github.com/rafamel/promist/commit/8cc3dd28e191c4870894880e8b5e3d85347fbbac))
+* **creation:** add wait ([67b9da7](https://github.com/rafamel/promist/commit/67b9da749fa6b0a6ede8b55950443c4d0fd4e958))
+* **creation:** wait can take a null delay for immediate resolution ([972968f](https://github.com/rafamel/promist/commit/972968ff47fc0c1b937167fa203cc40f0ada883b))
+* **utils:** add control and type guards utils ([ec0cff2](https://github.com/rafamel/promist/commit/ec0cff272ce3896b82a18053f76f742fe0bd1ec0))
+
+
+### BREAKING CHANGES
+
+* isPromiseLike returns false for functions with a then method
+* require node >= 22
+* Promist has been almost entirely rewritten and its api redesigned. Please check the
+latest documentation.
+
 # [5.1.0](https://github.com/rafamel/promist/compare/v5.0.0...v5.1.0) (2021-12-14)
 
 
@@ -239,6 +279,3 @@ type safety
 
 
 # 0.1.0 (2018-12-06)
-
-
-
