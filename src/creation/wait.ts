@@ -1,5 +1,4 @@
 import { TypeGuard } from 'type-core';
-import type { AbortSignal } from 'abort-controller';
 
 import { CancellablePromise } from '../classes';
 import { Util } from '../classes/helpers/Util';

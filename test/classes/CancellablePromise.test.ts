@@ -1,5 +1,4 @@
 import { expect, test, vi } from 'vitest';
-import { AbortController } from 'abort-controller';
 
 import { CancellablePromise } from '../../src/classes';
 

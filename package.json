@@ -74,7 +74,6 @@
     "vitest": "^2.0.3"
   },
   "dependencies": {
-    "abort-controller": "^3.0.0",
     "type-core": "^0.12.0"
   }
 }

@@ -1,5 +1,4 @@
 import type { NullaryFn, UnaryFn } from 'type-core';
-import type { AbortSignal } from 'abort-controller';
 
 import { ExtensiblePromise } from './ExtensiblePromise';
 
@@ -27,15 +26,17 @@ export class CancellablePromise<T> extends ExtensiblePromise<T> {
       onCancel = executor(resolve, reject);
     });
 
-    this.#onCancel = onCancel;
+    let teardown: NullaryFn | null = null;
+    this.#onCancel = () => {
+      if (teardown) teardown();
+      if (onCancel) onCancel();
+    };
 
     if (signal) {
       if (signal.aborted) this.cancel();
       else {
-        const onAbort = (): void => {
-          signal?.removeEventListener('abort', onAbort);
-          this.cancel();
-        };
+        const onAbort = (): void => this.cancel();
+        teardown = () => signal.removeEventListener('abort', onAbort);
         signal.addEventListener('abort', onAbort);
       }
     }
