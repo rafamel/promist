@@ -1,12 +1,12 @@
-import type { NullaryFn, UnaryFn } from 'type-core';
+import type { Callable } from 'type-core';
 
 import { ExtensiblePromise } from './ExtensiblePromise';
 
 export declare namespace CancellablePromise {
   type Executor<T> = (
-    resolve: UnaryFn<T | PromiseLike<T>>,
-    reject: UnaryFn<Error | unknown>
-  ) => NullaryFn;
+    resolve: Callable<T | PromiseLike<T>>,
+    reject: Callable<Error | unknown>
+  ) => Callable;
 }
 
 /**
@@ -16,17 +16,17 @@ export declare namespace CancellablePromise {
  * the `cancel` method, or by an AbortSignal.
  */
 export class CancellablePromise<T> extends ExtensiblePromise<T> {
-  #onCancel: NullaryFn | null;
+  #onCancel: Callable | null;
   public constructor(
     executor: CancellablePromise.Executor<T>,
     signal?: AbortSignal | null
   ) {
-    let onCancel: NullaryFn | null = null;
+    let onCancel: Callable | null = null;
     super((resolve, reject) => {
       onCancel = executor(resolve, reject);
     });
 
-    let teardown: NullaryFn | null = null;
+    let teardown: Callable | null = null;
     this.#onCancel = () => {
       if (teardown) teardown();
       if (onCancel) onCancel();

@@ -1,9 +1,9 @@
-import type { NullaryFn, UnaryFn } from 'type-core';
+import type { Callable } from 'type-core';
 
 export declare namespace ExtensiblePromise {
   type Executor<T> = (
-    resolve: UnaryFn<T | PromiseLike<T>>,
-    reject: UnaryFn<Error | unknown>
+    resolve: Callable<T | PromiseLike<T>>,
+    reject: Callable<Error | unknown>
   ) => void;
 }
 
@@ -21,9 +21,9 @@ export class ExtensiblePromise<T> implements Promise<T> {
     return 'ExtensiblePromise';
   }
   public then<TS = T, TF = never>(
-    onfulfilled?: UnaryFn<T, TS | PromiseLike<TS>> | undefined | null,
+    onfulfilled?: Callable<T, TS | PromiseLike<TS>> | undefined | null,
     onrejected?:
-      | UnaryFn<Error | unknown, TF | PromiseLike<TF>>
+      | Callable<Error | unknown, TF | PromiseLike<TF>>
       | undefined
       | null
   ): Promise<TS | TF> {
@@ -31,13 +31,13 @@ export class ExtensiblePromise<T> implements Promise<T> {
   }
   public catch<TF = never>(
     onrejected?:
-      | UnaryFn<Error | unknown, TF | PromiseLike<TF>>
+      | Callable<Error | unknown, TF | PromiseLike<TF>>
       | undefined
       | null
   ): Promise<T | TF> {
     return this.#promise.catch(onrejected);
   }
-  public finally(onfinally?: NullaryFn | undefined | null): Promise<T> {
+  public finally(onfinally?: Callable | undefined | null): Promise<T> {
     return this.#promise.finally(onfinally);
   }
 }

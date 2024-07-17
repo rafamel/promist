@@ -1,13 +1,13 @@
-import { type NullaryFn, TypeGuard, type UnaryFn } from 'type-core';
+import { type Callable, TypeGuard } from 'type-core';
 
 export class Util {
   static noop(): void {
     return undefined;
   }
   static operate<U, US = U, UF = never>(
-    cb: NullaryFn<U | PromiseLike<U>>,
-    success?: UnaryFn<U, US> | null,
-    failure?: UnaryFn<Error | unknown, UF> | null
+    cb: Callable<void, U | PromiseLike<U>>,
+    success?: Callable<U, US> | null,
+    failure?: Callable<Error | unknown, UF> | null
   ): US | UF | PromiseLike<US | UF> {
     let response: U | PromiseLike<U>;
     try {

@@ -1,12 +1,12 @@
-import { type NullaryFn, TypeGuard, type UnaryFn } from 'type-core';
+import { type Callable, TypeGuard } from 'type-core';
 
 import { Util } from './helpers/Util';
 import { ExtensiblePromise } from './ExtensiblePromise';
 
 export declare namespace SyncPromise {
   type Executor<T> = (
-    resolve: UnaryFn<T | PromiseLike<T>>,
-    reject: UnaryFn<Error | unknown>
+    resolve: Callable<T | PromiseLike<T>>,
+    reject: Callable<Error | unknown>
   ) => void;
 }
 
@@ -18,7 +18,9 @@ export class SyncPromise<T> extends ExtensiblePromise<T> {
   /**
    * Creates a SyncPromise from a function.
    */
-  public static from<T>(create: NullaryFn<T | PromiseLike<T>>): SyncPromise<T> {
+  public static from<T>(
+    create: Callable<void, T | PromiseLike<T>>
+  ): SyncPromise<T> {
     return new SyncPromise((resolve, reject) => {
       try {
         const response = create();
@@ -94,9 +96,9 @@ export class SyncPromise<T> extends ExtensiblePromise<T> {
    * if values are pending, and synchronously otherwise.
    */
   public operate<TS = T, TF = never>(
-    success?: UnaryFn<T, TS | PromiseLike<TS>> | null,
-    failure?: UnaryFn<Error | unknown, TF | PromiseLike<TF>> | null,
-    finalize?: NullaryFn<void | PromiseLike<void>> | null
+    success?: Callable<T, TS | PromiseLike<TS>> | null,
+    failure?: Callable<Error | unknown, TF | PromiseLike<TF>> | null,
+    finalize?: Callable<void, void | PromiseLike<void>> | null
   ): SyncPromise<TS | TF> {
     return new SyncPromise<TS | TF>((resolve, reject) => {
       Util.operate(

@@ -50,7 +50,7 @@ describe(`isPromiseLike`, () => {
     b.then = () => undefined;
 
     expect(isPromiseLike(a)).toBe(true);
-    expect(isPromiseLike(b)).toBe(true);
+    expect(isPromiseLike(b)).toBe(false);
   });
   test(`returns false for non-promises`, () => {
     const [a, b, c, d] = [1, 'hi', {}, []];

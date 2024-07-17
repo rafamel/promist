@@ -1,4 +1,4 @@
-import type { UnaryFn } from 'type-core';
+import type { Callable } from 'type-core';
 
 import { Util } from './helpers/Util';
 import { ExtensiblePromise } from './ExtensiblePromise';
@@ -8,11 +8,11 @@ import { ExtensiblePromise } from './ExtensiblePromise';
  * with `resolve` and `reject` methods.
  */
 export class DeferredPromise<T> extends ExtensiblePromise<T> {
-  #resolve: UnaryFn<T | PromiseLike<T>>;
-  #reject: UnaryFn<Error | unknown>;
+  #resolve: Callable<T | PromiseLike<T>>;
+  #reject: Callable<Error | unknown>;
   public constructor() {
-    let res: UnaryFn<T | PromiseLike<T>> = Util.noop;
-    let rej: UnaryFn<Error | unknown> = Util.noop;
+    let res: Callable<T | PromiseLike<T>> = Util.noop;
+    let rej: Callable<Error | unknown> = Util.noop;
     super((resolve, reject) => {
       res = resolve;
       rej = reject;
