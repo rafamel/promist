@@ -1,6 +1,6 @@
 # promist
 
-[![Version](https://img.shields.io/npm/v/@promist.svg)](https://www.npmjs.com/package/promist)
+[![Version](https://img.shields.io/npm/v/promist.svg)](https://www.npmjs.com/package/promist)
 [![Types](https://img.shields.io/npm/types/promist.svg)](https://www.npmjs.com/package/promist)
 [![License](https://img.shields.io/github/license/rafamel/promist.svg)](https://github.com/rafamel/promist/blob/master/LICENSE)
 
